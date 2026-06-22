@@ -60,10 +60,10 @@ nav.sc{
   border-bottom-color:rgba(255,255,255,.06);
 }
 .ni{max-width:1140px;margin:0 auto;padding:0 24px;width:100%;display:flex;align-items:center;gap:32px}
-.logo{display:flex;align-items:center;gap:9px;font-weight:800;font-size:16.5px;color:#fff;letter-spacing:-.02em;flex-shrink:0}
-.lm{width:29px;height:29px;background:#fff;border-radius:7px;display:grid;position:relative;flex-shrink:0}
-.lm::before{content:"";width:11px;height:11px;background:var(--blue);border-radius:3px;position:absolute;top:5px;left:5px}
-.lm::after{content:"";width:6px;height:6px;background:var(--accent);border-radius:1.5px;position:absolute;bottom:4px;right:4px}
+.logo{display:flex;align-items:center;gap:10px;color:#fff;letter-spacing:-.01em;flex-shrink:0;font-size:0}
+.logo svg{flex-shrink:0}
+.logo-wordmark{font-size:17px;font-weight:400;letter-spacing:-.01em;font-family:'Inter',system-ui,sans-serif}
+.logo-wordmark strong{font-weight:800}
 .nl{display:flex;gap:28px;align-items:center;margin-left:auto}
 .nl a{color:rgba(255,255,255,.65);font-size:13.5px;font-weight:500;transition:color .2s}
 .nl a:hover{color:#fff}
@@ -391,7 +391,18 @@ footer{background:var(--navy);color:#fff;padding:56px 0 32px}
 <!-- NAV -->
 <nav id="nav">
   <div class="ni">
-    <a href="#" class="logo"><span class="lm" aria-hidden="true"></span>QuantHQ</a>
+    <a href="#" class="logo">
+      <svg width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <!-- square outline, open at bottom-right corner -->
+        <path d="M28 4H6C4.895 4 4 4.895 4 6V28C4 28 4 30 6 30H24" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M30 6V24" stroke="white" stroke-width="2.2" stroke-linecap="round"/>
+        <!-- HQ text -->
+        <text x="9" y="22" font-family="Inter,system-ui,sans-serif" font-weight="700" font-size="11" fill="white" letter-spacing="-0.5">HQ</text>
+        <!-- accent square -->
+        <rect x="25" y="25" width="7" height="7" rx="1.5" fill="#7BB8FF"/>
+      </svg>
+      <span class="logo-wordmark">Quant<strong>HQ</strong></span>
+    </a>
     <div class="nl">
       <a href="#product">Product</a>
       <a href="#api">API</a>
@@ -837,7 +848,18 @@ footer{background:var(--navy);color:#fff;padding:56px 0 32px}
   <div class="wrap">
     <div class="fi">
       <div class="fb">
-        <a href="#" class="logo"><span class="lm" aria-hidden="true"></span>QuantHQ</a>
+        <a href="#" class="logo">
+      <svg width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <!-- square outline, open at bottom-right corner -->
+        <path d="M28 4H6C4.895 4 4 4.895 4 6V28C4 28 4 30 6 30H24" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M30 6V24" stroke="white" stroke-width="2.2" stroke-linecap="round"/>
+        <!-- HQ text -->
+        <text x="9" y="22" font-family="Inter,system-ui,sans-serif" font-weight="700" font-size="11" fill="white" letter-spacing="-0.5">HQ</text>
+        <!-- accent square -->
+        <rect x="25" y="25" width="7" height="7" rx="1.5" fill="#7BB8FF"/>
+      </svg>
+      <span class="logo-wordmark">Quant<strong>HQ</strong></span>
+    </a>
         <p>The quant operating system built for the AI era.</p>
       </div>
       <div class="flc">
