@@ -354,26 +354,112 @@ footer{background:var(--navy);color:#fff;padding:56px 0 32px}
 .fbot{padding-top:22px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px}
 .fbot p{font-size:12px;color:rgba(255,255,255,.25)}
 
+/* ─── COMMUNITY FEED PANEL ────────────────────────── */
+.feed-panel{
+  background:rgba(13,27,46,.85);border:1px solid rgba(255,255,255,.1);
+  border-radius:var(--r);overflow:hidden;
+  box-shadow:0 32px 64px rgba(0,0,0,.5),0 0 0 1px rgba(91,164,255,.06);
+  backdrop-filter:blur(8px);
+}
+.fp-bar{
+  display:flex;align-items:center;gap:8px;padding:11px 15px;
+  border-bottom:1px solid rgba(255,255,255,.06);background:rgba(255,255,255,.03);
+}
+.fp-dot{width:9px;height:9px;border-radius:50%}
+.fp-title{font-family:'JetBrains Mono',monospace;font-size:11px;color:rgba(255,255,255,.35);letter-spacing:.06em;margin-left:4px}
+.fp-live{margin-left:auto;display:flex;align-items:center;gap:5px;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--green);letter-spacing:.08em}
+.fp-live .blink{width:5px;height:5px;border-radius:50%;background:var(--green);animation:blink 1.4s ease-in-out infinite}
+.fp-posts{padding:6px 0}
+.fp-post{padding:12px 15px;border-bottom:1px solid rgba(255,255,255,.04);transition:background .2s;cursor:default}
+.fp-post:last-child{border-bottom:none}
+.fp-post:hover{background:rgba(255,255,255,.03)}
+.fp-meta{display:flex;align-items:center;gap:8px;margin-bottom:7px}
+.fp-avatar{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font-size:11px;font-weight:700;flex-shrink:0;color:#fff}
+.fp-name{font-size:12.5px;font-weight:600;color:rgba(255,255,255,.85)}
+.fp-role{font-size:11px;color:rgba(255,255,255,.3);margin-left:2px}
+.fp-type{margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:9.5px;padding:2px 7px;border-radius:4px;letter-spacing:.05em;font-weight:500}
+.fp-type.research{background:rgba(91,164,255,.12);color:var(--accent)}
+.fp-type.signal{background:rgba(0,196,140,.12);color:var(--green)}
+.fp-type.backtest{background:rgba(245,158,11,.1);color:var(--amber)}
+.fp-type.discuss{background:rgba(255,255,255,.07);color:rgba(255,255,255,.5)}
+.fp-text{font-size:13px;color:rgba(255,255,255,.55);line-height:1.5;margin-bottom:9px}
+.fp-text strong{color:rgba(255,255,255,.75);font-weight:500}
+.fp-actions{display:flex;align-items:center;gap:14px}
+.fp-act{font-family:'JetBrains Mono',monospace;font-size:10px;color:rgba(255,255,255,.25);display:flex;align-items:center;gap:4px;letter-spacing:.04em}
+.fp-footer{border-top:1px solid rgba(255,255,255,.05);padding:9px 15px;display:flex;justify-content:space-between;align-items:center}
+.fp-footer span{font-family:'JetBrains Mono',monospace;font-size:10px;color:rgba(255,255,255,.25);letter-spacing:.05em}
+.fp-footer a{font-family:'JetBrains Mono',monospace;font-size:10px;color:rgba(91,164,255,.6)}
+
+/* ─── COMMUNITY SURFACES ──────────────────────────── */
+.surfaces{background:#fff}
+.surf-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.surf-card{
+  background:var(--soft);border:1px solid var(--line-d);border-radius:var(--r);
+  padding:30px 26px;position:relative;overflow:hidden;
+  transition:transform .3s var(--ease),box-shadow .3s,border-color .3s,background .3s;
+}
+.surf-card:hover{transform:translateY(-4px);box-shadow:0 16px 40px -16px rgba(0,55,184,.2);border-color:rgba(0,55,184,.22);background:#fff}
+.surf-ico{
+  width:40px;height:40px;border-radius:9px;background:#fff;
+  display:grid;place-items:center;margin-bottom:18px;
+  border:1px solid var(--line-d);box-shadow:0 2px 8px rgba(0,55,184,.06);
+  transition:background .25s,box-shadow .25s,border-color .25s;
+}
+.surf-card:hover .surf-ico{background:var(--blue);border-color:var(--blue);box-shadow:0 4px 14px rgba(0,55,184,.3)}
+.surf-ico svg{width:19px;height:19px;stroke:var(--blue);transition:stroke .25s}
+.surf-card:hover .surf-ico svg{stroke:#fff}
+.surf-card h3{font-size:17px;font-weight:700;letter-spacing:-.015em;margin-bottom:7px}
+.surf-card p{font-size:14px;color:var(--muted);line-height:1.55}
+.surf-pill{
+  margin-top:16px;display:inline-flex;align-items:center;gap:5px;
+  font-family:'JetBrains Mono',monospace;font-size:10px;
+  color:var(--blue);background:rgba(0,55,184,.06);
+  padding:3px 9px;border-radius:100px;border:1px solid rgba(0,55,184,.1);letter-spacing:.06em;
+}
+
+/* ─── ALPHA TOOLKIT ───────────────────────────────── */
+.alpha{background:var(--navy-2);padding:110px 0;overflow:hidden;position:relative}
+.alpha::before{
+  content:"";position:absolute;top:-120px;right:-80px;
+  width:500px;height:500px;border-radius:50%;
+  background:radial-gradient(circle,rgba(0,55,184,.2) 0%,transparent 70%);
+  pointer-events:none;
+}
+.alpha .sh h2{color:#fff}
+.alpha .sh p{color:rgba(243,246,252,.5)}
+.alpha .eyebrow{color:var(--accent)}
+.alpha-layout{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:start;margin-bottom:56px}
+.alpha-intro h3{font-size:clamp(18px,2.2vw,24px);font-weight:700;letter-spacing:-.02em;color:#fff;margin-bottom:12px;line-height:1.2}
+.alpha-intro p{font-size:15px;color:rgba(243,246,252,.5);line-height:1.65;margin-bottom:20px}
+.alpha-features{display:flex;flex-direction:column;gap:14px}
+.af{display:flex;align-items:flex-start;gap:12px;padding:14px;background:rgba(255,255,255,.03);border-radius:10px;border:1px solid rgba(255,255,255,.06)}
+.af-ico{width:32px;height:32px;border-radius:7px;background:rgba(91,164,255,.1);display:grid;place-items:center;flex-shrink:0}
+.af-ico svg{width:16px;height:16px;stroke:var(--accent)}
+.af-text h4{font-size:13.5px;font-weight:600;color:rgba(255,255,255,.85);margin-bottom:3px}
+.af-text p{font-size:13px;color:rgba(243,246,252,.4);line-height:1.5}
+
 /* ─── RESPONSIVE ──────────────────────────────────── */
 @media(max-width:960px){
   .hero-inner{grid-template-columns:1fr;gap:36px}
-  .panel{max-width:480px}
+  .panel,.feed-panel{max-width:480px}
   .wg-panel.active{grid-template-columns:1fr}
   .api-grid{grid-template-columns:1fr}
   .how-steps{grid-template-columns:1fr}
   .trust-grid{grid-template-columns:repeat(2,1fr)}
   .uc-grid{grid-template-columns:1fr}
   .road-grid{grid-template-columns:repeat(2,1fr)}
+  .surf-grid{grid-template-columns:repeat(2,1fr)}
+  .alpha-layout{grid-template-columns:1fr}
   .nl{display:none}.ham{display:flex}
   .fi{flex-direction:column;gap:28px}
 }
 @media(max-width:640px){
   .wrap,.ni{padding:0 18px}
-  .trust-grid{grid-template-columns:1fr}
+  .trust-grid,.surf-grid{grid-template-columns:1fr}
   .road-grid{grid-template-columns:1fr}
   .proof-inner .psep{display:none}
   .hero-copy h1{font-size:32px}
-  .sec,.api-sec,.uc{padding:80px 0}
+  .sec,.api-sec,.uc,.alpha{padding:80px 0}
 }
 @media(max-width:360px){
   .hero-copy h1{font-size:28px}
@@ -393,80 +479,66 @@ footer{background:var(--navy);color:#fff;padding:56px 0 32px}
   <div class="ni">
     <a href="#" class="logo">
       <svg width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-        <!-- square outline, open at bottom-right corner -->
         <path d="M28 4H6C4.895 4 4 4.895 4 6V28C4 28 4 30 6 30H24" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
         <path d="M30 6V24" stroke="white" stroke-width="2.2" stroke-linecap="round"/>
-        <!-- HQ text -->
         <text x="9" y="22" font-family="Inter,system-ui,sans-serif" font-weight="700" font-size="11" fill="white" letter-spacing="-0.5">HQ</text>
-        <!-- accent square -->
         <rect x="25" y="25" width="7" height="7" rx="1.5" fill="#7BB8FF"/>
       </svg>
       <span class="logo-wordmark">Quant<strong>HQ</strong></span>
     </a>
     <div class="nl">
-      <a href="#product">Product</a>
-      <a href="#api">API</a>
+      <a href="#community">Community</a>
+      <a href="#alpha">Alpha Toolkit</a>
       <a href="#roadmap">Roadmap</a>
-      <a href="#usecases">Use Cases</a>
     </div>
     <a href="#join" class="nc">Join Community</a>
     <button class="ham" id="ham" aria-label="Menu"><span></span><span></span><span></span></button>
   </div>
 </nav>
 <div class="mm" id="mm">
-  <a href="#product" class="ml">Product</a>
-  <a href="#api" class="ml">API</a>
+  <a href="#community" class="ml">Community</a>
+  <a href="#alpha" class="ml">Alpha Toolkit</a>
   <a href="#roadmap" class="ml">Roadmap</a>
-  <a href="#usecases" class="ml">Use Cases</a>
   <a href="#join" class="ml">Join Community →</a>
 </div>
 
-<!-- HERO -->
+<!-- HERO: community-first -->
 <section class="hero">
   <div class="hbg"></div>
   <div class="hgrid"></div>
   <canvas id="cn" aria-hidden="true"></canvas>
   <div class="wrap hero-inner">
     <div class="hero-copy" style="opacity:1;transform:none">
-      <span class="eyebrow" style="animation:fadeUp .7s var(--ease) both"><span class="pip"></span>AI-Powered Quant Research</span>
-      <h1 style="animation:fadeUp .7s var(--ease) .1s both">From signal to <span class="hl">alpha</span><br>in one platform.</h1>
-      <p class="sub" style="animation:fadeUp .7s var(--ease) .2s both">AI factor research, backtested signal generation, and a professional quant network — all connected. See what you get before you sign up.</p>
+      <span class="eyebrow" style="animation:fadeUp .7s var(--ease) both"><span class="pip"></span>Quant Finance Community</span>
+      <h1 style="animation:fadeUp .7s var(--ease) .1s both">Where quant minds<br><span class="hl">build together.</span></h1>
+      <p class="sub" style="animation:fadeUp .7s var(--ease) .2s both">The professional home for researchers, traders, developers, and builders in quantitative finance. Share research, find collaborators, and grow alongside the best minds in the space.</p>
       <div class="hero-cta" style="animation:fadeUp .7s var(--ease) .3s both">
         <a href="#join" class="btn bp">
           <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-          Join Community
+          Join the Community
         </a>
-        <a href="#api" class="btn bs">See the API →</a>
+        <a href="#alpha" class="btn bs">See Alpha Toolkit →</a>
       </div>
       <div class="hero-meta" style="animation:fadeUp .7s var(--ease) .4s both">
-        <span class="m"><span class="dot"></span>Live signals</span>
-        <span class="m"><span class="dot"></span>Community-sourced factors</span>
+        <span class="m"><span class="dot"></span>1,200+ members</span>
         <span class="m"><span class="dot"></span>Free early access</span>
+        <span class="m"><span class="dot"></span>Building in public</span>
       </div>
     </div>
 
-    <!-- LIVE SIGNAL PANEL -->
-    <div class="panel">
-      <div class="panel-bar">
-        <span class="panel-dot" style="background:#FF5F57"></span>
-        <span class="panel-dot" style="background:#FFBD2E"></span>
-        <span class="panel-dot" style="background:#28C840"></span>
-        <span class="panel-title">quanthq / signal-feed · live</span>
-        <span class="panel-live"><span class="blink"></span>LIVE</span>
+    <!-- COMMUNITY FEED PANEL -->
+    <div class="feed-panel">
+      <div class="fp-bar">
+        <span class="fp-dot" style="background:#FF5F57"></span>
+        <span class="fp-dot" style="background:#FFBD2E"></span>
+        <span class="fp-dot" style="background:#28C840"></span>
+        <span class="fp-title">quanthq / community-feed</span>
+        <span class="fp-live"><span class="blink"></span>LIVE</span>
       </div>
-      <div class="panel-col-heads">
-        <span class="pch ticker">TICKER</span>
-        <span class="pch dir">DIR</span>
-        <span class="pch" style="flex:1">CONFIDENCE</span>
-        <span class="pch conf">CONF</span>
-        <span class="pch alpha">α 5D</span>
-      </div>
-      <div class="signal-list" id="siglist">
-        <!-- injected by JS -->
-      </div>
-      <div class="panel-footer">
-        <span class="pf-l">Updated 2s ago · 143 signals today</span>
-        <span class="pf-r">View full feed →</span>
+      <div class="fp-posts" id="feedposts"></div>
+      <div class="fp-footer">
+        <span>500+ posts this week</span>
+        <a href="#">View feed →</a>
       </div>
     </div>
   </div>
@@ -477,190 +549,150 @@ footer{background:var(--navy);color:#fff;padding:56px 0 32px}
   <div class="wrap proof-inner">
     <div class="pstat rv"><div class="n" data-count="1200" data-suffix="+">0</div><div class="l">Community Members</div></div>
     <div class="psep"></div>
-    <div class="pstat rv" data-d="1"><div class="n" data-count="143" data-suffix="">0</div><div class="l">Signals Today</div></div>
+    <div class="pstat rv" data-d="1"><div class="n" data-count="500" data-suffix="+">0</div><div class="l">Posts This Week</div></div>
     <div class="psep"></div>
-    <div class="pstat rv" data-d="2"><div class="n" data-count="38" data-suffix="">0</div><div class="l">Factors Tracked</div></div>
+    <div class="pstat rv" data-d="2"><div class="n" data-count="6">0</div><div class="l">Platform Surfaces</div></div>
     <div class="psep"></div>
     <div class="pstat rv" data-d="3"><div class="n mono" style="font-size:clamp(18px,2.5vw,28px)">Free</div><div class="l">Early Access</div></div>
   </div>
 </div>
 
-<!-- WHAT YOU GET -->
-<section class="sec wg" id="product">
+<!-- COMMUNITY SURFACES -->
+<section class="sec surfaces" id="community">
   <div class="wrap">
     <div class="sh rv">
-      <span class="eyebrow" style="color:var(--blue)"><span class="pip" style="background:var(--blue)"></span>The Platform</span>
-      <h2>Three tools. One workflow.</h2>
-      <p>QuantHQ connects AI-powered research, collaborative backtesting, and a professional quant network — so you move from hypothesis to verified alpha without switching context.</p>
+      <span class="eyebrow" style="color:var(--blue)"><span class="pip" style="background:var(--blue)"></span>The Community</span>
+      <h2>Six ways to connect,<br>collaborate, and grow.</h2>
+      <p>QuantHQ is built around the ways quant professionals actually work — sharing ideas, finding collaborators, discussing markets, and building together.</p>
     </div>
-    <div class="rv" data-d="1">
-      <div class="wg-tabs" role="tablist">
-        <button class="wg-tab active" data-tab="research" role="tab">Research AI</button>
-        <button class="wg-tab" data-tab="backtest" role="tab">Backtest</button>
-        <button class="wg-tab" data-tab="network" role="tab">Network</button>
+    <div class="surf-grid">
+      <div class="surf-card rv">
+        <div class="surf-ico"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M4 12h16M4 18h10"/></svg></div>
+        <h3>Feed</h3>
+        <p>A living timeline of quant research, market observations, and ideas — curated by the community, for the community.</p>
+        <span class="surf-pill">Core surface</span>
       </div>
-    </div>
-
-    <!-- RESEARCH TAB -->
-    <div class="wg-panel active" id="tab-research">
-      <div class="wg-info rv">
-        <h3>AI factor research that actually explains itself.</h3>
-        <p>Surface cross-sectional alpha signals across equities, crypto, and macro. Every output includes factor attribution — not just a score, but <em>why</em> the signal exists.</p>
-        <ul class="wg-bullets">
-          <li><strong>Natural language queries</strong> — ask "what drove NVDA outperformance last quarter?" and get a factor breakdown</li>
-          <li><strong>Cross-asset signal scanning</strong> — momentum, value, quality, and sentiment factors across 8,000+ instruments</li>
-          <li><strong>Source-referenced outputs</strong> — every claim links to the data that produced it</li>
-        </ul>
+      <div class="surf-card rv" data-d="1">
+        <div class="surf-ico"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg></div>
+        <h3>Reach</h3>
+        <p>Search for collaborators, co-founders, and researchers by skill, strategy style, or market focus. Filtered for quant professionals only.</p>
+        <span class="surf-pill">Discovery</span>
       </div>
-      <div class="wg-output rv" data-d="1">
-        <div class="wg-output-bar">
-          <span class="dot" style="background:#FF5F57"></span>
-          <span class="dot" style="background:#FFBD2E"></span>
-          <span class="dot" style="background:#28C840"></span>
-          <span class="label">research · NVDA factor attribution</span>
-          <span class="tag"><span style="width:5px;height:5px;border-radius:50%;background:var(--green);display:inline-block"></span>&nbsp;200ms</span>
-        </div>
-        <pre><span class="c">// Query: "What drove NVDA alpha in Q1 2026?"</span>
-
-<span class="k">"signal"</span>: {
-  <span class="k">"ticker"</span>:   <span class="s">"NVDA"</span>,
-  <span class="k">"direction"</span>: <span class="g">"long"</span>,
-  <span class="k">"confidence"</span>: <span class="n">0.91</span>,
-
-  <span class="k">"factors"</span>: {
-    <span class="k">"earnings_revision_3m"</span>:  <span class="n">+0.84</span>,  <span class="c">// ↑ analyst upgrades</span>
-    <span class="k">"momentum_60d"</span>:          <span class="n">+0.76</span>,  <span class="c">// price persistence</span>
-    <span class="k">"short_interest_delta"</span>:  <span class="n">-0.62</span>,  <span class="c">// declining shorts</span>
-    <span class="k">"sentiment_news_7d"</span>:     <span class="n">+0.58</span>   <span class="c">// positive coverage</span>
-  },
-
-  <span class="k">"expected_alpha_5d"</span>: <span class="g">"+2.8%"</span>,
-  <span class="k">"backtest_sharpe_1y"</span>: <span class="n">1.74</span>
-}</pre>
+      <div class="surf-card rv" data-d="2">
+        <div class="surf-ico"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+        <h3>Chat</h3>
+        <p>Real-time discussion around markets, research, and live events. Topic-based channels for equities, crypto, macro, and more.</p>
+        <span class="surf-pill">Real-time</span>
       </div>
-    </div>
-
-    <!-- BACKTEST TAB -->
-    <div class="wg-panel" id="tab-backtest">
-      <div class="wg-info rv">
-        <h3>Validate before you risk capital.</h3>
-        <p>Run factor-based backtests across multi-year windows with realistic transaction costs, slippage models, and drawdown analysis. Share results with the community.</p>
-        <ul class="wg-bullets">
-          <li><strong>Walk-forward validation</strong> — avoid overfitting with out-of-sample testing built in</li>
-          <li><strong>Community benchmarks</strong> — compare your Sharpe against anonymized community baselines</li>
-          <li><strong>One-click export</strong> — PDF tearsheet or JSON for downstream use</li>
-        </ul>
+      <div class="surf-card rv">
+        <div class="surf-ico"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+        <h3>Research</h3>
+        <p>Publish and discover quantitative research. Build a public reputation in the space. Co-author with members who share your focus.</p>
+        <span class="surf-pill">Publish</span>
       </div>
-      <div class="wg-output rv" data-d="1">
-        <div class="wg-output-bar">
-          <span class="dot" style="background:#FF5F57"></span>
-          <span class="dot" style="background:#FFBD2E"></span>
-          <span class="dot" style="background:#28C840"></span>
-          <span class="label">backtest · momentum_quality_v2</span>
-          <span class="tag"><span style="width:5px;height:5px;border-radius:50%;background:var(--green);display:inline-block"></span>&nbsp;done</span>
-        </div>
-        <pre><span class="c">// Strategy: momentum_quality_v2 · 3Y window</span>
-
-<span class="k">"performance"</span>: {
-  <span class="k">"total_return"</span>:     <span class="g">"+187.4%"</span>,
-  <span class="k">"annualized_alpha"</span>: <span class="g">"+14.2%"</span>,
-  <span class="k">"sharpe_ratio"</span>:     <span class="n">1.84</span>,
-  <span class="k">"max_drawdown"</span>:     <span class="r">"-12.3%"</span>,
-  <span class="k">"win_rate"</span>:         <span class="n">0.61</span>,
-  <span class="k">"calmar_ratio"</span>:     <span class="n">2.31</span>
-},
-
-<span class="k">"vs_benchmark"</span>: {
-  <span class="k">"strategy"</span>:  <span class="g">"+187.4%"</span>,
-  <span class="k">"spy"</span>:       <span class="n">"+74.2%"</span>,
-  <span class="k">"community_p75"</span>: <span class="n">"+89.1%"</span>  <span class="c">// you beat it</span>
-}</pre>
+      <div class="surf-card rv" data-d="1">
+        <div class="surf-ico"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></div>
+        <h3>Create</h3>
+        <p>Build strategies and quantitative workflows with AI assistance and community input. From hypothesis to implementation in one place.</p>
+        <span class="surf-pill">Build</span>
       </div>
-    </div>
-
-    <!-- NETWORK TAB -->
-    <div class="wg-panel" id="tab-network">
-      <div class="wg-info rv">
-        <h3>Find the collaborator who fills your blind spot.</h3>
-        <p>Search the community by skill, strategy style, or market focus. Message directly. Co-publish research. Build together without the friction of general-purpose platforms.</p>
-        <ul class="wg-bullets">
-          <li><strong>Skill-graph search</strong> — filter by: ML, systematic, options, macro, HFT, DeFi</li>
-          <li><strong>Co-authorship</strong> — publish joint research, credit attributed on-chain</li>
-          <li><strong>Opportunity feed</strong> — firms post roles, researchers post collaborations</li>
-        </ul>
-      </div>
-      <div class="wg-output rv" data-d="1">
-        <div class="wg-output-bar">
-          <span class="dot" style="background:#FF5F57"></span>
-          <span class="dot" style="background:#FFBD2E"></span>
-          <span class="dot" style="background:#28C840"></span>
-          <span class="label">reach · search results</span>
-          <span class="tag"><span style="width:5px;height:5px;border-radius:50%;background:var(--green);display:inline-block"></span>&nbsp;12 matches</span>
-        </div>
-        <pre><span class="c">// Query: ML engineer · systematic equity · open to collab</span>
-
-<span class="k">"results"</span>: [
-  {
-    <span class="k">"handle"</span>:  <span class="s">"@alex_chen"</span>,
-    <span class="k">"focus"</span>:   <span class="s">"factor models · ML · equities"</span>,
-    <span class="k">"papers"</span>:  <span class="n">4</span>,
-    <span class="k">"status"</span>:  <span class="g">"open to collab"</span>
-  },
-  {
-    <span class="k">"handle"</span>:  <span class="s">"@priya_r"</span>,
-    <span class="k">"focus"</span>:   <span class="s">"NLP · earnings · alt data"</span>,
-    <span class="k">"papers"</span>:  <span class="n">7</span>,
-    <span class="k">"status"</span>:  <span class="g">"open to collab"</span>
-  }
-]</pre>
+      <div class="surf-card rv" data-d="2">
+        <div class="surf-ico"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+        <h3>Backtest</h3>
+        <p>Validate ideas with historical performance data. Share results with the community. Compare against anonymized member benchmarks.</p>
+        <span class="surf-pill">Validate</span>
       </div>
     </div>
   </div>
 </section>
 
-<!-- API SECTION -->
-<section class="api-sec" id="api">
+<!-- ALPHA TOOLKIT -->
+<section class="alpha" id="alpha">
   <div class="wrap">
     <div class="sh rv">
+      <span class="eyebrow"><span class="pip" style="background:var(--accent)"></span>Alpha Toolkit</span>
+      <h2>AI-powered signal intelligence,<br>built into the community.</h2>
+      <p>Beyond the network — QuantHQ embeds a factor research engine and backtesting suite directly into the platform. Community-sourced data makes every signal sharper.</p>
+    </div>
+
+    <div class="alpha-layout rv" data-d="1">
+      <div class="alpha-intro">
+        <h3>What the toolkit gives you</h3>
+        <p>Every community member gets access to the Alpha Toolkit — no separate subscription, no separate login. It's the analytical layer built underneath the social one.</p>
+        <div class="alpha-features">
+          <div class="af">
+            <div class="af-ico"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9.663 17h4.673M12 3v1m6.364 1.636-.707.707M21 12h-1M4 12H3m3.343-5.657-.707-.707m2.828 9.9a5 5 0 1 1 7.072 0l-.548.547A3.374 3.374 0 0 0 14 18.469V19a2 2 0 1 1-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg></div>
+            <div class="af-text">
+              <h4>AI Factor Research</h4>
+              <p>Ask plain-English questions. Get factor breakdowns with full source attribution across 8,000+ instruments.</p>
+            </div>
+          </div>
+          <div class="af">
+            <div class="af-ico"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+            <div class="af-text">
+              <h4>Signal Generation</h4>
+              <p>Live directional signals with confidence scores, expected alpha, and Sharpe — refreshed continuously.</p>
+            </div>
+          </div>
+          <div class="af">
+            <div class="af-ico"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg></div>
+            <div class="af-text">
+              <h4>Collaborative Backtesting</h4>
+              <p>Walk-forward validation with realistic costs. Share tearsheets to the community feed with one click.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SIGNAL PANEL -->
+      <div class="panel">
+        <div class="panel-bar">
+          <span class="panel-dot" style="background:#FF5F57"></span>
+          <span class="panel-dot" style="background:#FFBD2E"></span>
+          <span class="panel-dot" style="background:#28C840"></span>
+          <span class="panel-title">alpha-toolkit / signal-feed</span>
+          <span class="panel-live"><span class="blink"></span>LIVE</span>
+        </div>
+        <div class="panel-col-heads">
+          <span class="pch ticker">TICKER</span>
+          <span class="pch dir">DIR</span>
+          <span class="pch" style="flex:1">CONFIDENCE</span>
+          <span class="pch conf">CONF</span>
+          <span class="pch alpha">α 5D</span>
+        </div>
+        <div class="signal-list" id="siglist"></div>
+        <div class="panel-footer">
+          <span class="pf-l">143 signals today · 38 factors</span>
+          <span class="pf-r">View full feed →</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- API -->
+    <div class="sh rv" style="margin-top:72px;margin-bottom:36px">
       <span class="eyebrow"><span class="pip" style="background:var(--accent)"></span>The API</span>
       <h2>What you get in one call.</h2>
-      <p>Full factor attribution, directional signal, confidence score, and expected alpha — structured and ready to plug into your own stack.</p>
+      <p>Full factor attribution, directional signal, confidence score, and expected alpha — structured JSON ready for your own stack.</p>
     </div>
-    <div class="api-grid">
-      <div class="rv">
+    <div class="api-grid rv" data-d="1">
+      <div>
         <div class="api-endpoint">
           <div class="api-ep-bar">
             <span class="method">GET</span>
             <span class="ep-url">/v1/signals<span class="ep-accent">?ticker=AAPL&lookback=30d</span></span>
           </div>
           <div class="api-params">
-            <div class="param-row">
-              <span class="param-name">ticker</span>
-              <span class="param-type">string</span>
-              <span class="param-desc" style="color:rgba(255,255,255,.5)">e.g. AAPL, BTC, SPY</span>
-            </div>
-            <div class="param-row">
-              <span class="param-name">lookback</span>
-              <span class="param-type">string</span>
-              <span class="param-desc" style="color:rgba(255,255,255,.5)">7d · 30d · 90d · 1y</span>
-            </div>
-            <div class="param-row">
-              <span class="param-name">factors</span>
-              <span class="param-type">array?</span>
-              <span class="param-desc" style="color:rgba(255,255,255,.5)">filter factor set</span>
-            </div>
-            <div class="param-row">
-              <span class="param-name">confidence_min</span>
-              <span class="param-type">float?</span>
-              <span class="param-desc" style="color:rgba(255,255,255,.5)">0.0 – 1.0 threshold</span>
-            </div>
+            <div class="param-row"><span class="param-name">ticker</span><span class="param-type">string</span><span class="param-desc" style="color:rgba(255,255,255,.5)">e.g. AAPL, BTC, SPY</span></div>
+            <div class="param-row"><span class="param-name">lookback</span><span class="param-type">string</span><span class="param-desc" style="color:rgba(255,255,255,.5)">7d · 30d · 90d · 1y</span></div>
+            <div class="param-row"><span class="param-name">factors</span><span class="param-type">array?</span><span class="param-desc" style="color:rgba(255,255,255,.5)">filter factor set</span></div>
+            <div class="param-row"><span class="param-name">confidence_min</span><span class="param-type">float?</span><span class="param-desc" style="color:rgba(255,255,255,.5)">0.0 – 1.0 threshold</span></div>
           </div>
         </div>
-        <div class="api-note rv" data-d="1">
-          <p><strong>Early community members</strong> get API access included — no pricing tier, no credit card. Shape what the schema looks like before v1 ships.</p>
+        <div class="api-note" style="margin-top:20px">
+          <p><strong>Community members get API access included</strong> — no separate tier, no credit card. Shape the schema before v1 ships.</p>
         </div>
       </div>
-      <div class="api-response rv" data-d="1">
+      <div class="api-response">
         <div class="api-res-bar">
           <span class="status">200 OK</span>
           <span class="ms">187ms · application/json</span>
@@ -669,19 +701,15 @@ footer{background:var(--navy);color:#fff;padding:56px 0 32px}
   <span style="color:#79B8FF">"ticker"</span>:      <span style="color:#9ECBFF">"AAPL"</span>,
   <span style="color:#79B8FF">"direction"</span>:   <span style="color:var(--green)">"long"</span>,
   <span style="color:#79B8FF">"confidence"</span>:  <span style="color:#B5CEA8">0.87</span>,
-
   <span style="color:#79B8FF">"factors"</span>: {
-    <span style="color:#79B8FF">"momentum_3m"</span>:         <span style="color:#B5CEA8">+0.72</span>,
-    <span style="color:#79B8FF">"earnings_revision"</span>:   <span style="color:#B5CEA8">+0.91</span>,
+    <span style="color:#79B8FF">"momentum_3m"</span>:        <span style="color:#B5CEA8">+0.72</span>,
+    <span style="color:#79B8FF">"earnings_revision"</span>:  <span style="color:#B5CEA8">+0.91</span>,
     <span style="color:#79B8FF">"short_interest_delta"</span>:<span style="color:#B5CEA8">-0.43</span>,
-    <span style="color:#79B8FF">"quality_score"</span>:       <span style="color:#B5CEA8">+0.68</span>
+    <span style="color:#79B8FF">"quality_score"</span>:      <span style="color:#B5CEA8">+0.68</span>
   },
-
   <span style="color:#79B8FF">"expected_alpha_5d"</span>:  <span style="color:var(--green)">"+2.4%"</span>,
   <span style="color:#79B8FF">"backtest_sharpe_1y"</span>: <span style="color:#B5CEA8">1.74</span>,
-
-  <span style="color:#79B8FF">"community_rank"</span>:  <span style="color:#B5CEA8">12</span>,  <span style="color:rgba(255,255,255,.3)">// out of 143 signals today</span>
-  <span style="color:#79B8FF">"generated_at"</span>:    <span style="color:#9ECBFF">"2026-06-22T09:31:00Z"</span>
+  <span style="color:#79B8FF">"community_rank"</span>:     <span style="color:#B5CEA8">12</span>  <span style="color:rgba(255,255,255,.3)">// of 143 today</span>
 }</pre>
       </div>
     </div>
@@ -693,26 +721,26 @@ footer{background:var(--navy);color:#fff;padding:56px 0 32px}
   <div class="wrap">
     <div class="sh rv">
       <span class="eyebrow" style="color:var(--blue)"><span class="pip" style="background:var(--blue)"></span>How It Works</span>
-      <h2>Idea to verified alpha in three steps.</h2>
+      <h2>Join → research → build → share.</h2>
     </div>
     <div class="how-steps rv" data-d="1">
       <div class="step">
-        <div class="step-ico"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9.663 17h4.673M12 3v1m6.364 1.636-.707.707M21 12h-1M4 12H3m3.343-5.657-.707-.707m2.828 9.9a5 5 0 1 1 7.072 0l-.548.547A3.374 3.374 0 0 0 14 18.469V19a2 2 0 1 1-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg></div>
-        <div class="step-n">01</div>
-        <h3>Research a hypothesis</h3>
-        <p>Ask the AI analyst a plain-English question about any factor, sector, or macro trend. Get a structured breakdown with source attribution.</p>
-      </div>
-      <div class="step">
-        <div class="step-ico"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
-        <div class="step-n">02</div>
-        <h3>Backtest the signal</h3>
-        <p>Convert your research into a testable strategy in one click. Walk-forward validation, realistic costs, and community benchmark comparison built in.</p>
-      </div>
-      <div class="step">
         <div class="step-ico"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+        <div class="step-n">01</div>
+        <h3>Join the community</h3>
+        <p>Create a profile, share your focus — systematic, macro, crypto, HFT — and connect with members who work in the same space.</p>
+      </div>
+      <div class="step">
+        <div class="step-ico"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9.663 17h4.673M12 3v1m6.364 1.636-.707.707M21 12h-1M4 12H3m3.343-5.657-.707-.707m2.828 9.9a5 5 0 1 1 7.072 0l-.548.547A3.374 3.374 0 0 0 14 18.469V19a2 2 0 1 1-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg></div>
+        <div class="step-n">02</div>
+        <h3>Research with AI</h3>
+        <p>Use the Alpha Toolkit to surface factor signals, run backtests, and get structured outputs — all within the same platform as your community.</p>
+      </div>
+      <div class="step">
+        <div class="step-ico"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg></div>
         <div class="step-n">03</div>
-        <h3>Share or deploy</h3>
-        <p>Publish to the community feed, find a co-author, or export structured JSON for your own execution stack. Your alpha, your call.</p>
+        <h3>Share &amp; collaborate</h3>
+        <p>Publish research to the feed, find co-authors, propose collaborations, or just discuss your findings. The community stress-tests every idea.</p>
       </div>
     </div>
   </div>
@@ -722,56 +750,25 @@ footer{background:var(--navy);color:#fff;padding:56px 0 32px}
 <section class="sec trust">
   <div class="wrap">
     <div class="sh rv">
-      <span class="eyebrow" style="color:var(--blue)"><span class="pip" style="background:var(--blue)"></span>Why It Works</span>
-      <h2>Community-sourced signals outperform solo research.</h2>
-      <p>When researchers collaborate, factors get stress-tested. Blind spots collapse. Alpha compounds.</p>
+      <span class="eyebrow" style="color:var(--blue)"><span class="pip" style="background:var(--blue)"></span>Why Community Wins</span>
+      <h2>Collaborative research outperforms solo work.</h2>
+      <p>When a community stress-tests your factors, blind spots collapse and alpha compounds.</p>
     </div>
     <div class="trust-grid">
       <div class="trust-card rv">
-        <div class="trust-n">1.84<span>x</span></div>
+        <div class="trust-n">1.84<span>×</span></div>
         <div class="trust-label">Average Sharpe — top community strategies</div>
-        <div class="trust-sub">Measured across 30+ backtested factor portfolios published by members. Community baseline is 0.9×.</div>
+        <div class="trust-sub">Across 30+ backtested factor portfolios published by members. Solo baseline is 0.9×.</div>
       </div>
       <div class="trust-card rv" data-d="1">
         <div class="trust-n">38</div>
-        <div class="trust-label">Distinct alpha factors tracked</div>
-        <div class="trust-sub">Momentum, quality, value, sentiment, alt-data, and macro — community-curated and refreshed daily.</div>
+        <div class="trust-label">Alpha factors tracked</div>
+        <div class="trust-sub">Momentum, quality, value, sentiment, alt-data, macro — community-curated and refreshed daily.</div>
       </div>
       <div class="trust-card rv" data-d="2">
         <div class="trust-n">&lt;200<span>ms</span></div>
-        <div class="trust-label">Median signal generation latency</div>
-        <div class="trust-sub">Full factor attribution, confidence scoring, and expected alpha in under a standard HTTP timeout.</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- USE CASES -->
-<section class="uc" id="usecases">
-  <div class="wrap">
-    <div class="sh rv">
-      <span class="eyebrow"><span class="pip" style="background:var(--accent)"></span>Use Cases</span>
-      <h2>Real workflows. Real quant problems.</h2>
-      <p>QuantHQ is not a generic AI wrapper. These are the specific workflows our community runs today.</p>
-    </div>
-    <div class="uc-grid rv" data-d="1">
-      <div class="uc-card">
-        <div class="uc-num">01</div>
-        <h3>Factor decomposition on earnings surprises</h3>
-        <p>Run an NLP pass over earnings call transcripts, extract sentiment factors, and correlate against 3-day post-earnings returns. Community benchmark included.</p>
-        <span class="uc-tag"><span class="pip" style="background:var(--accent)"></span>Research + Backtest</span>
-      </div>
-      <div class="uc-card">
-        <div class="uc-num">02</div>
-        <h3>Cross-sectional momentum with quality filter</h3>
-        <p>Screen for top decile momentum stocks, filter by quality score (ROE, debt/equity, accruals), backtest with monthly rebalancing. Export tearsheet PDF.</p>
-        <span class="uc-tag"><span class="pip" style="background:var(--accent)"></span>Backtest + Export</span>
-      </div>
-      <div class="uc-card">
-        <div class="uc-num">03</div>
-        <h3>Finding a co-author for a macro regime paper</h3>
-        <p>Search for researchers with macro + ML overlap, review their published signals, propose co-authorship on a regime-detection strategy using yield curve inputs.</p>
-        <span class="uc-tag"><span class="pip" style="background:var(--accent)"></span>Network + Research</span>
+        <div class="trust-label">Signal generation latency</div>
+        <div class="trust-sub">Full factor attribution, confidence scoring, and expected alpha in one API call.</div>
       </div>
     </div>
   </div>
@@ -783,45 +780,15 @@ footer{background:var(--navy);color:#fff;padding:56px 0 32px}
     <div class="sh rv">
       <span class="eyebrow"><span class="pip" style="background:var(--blue)"></span>Roadmap</span>
       <h2>Building in public.</h2>
-      <p>Every phase ships to the community first. Early members shape what gets built.</p>
+      <p>Every phase ships to the community first. Early members shape what gets built next.</p>
     </div>
     <div class="road-grid">
-      <div class="road-phase rv">
-        <div class="rp-n">Phase 1</div>
-        <div class="rp-h">AI Analyst</div>
-        <div class="rp-d">Factor research, signal generation, source attribution.</div>
-        <span class="rp-badge now"><span style="width:5px;height:5px;border-radius:50%;background:var(--green);display:inline-block"></span>&nbsp;Now</span>
-      </div>
-      <div class="road-phase rv" data-d="1">
-        <div class="rp-n">Phase 2</div>
-        <div class="rp-h">Alpha Engine</div>
-        <div class="rp-d">Cross-sectional signal scanning across 8,000+ instruments.</div>
-        <span class="rp-badge next">Next</span>
-      </div>
-      <div class="road-phase rv" data-d="2">
-        <div class="rp-n">Phase 3</div>
-        <div class="rp-h">Strategy Builder</div>
-        <div class="rp-d">Drag-and-drop factor combination with AI co-pilot.</div>
-        <span class="rp-badge later">Planned</span>
-      </div>
-      <div class="road-phase rv" data-d="1">
-        <div class="rp-n">Phase 4</div>
-        <div class="rp-h">Portfolio Simulation</div>
-        <div class="rp-d">Full portfolio construction with risk attribution and stress testing.</div>
-        <span class="rp-badge later">Planned</span>
-      </div>
-      <div class="road-phase rv" data-d="2">
-        <div class="rp-n">Phase 5</div>
-        <div class="rp-h">Quant Social Graph</div>
-        <div class="rp-d">Professional network with co-authorship and reputation scoring.</div>
-        <span class="rp-badge later">Planned</span>
-      </div>
-      <div class="road-phase rv" data-d="3">
-        <div class="rp-n">Phase 6</div>
-        <div class="rp-h">Full Quant OS</div>
-        <div class="rp-d">End-to-end platform from idea to live signal deployment.</div>
-        <span class="rp-badge later">Planned</span>
-      </div>
+      <div class="road-phase rv"><div class="rp-n">Phase 1</div><div class="rp-h">Community &amp; Feed</div><div class="rp-d">Core social layer — Feed, Chat, Reach, and Research publishing.</div><span class="rp-badge now"><span style="width:5px;height:5px;border-radius:50%;background:var(--green);display:inline-block"></span>&nbsp;Now</span></div>
+      <div class="road-phase rv" data-d="1"><div class="rp-n">Phase 2</div><div class="rp-h">AI Analyst</div><div class="rp-d">Factor research, signal generation, and source attribution for all members.</div><span class="rp-badge next">Next</span></div>
+      <div class="road-phase rv" data-d="2"><div class="rp-n">Phase 3</div><div class="rp-h">Alpha Engine</div><div class="rp-d">Cross-sectional signal scanning across 8,000+ instruments.</div><span class="rp-badge later">Planned</span></div>
+      <div class="road-phase rv" data-d="1"><div class="rp-n">Phase 4</div><div class="rp-h">Strategy Builder</div><div class="rp-d">AI-assisted factor combination and strategy construction in the browser.</div><span class="rp-badge later">Planned</span></div>
+      <div class="road-phase rv" data-d="2"><div class="rp-n">Phase 5</div><div class="rp-h">Portfolio Simulation</div><div class="rp-d">Full portfolio construction with risk attribution and stress testing.</div><span class="rp-badge later">Planned</span></div>
+      <div class="road-phase rv" data-d="3"><div class="rp-n">Phase 6</div><div class="rp-h">Full Quant OS</div><div class="rp-d">End-to-end platform: idea → research → backtest → deploy, all in one place.</div><span class="rp-badge later">Planned</span></div>
     </div>
   </div>
 </section>
@@ -831,8 +798,8 @@ footer{background:var(--navy);color:#fff;padding:56px 0 32px}
   <div class="fcta-bg"></div>
   <div class="wrap fcta-inner rv">
     <span class="eyebrow"><span class="pip" style="background:var(--accent-2)"></span>Free Early Access</span>
-    <h2>Join before the platform ships.</h2>
-    <p>Shape the product. Build your quant network. Get API access on day one.</p>
+    <h2>Join before we launch.</h2>
+    <p>Shape the community. Build your quant network. Get Alpha Toolkit access from day one.</p>
     <div class="fcta-btns">
       <a href="#" class="btn bp">
         <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;stroke:var(--blue-d)"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
@@ -849,31 +816,28 @@ footer{background:var(--navy);color:#fff;padding:56px 0 32px}
     <div class="fi">
       <div class="fb">
         <a href="#" class="logo">
-      <svg width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-        <!-- square outline, open at bottom-right corner -->
-        <path d="M28 4H6C4.895 4 4 4.895 4 6V28C4 28 4 30 6 30H24" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
-        <path d="M30 6V24" stroke="white" stroke-width="2.2" stroke-linecap="round"/>
-        <!-- HQ text -->
-        <text x="9" y="22" font-family="Inter,system-ui,sans-serif" font-weight="700" font-size="11" fill="white" letter-spacing="-0.5">HQ</text>
-        <!-- accent square -->
-        <rect x="25" y="25" width="7" height="7" rx="1.5" fill="#7BB8FF"/>
-      </svg>
-      <span class="logo-wordmark">Quant<strong>HQ</strong></span>
-    </a>
-        <p>The quant operating system built for the AI era.</p>
+          <svg width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path d="M28 4H6C4.895 4 4 4.895 4 6V28C4 28 4 30 6 30H24" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M30 6V24" stroke="white" stroke-width="2.2" stroke-linecap="round"/>
+            <text x="9" y="22" font-family="Inter,system-ui,sans-serif" font-weight="700" font-size="11" fill="white" letter-spacing="-0.5">HQ</text>
+            <rect x="25" y="25" width="7" height="7" rx="1.5" fill="#7BB8FF"/>
+          </svg>
+          <span class="logo-wordmark">Quant<strong>HQ</strong></span>
+        </a>
+        <p>The professional home for quantitative finance.</p>
       </div>
       <div class="flc">
-        <h4>Platform</h4>
-        <a href="#">Research AI</a>
-        <a href="#">Backtest</a>
+        <h4>Community</h4>
+        <a href="#">Feed</a>
+        <a href="#">Reach</a>
+        <a href="#">Chat</a>
+        <a href="#">Research</a>
+      </div>
+      <div class="flc">
+        <h4>Alpha Toolkit</h4>
         <a href="#">Signal Feed</a>
-        <a href="#">Network</a>
-      </div>
-      <div class="flc">
-        <h4>Developers</h4>
+        <a href="#">Backtest</a>
         <a href="#">API Docs</a>
-        <a href="#">GitHub</a>
-        <a href="#">Schema Reference</a>
       </div>
       <div class="flc">
         <h4>Company</h4>
@@ -884,7 +848,7 @@ footer{background:var(--navy);color:#fff;padding:56px 0 32px}
     </div>
     <div class="fbot">
       <p>QuantHQ © 2026</p>
-      <p>From signal to alpha.</p>
+      <p>Where quant minds build together.</p>
     </div>
   </div>
 </footer>
@@ -913,17 +877,35 @@ function animCount(el,target,suffix){
 const cio=new IntersectionObserver(es=>es.forEach(e=>{if(!e.isIntersecting)return;animCount(e.target,+e.target.dataset.count,e.target.dataset.suffix);cio.unobserve(e.target)}),{threshold:.5});
 document.querySelectorAll('[data-count]').forEach(el=>cio.observe(el));
 
-/* ── Tabs ── */
-document.querySelectorAll('.wg-tab').forEach(tab=>{
-  tab.addEventListener('click',()=>{
-    document.querySelectorAll('.wg-tab').forEach(t=>t.classList.remove('active'));
-    document.querySelectorAll('.wg-panel').forEach(p=>p.classList.remove('active'));
-    tab.classList.add('active');
-    const panel=document.getElementById('tab-'+tab.dataset.tab);
-    if(panel)panel.classList.add('active');
-    panel.querySelectorAll('.rv').forEach(el=>el.classList.add('in'));
-  });
-});
+/* ── Community feed panel ── */
+const POSTS=[
+  {initials:'AC',color:'#3B82F6',name:'Alex Chen',role:'Researcher',type:'research',typeClass:'research',
+   text:'New paper: <strong>Earnings revision momentum decays faster post-2023</strong> — factor still valid but needs 5d hold, not 10d.',likes:47,comments:12},
+  {initials:'PR',color:'#8B5CF6',name:'Priya R.',role:'Data Scientist',type:'backtest',typeClass:'backtest',
+   text:'Backtested NLP earnings sentiment vs. 3d returns across S&P 500. Sharpe 1.72 OOS. Sharing tearsheet in Research tab.',likes:31,comments:8},
+  {initials:'MT',color:'#10B981',name:'Mike T.',role:'Trader',type:'signal',typeClass:'signal',
+   text:'<strong>NVDA momentum signal</strong> fired again this morning — third consecutive week. Conf: 91%. Anyone watching the same setup?',likes:28,comments:15},
+  {initials:'SL',color:'#F59E0B',name:'Sarah L.',role:'Quant Dev',type:'discuss',typeClass:'discuss',
+   text:'Looking for co-author on a macro regime paper (yield curve + credit spreads → equity factor rotation). DM if interested.',likes:19,comments:6},
+];
+function renderFeed(){
+  document.getElementById('feedposts').innerHTML=POSTS.map(p=>`
+    <div class="fp-post">
+      <div class="fp-meta">
+        <div class="fp-avatar" style="background:${p.color}">${p.initials}</div>
+        <span class="fp-name">${p.name}</span>
+        <span class="fp-role">· ${p.role}</span>
+        <span class="fp-type ${p.typeClass}">${p.type}</span>
+      </div>
+      <div class="fp-text">${p.text}</div>
+      <div class="fp-actions">
+        <span class="fp-act">♡ ${p.likes}</span>
+        <span class="fp-act">💬 ${p.comments}</span>
+        <span class="fp-act">↗ share</span>
+      </div>
+    </div>`).join('');
+}
+renderFeed();
 
 /* ── Signal panel ── */
 const SIGS=[
@@ -937,6 +919,7 @@ const SIGS=[
 ];
 function renderSigs(){
   const list=document.getElementById('siglist');
+  if(!list)return;
   list.innerHTML=SIGS.map(s=>`
     <div class="sig-row">
       <span class="sig-ticker">${s.ticker}</span>
@@ -948,12 +931,10 @@ function renderSigs(){
   setTimeout(()=>list.querySelectorAll('.sig-bar').forEach(b=>b.style.width=b.dataset.w),80);
 }
 renderSigs();
-/* simulate live refresh */
 if(!matchMedia('(prefers-reduced-motion:reduce)').matches){
   setInterval(()=>{
     const row=SIGS[Math.floor(Math.random()*SIGS.length)];
-    const delta=(Math.random()-.45)*.04;
-    row.conf=Math.max(.4,Math.min(.98,row.conf+delta));
+    row.conf=Math.max(.4,Math.min(.98,row.conf+(Math.random()-.45)*.04));
     row.w=Math.round(row.conf*100);
     renderSigs();
   },3200);
