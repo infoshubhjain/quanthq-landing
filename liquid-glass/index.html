@@ -1,0 +1,1124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QuantHQ — AI Research & Signal Intelligence for Quant Finance</title>
+<meta name="description" content="QuantHQ gives quant researchers, traders, and developers AI-powered signal intelligence, collaborative backtesting, and a professional network — in one platform.">
+<meta property="og:title" content="QuantHQ — AI Research & Signal Intelligence">
+<meta property="og:description" content="From factor research to backtested alpha — QuantHQ is the quant operating system built for the AI era.">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ─── TOKENS ──────────────────────────────────────── */
+:root{
+  --blue:#0F3CC8;--blue-d:#0A2FA0;--blue-l:#2655E8;
+  --ink:#0A0F1E;--muted:#5C6882;--muted-2:#8892A8;
+  --line-d:rgba(10,15,30,.06);
+  --code-bg:#06080F;
+  --r:22px;--r-sm:14px;--r-lg:32px;
+  --ease:cubic-bezier(.22,1,.36,1);
+  /* ── Glass tokens ── */
+  --gl:rgba(255,255,255,.72);
+  --gl-b:rgba(255,255,255,.85);
+  --gl-hi:inset 0 1px 0 rgba(255,255,255,.92),inset 0 -1px 0 rgba(10,15,40,.04);
+  --gl-sh:0 4px 40px rgba(10,15,50,.09);
+  --gl-d:rgba(255,255,255,.07);
+  --gl-db:rgba(255,255,255,.13);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:72px}
+body{font-family:'Nunito','Inter',system-ui,sans-serif;color:var(--ink);background:#F0F4FF;-webkit-font-smoothing:antialiased;line-height:1.5;overflow-x:hidden}
+a{text-decoration:none;color:inherit}
+.wrap{max-width:1140px;margin:0 auto;padding:0 24px}
+
+/* ─── TYPE ────────────────────────────────────────── */
+.mono{font-family:'JetBrains Mono',monospace}
+.eyebrow{
+  font-family:'JetBrains Mono',monospace;font-size:11px;
+  letter-spacing:.14em;text-transform:uppercase;font-weight:500;
+  display:inline-flex;align-items:center;gap:7px;
+}
+.pip{width:5px;height:5px;border-radius:50%;background:currentColor}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+
+/* ─── REVEAL ──────────────────────────────────────── */
+.rv{opacity:0;transform:translateY(24px);transition:opacity .7s var(--ease),transform .7s var(--ease)}
+.rv.in{opacity:1;transform:none}
+.rv[data-d="1"]{transition-delay:.08s}.rv[data-d="2"]{transition-delay:.16s}
+.rv[data-d="3"]{transition-delay:.24s}.rv[data-d="4"]{transition-delay:.32s}
+
+/* ─── NAV ─────────────────────────────────────────── */
+nav{
+  position:fixed;top:12px;left:50%;transform:translateX(-50%);
+  width:calc(100% - 48px);max-width:1092px;
+  height:56px;z-index:200;border-radius:var(--r-lg);
+  display:flex;align-items:center;
+  background:var(--gl);
+  backdrop-filter:blur(28px) saturate(200%);
+  -webkit-backdrop-filter:blur(28px) saturate(200%);
+  border:1px solid var(--gl-b);
+  box-shadow:var(--gl-sh),var(--gl-hi);
+  transition:box-shadow .4s var(--ease),background .4s;
+}
+nav.sc{
+  background:rgba(255,255,255,.82);
+  box-shadow:0 8px 48px rgba(10,15,50,.14),var(--gl-hi);
+}
+.ni{padding:0 20px;width:100%;display:flex;align-items:center;gap:28px}
+.logo{display:flex;align-items:center;gap:9px;color:var(--ink);letter-spacing:-.01em;flex-shrink:0;font-size:0}
+.logo svg{flex-shrink:0}
+.logo svg rect:first-child,.logo svg path{stroke:var(--ink)!important}
+.logo svg text{fill:var(--ink)!important}
+.logo svg rect.accent{fill:var(--blue)!important}
+.logo-wordmark{font-size:16px;font-weight:400;letter-spacing:-.01em;font-family:'Nunito',system-ui,sans-serif;color:var(--ink)}
+.logo-wordmark strong{font-weight:900;color:var(--blue)}
+.nl{display:flex;gap:24px;align-items:center;margin-left:auto}
+.nl a{color:var(--muted);font-size:13.5px;font-weight:600;transition:color .2s}
+.nl a:hover{color:var(--ink)}
+.nc{
+  background:var(--blue);color:#fff;padding:8px 18px;border-radius:100px;
+  font-size:13px;font-weight:700;border:none;cursor:pointer;flex-shrink:0;
+  box-shadow:0 2px 12px rgba(15,60,200,.35);
+  transition:all .25s var(--ease);
+}
+.nc:hover{background:var(--blue-l);transform:translateY(-1px);box-shadow:0 4px 20px rgba(15,60,200,.45)}
+.ham{display:none;flex-direction:column;gap:4px;cursor:pointer;padding:4px;background:none;border:none}
+.ham span{width:18px;height:1.5px;background:var(--ink);display:block;border-radius:2px;transition:transform .3s,opacity .3s}
+.ham.o span:nth-child(1){transform:translateY(5.5px) rotate(45deg)}
+.ham.o span:nth-child(2){opacity:0}
+.ham.o span:nth-child(3){transform:translateY(-5.5px) rotate(-45deg)}
+.mm{
+  display:none;position:fixed;top:80px;left:16px;right:16px;
+  background:var(--gl);backdrop-filter:blur(28px) saturate(200%);
+  -webkit-backdrop-filter:blur(28px) saturate(200%);
+  border:1px solid var(--gl-b);border-radius:var(--r);
+  box-shadow:var(--gl-sh),var(--gl-hi);
+  padding:16px 20px 20px;flex-direction:column;gap:2px;z-index:199;
+}
+.mm.o{display:flex}
+.mm a{color:var(--muted);font-size:15px;font-weight:600;padding:11px 0;border-bottom:1px solid var(--line-d);transition:color .2s}
+.mm a:last-child{border:none;margin-top:6px;color:var(--blue);font-weight:700}
+
+/* ─── HERO ────────────────────────────────────────── */
+.hero{
+  min-height:100svh;display:flex;align-items:center;
+  background:#EEF2FF;overflow:hidden;padding:110px 0 80px;position:relative;
+}
+/* Color orbs */
+.hbg{
+  position:absolute;inset:0;pointer-events:none;
+  background:
+    radial-gradient(ellipse 55% 55% at 75% 10%,rgba(15,60,200,.18) 0%,transparent 65%),
+    radial-gradient(ellipse 40% 40% at 10% 80%,rgba(80,60,220,.1) 0%,transparent 60%),
+    radial-gradient(ellipse 30% 30% at 85% 75%,rgba(15,100,240,.08) 0%,transparent 55%),
+    #EEF2FF;
+}
+/* Subtle dot grid */
+.hgrid{
+  position:absolute;inset:0;pointer-events:none;
+  background-image:radial-gradient(circle,rgba(15,60,200,.12) 1px,transparent 1px);
+  background-size:32px 32px;
+  mask-image:radial-gradient(ellipse 80% 80% at 50% 50%,#000 20%,transparent 80%);
+}
+canvas#cn{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;opacity:.5}
+.hero-inner{position:relative;z-index:2;display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center}
+.hero-copy .eyebrow{
+  color:var(--blue);margin-bottom:24px;
+  background:rgba(15,60,200,.08);border:1px solid rgba(15,60,200,.15);
+  padding:5px 14px;border-radius:100px;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.7);
+}
+.hero-copy h1{
+  font-size:clamp(34px,4.8vw,60px);font-weight:900;line-height:1.05;
+  letter-spacing:-.03em;color:var(--ink);margin-bottom:20px;
+  font-family:'Nunito',system-ui,sans-serif;
+}
+.hero-copy .sub{font-size:clamp(15px,1.6vw,18px);color:var(--muted);line-height:1.7;margin-bottom:36px;max-width:440px}
+.hero-cta{display:flex;gap:12px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:13px 24px;border-radius:100px;font-size:14px;font-weight:700;cursor:pointer;border:none;transition:all .3s var(--ease)}
+.bp{
+  background:var(--blue);color:#fff;
+  box-shadow:0 4px 20px rgba(15,60,200,.4),inset 0 1px 0 rgba(255,255,255,.2);
+}
+.bp:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(15,60,200,.5),inset 0 1px 0 rgba(255,255,255,.2)}
+.bp svg{width:14px;height:14px;stroke:#fff}
+.bs{
+  background:var(--gl);color:var(--ink);
+  border:1px solid var(--gl-b);
+  box-shadow:var(--gl-sh),var(--gl-hi);
+  backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);
+}
+.bs:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(10,15,50,.12),var(--gl-hi)}
+.hero-meta{display:flex;gap:20px;margin-top:32px;flex-wrap:wrap}
+.hero-meta .m{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted-2);display:flex;align-items:center;gap:6px}
+.hero-meta .m .dot{width:5px;height:5px;border-radius:50%;background:var(--blue);opacity:.5}
+
+/* ─── GLASS PANELS (feed + signal) ───────────────── */
+.feed-panel,.panel{
+  background:var(--gl);
+  backdrop-filter:blur(32px) saturate(220%);
+  -webkit-backdrop-filter:blur(32px) saturate(220%);
+  border:1px solid var(--gl-b);
+  border-radius:var(--r);
+  box-shadow:var(--gl-sh),var(--gl-hi);
+  overflow:hidden;
+  animation:float 6s ease-in-out infinite;
+}
+.panel-bar,.fp-bar{
+  display:flex;align-items:center;gap:8px;padding:12px 16px;
+  border-bottom:1px solid var(--line-d);
+  background:rgba(255,255,255,.4);
+}
+.panel-dot,.fp-dot{width:9px;height:9px;border-radius:50%}
+.panel-title,.fp-title{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted-2);letter-spacing:.06em;margin-left:4px}
+.panel-live,.fp-live{margin-left:auto;display:flex;align-items:center;gap:5px;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted-2);letter-spacing:.08em}
+.panel-live .blink,.fp-live .blink{width:5px;height:5px;border-radius:50%;background:var(--blue);animation:blink 1.4s ease-in-out infinite}
+.signal-list{padding:10px 0}
+.sig-row{display:flex;align-items:center;gap:10px;padding:8px 16px;border-radius:8px;margin:0 6px;transition:background .2s;cursor:default}
+.sig-row:hover{background:rgba(15,60,200,.05)}
+.sig-ticker{font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700;color:var(--ink);width:52px;flex-shrink:0}
+.sig-dir{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;padding:2px 7px;border-radius:6px;letter-spacing:.06em;flex-shrink:0;width:40px;text-align:center}
+.sig-dir.long{background:rgba(15,60,200,.1);color:var(--blue)}
+.sig-dir.short{background:rgba(10,15,30,.07);color:var(--muted)}
+.sig-dir.hold{background:rgba(10,15,30,.05);color:var(--muted-2)}
+.sig-bar-wrap{flex:1;height:3px;background:rgba(10,15,30,.07);border-radius:2px;overflow:hidden}
+.sig-bar{height:100%;border-radius:2px;transition:width 1.2s var(--ease)}
+.sig-bar.long{background:var(--blue)}
+.sig-bar.short,.sig-bar.hold{background:rgba(10,15,30,.2)}
+.sig-conf{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted-2);width:34px;text-align:right;flex-shrink:0}
+.sig-alpha{font-family:'JetBrains Mono',monospace;font-size:11px;width:48px;text-align:right;flex-shrink:0;font-weight:700}
+.sig-alpha.pos{color:var(--blue)}
+.sig-alpha.neg{color:var(--muted)}
+.panel-footer,.fp-footer{border-top:1px solid var(--line-d);padding:10px 16px;display:flex;justify-content:space-between;align-items:center;background:rgba(255,255,255,.3)}
+.panel-footer .pf-l,.fp-footer span{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted-2);letter-spacing:.06em}
+.panel-footer .pf-r,.fp-footer a{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--blue)}
+.panel-col-heads{display:flex;align-items:center;gap:10px;padding:4px 16px 6px;border-bottom:1px solid var(--line-d)}
+.pch{font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.06em;color:var(--muted-2);text-transform:uppercase;opacity:.6}
+.pch.ticker{width:52px;flex-shrink:0}.pch.dir{width:40px;flex-shrink:0}
+.pch.conf{margin-left:auto;width:34px;text-align:right;flex-shrink:0}.pch.alpha{width:48px;text-align:right;flex-shrink:0}
+
+/* ─── FEED PANEL ──────────────────────────────────── */
+.fp-posts{padding:4px 0}
+.fp-post{padding:12px 15px;border-bottom:1px solid var(--line-d);transition:background .2s;cursor:default}
+.fp-post:last-child{border-bottom:none}
+.fp-post:hover{background:rgba(15,60,200,.04)}
+.fp-meta{display:flex;align-items:center;gap:8px;margin-bottom:7px}
+.fp-avatar{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;font-size:11px;font-weight:800;flex-shrink:0;color:#fff;background:var(--blue)}
+.fp-name{font-size:12.5px;font-weight:700;color:var(--ink)}
+.fp-role{font-size:11px;color:var(--muted-2);margin-left:2px}
+.fp-type{margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:9.5px;padding:2px 8px;border-radius:100px;letter-spacing:.05em;font-weight:600;background:rgba(15,60,200,.08);color:var(--blue);border:1px solid rgba(15,60,200,.12)}
+.fp-text{font-size:13px;color:var(--muted);line-height:1.55;margin-bottom:8px}
+.fp-text strong{color:var(--ink);font-weight:600}
+.fp-actions{display:flex;align-items:center;gap:14px}
+.fp-act{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted-2);letter-spacing:.04em;cursor:pointer;transition:color .2s}
+.fp-act:hover{color:var(--blue)}
+
+/* ─── PROOF BAR ───────────────────────────────────── */
+.proof-bar{
+  background:var(--gl);
+  backdrop-filter:blur(20px) saturate(180%);
+  -webkit-backdrop-filter:blur(20px) saturate(180%);
+  border-top:1px solid var(--gl-b);border-bottom:1px solid var(--line-d);padding:24px 0;
+  box-shadow:0 2px 20px rgba(10,15,50,.05);
+}
+.proof-inner{display:flex;align-items:center;justify-content:space-around;flex-wrap:wrap;gap:8px}
+.pstat{text-align:center;padding:6px 24px}
+.pstat .n{font-size:clamp(22px,3vw,32px);font-weight:900;letter-spacing:-.04em;color:var(--blue);line-height:1}
+.pstat .l{font-size:11px;color:var(--muted-2);margin-top:4px;letter-spacing:.04em;text-transform:uppercase;font-weight:600}
+.psep{width:1px;height:36px;background:var(--line-d)}
+
+/* ─── SECTION STRUCTURE ───────────────────────────── */
+section{position:relative}
+.sec{padding:120px 0;background:#F8FAFF}
+.sec-sm{padding:80px 0}
+.sh{margin-bottom:56px}
+.sh .eyebrow{margin-bottom:14px;color:var(--blue)}
+.sh h2{font-size:clamp(28px,3.8vw,46px);font-weight:900;letter-spacing:-.03em;line-height:1.06;margin-top:10px;font-family:'Nunito',system-ui,sans-serif;color:var(--ink)}
+.sh p{margin-top:16px;font-size:17px;color:var(--muted);line-height:1.7;max-width:520px}
+
+/* ─── COMMUNITY SURFACES ──────────────────────────── */
+.surfaces{background:#F8FAFF}
+.surf-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.surf-card{
+  background:var(--gl);
+  backdrop-filter:blur(20px) saturate(180%);
+  -webkit-backdrop-filter:blur(20px) saturate(180%);
+  border:1px solid var(--gl-b);border-radius:var(--r);
+  padding:32px 28px;position:relative;overflow:hidden;
+  box-shadow:var(--gl-sh),var(--gl-hi);
+  transform-style:preserve-3d;will-change:transform;
+  transition:box-shadow .3s var(--ease),border-color .3s;
+}
+.surf-card::before{
+  content:"";position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.9) 40%,rgba(255,255,255,.9) 60%,transparent);
+}
+.surf-ico{
+  width:44px;height:44px;border-radius:12px;
+  background:var(--gl);
+  display:grid;place-items:center;margin-bottom:20px;
+  border:1px solid var(--gl-b);
+  box-shadow:0 2px 8px rgba(10,15,50,.06),var(--gl-hi);
+  transition:background .3s,box-shadow .3s;
+}
+.surf-card:hover .surf-ico{background:var(--blue);border-color:var(--blue);box-shadow:0 4px 16px rgba(15,60,200,.4)}
+.surf-ico svg{width:20px;height:20px;stroke:var(--blue);transition:stroke .3s}
+.surf-card:hover .surf-ico svg{stroke:#fff}
+.surf-card h3{font-size:17px;font-weight:800;letter-spacing:-.02em;margin-bottom:8px;color:var(--ink)}
+.surf-card p{font-size:14px;color:var(--muted);line-height:1.6}
+.surf-pill{
+  margin-top:18px;display:inline-flex;align-items:center;gap:5px;
+  font-family:'JetBrains Mono',monospace;font-size:10px;
+  color:var(--blue);background:rgba(15,60,200,.07);
+  padding:4px 10px;border-radius:100px;border:1px solid rgba(15,60,200,.12);letter-spacing:.06em;
+}
+.surf-card.tilting{transition:box-shadow .08s linear,border-color .08s linear}
+
+/* ─── ALPHA TOOLKIT ───────────────────────────────── */
+.alpha{
+  background:linear-gradient(160deg,#0A0F2E 0%,#0F1A4A 50%,#0A0F2E 100%);
+  padding:120px 0;overflow:hidden;position:relative;
+}
+.alpha::before,.alpha::after{
+  content:"";position:absolute;border-radius:50%;pointer-events:none;
+}
+.alpha::before{
+  width:700px;height:700px;top:-200px;right:-150px;
+  background:radial-gradient(circle,rgba(15,60,200,.25) 0%,transparent 65%);
+  filter:blur(60px);
+}
+.alpha::after{
+  width:500px;height:500px;bottom:-100px;left:-100px;
+  background:radial-gradient(circle,rgba(40,20,200,.15) 0%,transparent 65%);
+  filter:blur(80px);
+}
+.alpha .sh h2{color:#fff}
+.alpha .sh p{color:rgba(255,255,255,.45)}
+.alpha .eyebrow{color:rgba(255,255,255,.5)}
+.alpha .sh .eyebrow{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);padding:5px 14px;border-radius:100px}
+.alpha-layout{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:start;margin-bottom:56px}
+.alpha-intro h3{font-size:clamp(18px,2.2vw,24px);font-weight:800;letter-spacing:-.025em;color:#fff;margin-bottom:14px;line-height:1.2;font-family:'Nunito',system-ui,sans-serif}
+.alpha-intro p{font-size:15px;color:rgba(255,255,255,.45);line-height:1.7;margin-bottom:24px}
+.alpha-features{display:flex;flex-direction:column;gap:12px}
+.af{
+  display:flex;align-items:flex-start;gap:14px;padding:16px;
+  background:var(--gl-d);border-radius:var(--r-sm);border:1px solid var(--gl-db);
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.08);
+  transition:background .25s,border-color .25s;
+}
+.af:hover{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.18)}
+.af-ico{width:34px;height:34px;border-radius:8px;background:rgba(15,60,200,.3);display:grid;place-items:center;flex-shrink:0;border:1px solid rgba(255,255,255,.1)}
+.af-ico svg{width:16px;height:16px;stroke:rgba(255,255,255,.85)}
+.af-text h4{font-size:14px;font-weight:700;color:rgba(255,255,255,.9);margin-bottom:4px}
+.af-text p{font-size:13px;color:rgba(255,255,255,.4);line-height:1.55}
+/* Signal panel inside alpha — dark glass */
+.alpha .panel{
+  background:rgba(255,255,255,.07);
+  border-color:rgba(255,255,255,.12);
+  box-shadow:0 20px 60px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.1);
+  animation:none;
+}
+.alpha .panel-bar{background:rgba(255,255,255,.05);border-bottom-color:rgba(255,255,255,.07)}
+.alpha .panel-title{color:rgba(255,255,255,.3)}
+.alpha .panel-footer{background:rgba(255,255,255,.04);border-top-color:rgba(255,255,255,.07)}
+.alpha .sig-ticker{color:#fff}
+.alpha .sig-dir.long{background:rgba(255,255,255,.1);color:rgba(255,255,255,.7)}
+.alpha .sig-dir.short,.alpha .sig-dir.hold{background:rgba(255,255,255,.05);color:rgba(255,255,255,.35)}
+.alpha .sig-bar-wrap{background:rgba(255,255,255,.08)}
+.alpha .sig-bar.long{background:rgba(255,255,255,.55)}
+.alpha .sig-bar.short,.alpha .sig-bar.hold{background:rgba(255,255,255,.2)}
+.alpha .sig-conf,.alpha .panel-footer .pf-l{color:rgba(255,255,255,.25)}
+.alpha .panel-footer .pf-r{color:rgba(255,255,255,.4)}
+.alpha .sig-alpha.pos{color:rgba(255,255,255,.8)}
+.alpha .sig-alpha.neg{color:rgba(255,255,255,.4)}
+.alpha .pch{color:rgba(255,255,255,.22)}
+.alpha .sig-row:hover{background:rgba(255,255,255,.04)}
+
+/* ─── API INSIDE ALPHA ────────────────────────────── */
+.alpha .api-grid{display:grid;grid-template-columns:1fr 1.1fr;gap:40px;align-items:start}
+.alpha .api-endpoint{background:var(--gl-d);border:1px solid var(--gl-db);border-radius:var(--r);overflow:hidden;backdrop-filter:blur(12px)}
+.alpha .api-ep-bar{padding:10px 14px;border-bottom:1px solid rgba(255,255,255,.07);display:flex;align-items:center;gap:8px}
+.method{font-family:'JetBrains Mono',monospace;font-size:10.5px;font-weight:700;color:#fff;background:var(--blue);padding:3px 8px;border-radius:6px}
+.ep-url{font-family:'JetBrains Mono',monospace;font-size:12px;color:rgba(255,255,255,.45)}
+.ep-url .ep-accent{color:rgba(255,255,255,.25)}
+.alpha .api-params{padding:14px}
+.param-row{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid rgba(255,255,255,.05)}
+.param-row:last-child{border:none}
+.param-name{font-family:'JetBrains Mono',monospace;font-size:12px;color:rgba(255,255,255,.65)}
+.param-type{font-family:'JetBrains Mono',monospace;font-size:10.5px;color:rgba(255,255,255,.45);background:rgba(255,255,255,.08);padding:2px 7px;border-radius:5px}
+.param-desc{font-size:12px;color:rgba(255,255,255,.3);max-width:160px;text-align:right}
+.api-response{background:var(--code-bg);border-radius:var(--r);border:1px solid rgba(255,255,255,.08);overflow:hidden}
+.api-res-bar{display:flex;align-items:center;padding:10px 14px;border-bottom:1px solid rgba(255,255,255,.06);gap:8px}
+.api-res-bar .status{font-family:'JetBrains Mono',monospace;font-size:11px;color:rgba(255,255,255,.65);font-weight:600}
+.api-res-bar .ms{font-family:'JetBrains Mono',monospace;font-size:10px;color:rgba(255,255,255,.22);margin-left:auto}
+.api-response pre{padding:18px;font-family:'JetBrains Mono',monospace;font-size:12px;line-height:1.75;overflow-x:auto;color:rgba(255,255,255,.65)}
+.api-note{margin-top:24px;padding:16px;background:var(--gl-d);border:1px solid var(--gl-db);border-radius:var(--r-sm);backdrop-filter:blur(12px)}
+.api-note p{font-size:13.5px;color:rgba(255,255,255,.4);line-height:1.6}
+.api-note strong{color:rgba(255,255,255,.75);font-weight:700}
+
+/* ─── HOW IT WORKS ────────────────────────────────── */
+.how{background:#EEF2FF}
+.how-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.step{
+  background:var(--gl);
+  backdrop-filter:blur(20px) saturate(180%);
+  -webkit-backdrop-filter:blur(20px) saturate(180%);
+  border:1px solid var(--gl-b);border-radius:var(--r);
+  padding:40px 32px;position:relative;overflow:hidden;
+  box-shadow:var(--gl-sh),var(--gl-hi);
+  transition:transform .35s var(--ease),box-shadow .35s;
+}
+.step::before{
+  content:"";position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.9) 40%,rgba(255,255,255,.9) 60%,transparent);
+}
+.step:hover{transform:translateY(-6px);box-shadow:0 24px 60px rgba(10,15,50,.12),var(--gl-hi)}
+.step-n{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--blue);letter-spacing:.1em;margin-bottom:20px;display:flex;align-items:center;gap:8px}
+.step-n::after{content:"";flex:1;height:1px;background:var(--line-d);display:block}
+.step h3{font-size:clamp(18px,2vw,22px);font-weight:800;letter-spacing:-.025em;margin-bottom:12px;color:var(--ink)}
+.step p{font-size:14.5px;color:var(--muted);line-height:1.65}
+.step-ico{
+  width:44px;height:44px;border-radius:12px;background:rgba(15,60,200,.08);
+  display:grid;place-items:center;margin-bottom:20px;
+  border:1px solid rgba(15,60,200,.15);
+  box-shadow:0 2px 8px rgba(15,60,200,.1);
+}
+.step-ico svg{width:20px;height:20px;stroke:var(--blue)}
+
+/* ─── TRUST ───────────────────────────────────────── */
+.trust{background:#F8FAFF}
+.trust-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.trust-card{
+  background:var(--gl);
+  backdrop-filter:blur(20px) saturate(180%);
+  -webkit-backdrop-filter:blur(20px) saturate(180%);
+  border:1px solid var(--gl-b);border-radius:var(--r);
+  padding:36px 32px;
+  box-shadow:var(--gl-sh),var(--gl-hi);
+  overflow:hidden;position:relative;
+  transform-style:preserve-3d;will-change:transform;
+  transition:box-shadow .35s var(--ease);
+}
+.trust-card::before{
+  content:"";position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.9) 40%,rgba(255,255,255,.9) 60%,transparent);
+}
+.trust-card::after{
+  content:"";position:absolute;bottom:0;left:0;right:0;height:3px;
+  background:var(--blue);opacity:0;transition:opacity .35s var(--ease);border-radius:0 0 var(--r) var(--r);
+}
+.trust-card:hover::after{opacity:1}
+.trust-n{font-size:clamp(32px,4vw,44px);font-weight:900;letter-spacing:-.04em;color:var(--ink);line-height:1;margin-bottom:10px;font-family:'Nunito',system-ui,sans-serif}
+.trust-n span{font-size:.5em;color:var(--blue);font-weight:700}
+.trust-label{font-size:14px;font-weight:700;color:var(--ink);margin-bottom:8px}
+.trust-sub{font-size:13.5px;color:var(--muted);line-height:1.55}
+.trust-card.tilting{transition:box-shadow .08s linear}
+
+/* ─── ROADMAP ─────────────────────────────────────── */
+.road{background:#EEF2FF}
+.road .eyebrow{color:var(--blue)}
+.road-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.road-phase{
+  background:var(--gl);
+  backdrop-filter:blur(20px) saturate(180%);
+  -webkit-backdrop-filter:blur(20px) saturate(180%);
+  border:1px solid var(--gl-b);border-radius:var(--r);
+  padding:28px 24px;
+  box-shadow:var(--gl-sh),var(--gl-hi);
+  transition:transform .35s var(--ease),box-shadow .35s;
+  transform-style:preserve-3d;will-change:transform;
+}
+.road-phase::before{
+  content:"";position:absolute;top:0;left:0;right:0;height:1px;border-radius:var(--r) var(--r) 0 0;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.9) 50%,transparent);
+}
+.road-phase:hover{transform:translateY(-5px);box-shadow:0 20px 48px rgba(10,15,50,.11),var(--gl-hi)}
+.rp-n{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;color:var(--muted-2);margin-bottom:14px;text-transform:uppercase}
+.rp-h{font-size:17px;font-weight:800;letter-spacing:-.02em;margin-bottom:8px;color:var(--ink)}
+.rp-d{font-size:13.5px;color:var(--muted);line-height:1.55}
+.rp-badge{margin-top:16px;display:inline-flex;align-items:center;gap:5px;font-family:'JetBrains Mono',monospace;font-size:10px;padding:4px 10px;border-radius:100px;font-weight:600}
+.rp-badge.now{background:var(--blue);color:#fff;box-shadow:0 2px 10px rgba(15,60,200,.35)}
+.rp-badge.next{background:rgba(15,60,200,.1);color:var(--blue);border:1px solid rgba(15,60,200,.2)}
+.rp-badge.later{background:rgba(10,15,30,.05);color:var(--muted-2);border:1px solid var(--line-d)}
+.road-phase.tilting{transition:box-shadow .08s linear}
+
+/* ─── FINAL CTA ───────────────────────────────────── */
+.fcta{
+  padding:160px 0;overflow:hidden;position:relative;
+  background:linear-gradient(160deg,#0A0F2E 0%,#0F1A4A 60%,#0D0E2E 100%);
+  color:#fff;text-align:center;
+}
+.fcta::before,.fcta::after{content:"";position:absolute;border-radius:50%;pointer-events:none}
+.fcta::before{
+  width:900px;height:900px;top:50%;left:50%;transform:translate(-50%,-50%);
+  background:radial-gradient(circle,rgba(15,60,200,.3) 0%,transparent 60%);
+  filter:blur(80px);
+}
+.fcta::after{
+  width:400px;height:400px;top:0;right:-100px;
+  background:radial-gradient(circle,rgba(80,60,240,.2) 0%,transparent 70%);
+  filter:blur(60px);
+}
+.fcta-bg{display:none}
+.fcta-inner{position:relative;z-index:2;max-width:640px;margin:0 auto}
+.fcta .eyebrow{color:rgba(255,255,255,.5);margin-bottom:20px;justify-content:center;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);padding:5px 14px;border-radius:100px;display:inline-flex}
+.fcta h2{font-size:clamp(32px,5.5vw,60px);font-weight:900;letter-spacing:-.035em;line-height:1.03;font-family:'Nunito',system-ui,sans-serif}
+.fcta p{font-size:17px;color:rgba(255,255,255,.55);margin:20px auto 40px;max-width:420px;line-height:1.7}
+.fcta-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+/* Glass CTA buttons */
+.fcta .bp{background:#fff;color:var(--blue);box-shadow:0 4px 24px rgba(255,255,255,.2),inset 0 1px 0 rgba(255,255,255,.9)}
+.fcta .bp:hover{box-shadow:0 8px 40px rgba(255,255,255,.3),inset 0 1px 0 rgba(255,255,255,.9)}
+.fcta .bs{background:rgba(255,255,255,.1);color:#fff;border-color:rgba(255,255,255,.18);backdrop-filter:blur(12px);box-shadow:inset 0 1px 0 rgba(255,255,255,.15)}
+.fcta .bs:hover{background:rgba(255,255,255,.16)}
+
+/* ─── FOOTER ──────────────────────────────────────── */
+footer{
+  background:linear-gradient(180deg,#0A0F2E 0%,#06080F 100%);
+  color:#fff;padding:64px 0 36px;position:relative;
+}
+footer::before{content:"";position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.1) 30%,rgba(255,255,255,.1) 70%,transparent)}
+.fi{display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:32px;padding-bottom:36px;border-bottom:1px solid rgba(255,255,255,.06)}
+.fb p{font-size:13px;color:rgba(255,255,255,.3);margin-top:10px;max-width:200px;line-height:1.6}
+.flc h4{font-size:10.5px;font-family:'JetBrains Mono',monospace;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.25);margin-bottom:14px}
+.flc a{display:block;font-size:13.5px;font-weight:500;color:rgba(255,255,255,.45);margin-bottom:9px;transition:color .2s}
+.flc a:hover{color:#fff}
+.fbot{padding-top:24px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px}
+.fbot p{font-size:12px;color:rgba(255,255,255,.2)}
+/* Footer logo: white */
+footer .logo svg rect,.footer .logo svg path{stroke:#fff!important}
+footer .logo svg text{fill:#fff!important}
+footer .logo-wordmark{color:#fff}
+footer .logo-wordmark strong{color:rgba(255,255,255,.7)}
+
+/* ─── RESPONSIVE ──────────────────────────────────── */
+@media(max-width:960px){
+  nav{top:8px;width:calc(100% - 32px)}
+  .hero-inner{grid-template-columns:1fr;gap:40px}
+  .panel,.feed-panel{max-width:480px}
+  .api-grid,.alpha .api-grid{grid-template-columns:1fr}
+  .how-steps{grid-template-columns:1fr}
+  .trust-grid{grid-template-columns:repeat(2,1fr)}
+  .road-grid{grid-template-columns:repeat(2,1fr)}
+  .surf-grid{grid-template-columns:repeat(2,1fr)}
+  .alpha-layout{grid-template-columns:1fr}
+  .nl{display:none}.ham{display:flex}
+  .fi{flex-direction:column;gap:28px}
+}
+@media(max-width:640px){
+  .wrap,.ni{padding:0 18px}
+  nav{width:calc(100% - 28px)}
+  .trust-grid,.surf-grid{grid-template-columns:1fr}
+  .road-grid{grid-template-columns:1fr}
+  .proof-inner .psep{display:none}
+  .hero-copy h1{font-size:32px}
+  .sec,.alpha{padding:88px 0}
+}
+@media(max-width:360px){
+  .hero-copy h1{font-size:28px}
+  .hero-cta{flex-direction:column}
+  .btn{width:100%;justify-content:center}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  .rv{opacity:1;transform:none}
+  .feed-panel,.panel{animation:none}
+}
+
+/* ─── INTERACTIVE ─────────────────────────────────── */
+#progress{position:fixed;top:0;left:0;height:2px;width:0%;background:var(--blue);z-index:301;transition:width .1s linear;pointer-events:none}
+
+#cursor-glow{
+  position:fixed;width:400px;height:400px;border-radius:50%;
+  background:radial-gradient(circle,rgba(15,60,200,.12) 0%,transparent 70%);
+  pointer-events:none;z-index:0;
+  transform:translate(-50%,-50%);
+  transition:opacity .5s,left .08s linear,top .08s linear;opacity:0;
+}
+
+.type-cursor{display:inline-block;width:3px;height:.85em;background:var(--ink);margin-left:3px;vertical-align:middle;border-radius:2px;animation:blink .9s ease-in-out infinite}
+
+@keyframes slideIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.fp-post{animation:slideIn .4s var(--ease) both}
+</style>
+</head>
+<body>
+<div id="progress"></div>
+<div id="cursor-glow"></div>
+
+<!-- NAV -->
+<nav id="nav">
+  <div class="ni">
+    <a href="#" class="logo">
+      <svg width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <rect x="3" y="3" width="22" height="22" rx="3" stroke="currentColor" stroke-width="2.2" fill="none"/>
+        <text x="7.5" y="19.5" font-family="Nunito,system-ui,sans-serif" font-weight="800" font-size="10.5" fill="currentColor" letter-spacing="0">HQ</text>
+        <rect x="22" y="22" width="9" height="9" rx="2" fill="#0F3CC8"/>
+      </svg>
+      <span class="logo-wordmark">Quant<strong>HQ</strong></span>
+    </a>
+    <div class="nl">
+      <a href="#community">Community</a>
+      <a href="#alpha">Alpha Toolkit</a>
+      <a href="#roadmap">Roadmap</a>
+    </div>
+    <a href="#join" class="nc">Join Community</a>
+    <button class="ham" id="ham" aria-label="Menu"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+<div class="mm" id="mm">
+  <a href="#community" class="ml">Community</a>
+  <a href="#alpha" class="ml">Alpha Toolkit</a>
+  <a href="#roadmap" class="ml">Roadmap</a>
+  <a href="#join" class="ml">Join Community →</a>
+</div>
+
+<!-- HERO: community-first -->
+<section class="hero">
+  <div class="hbg"></div>
+  <div class="hgrid"></div>
+  <canvas id="cn" aria-hidden="true"></canvas>
+  <div class="wrap hero-inner">
+    <div class="hero-copy" style="opacity:1;transform:none">
+      <span class="eyebrow" style="animation:fadeUp .7s var(--ease) both"><span class="pip"></span>Quant Finance Community</span>
+      <h1 style="animation:fadeUp .7s var(--ease) .1s both">Where quant minds<br><span id="typed-text"></span><span class="type-cursor"></span></h1>
+      <p class="sub" style="animation:fadeUp .7s var(--ease) .2s both">The professional home for researchers, traders, developers, and builders in quantitative finance. Share research, find collaborators, and grow alongside the best minds in the space.</p>
+      <div class="hero-cta" style="animation:fadeUp .7s var(--ease) .3s both">
+        <a href="#join" class="btn bp">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          Join the Community
+        </a>
+        <a href="#alpha" class="btn bs">See Alpha Toolkit →</a>
+      </div>
+      <div class="hero-meta" style="animation:fadeUp .7s var(--ease) .4s both">
+        <span class="m"><span class="dot"></span>1,200+ members</span>
+        <span class="m"><span class="dot"></span>Free early access</span>
+        <span class="m"><span class="dot"></span>Building in public</span>
+      </div>
+    </div>
+
+    <!-- COMMUNITY FEED PANEL -->
+    <div class="feed-panel">
+      <div class="fp-bar">
+        <span class="fp-dot" style="background:#FF5F57"></span>
+        <span class="fp-dot" style="background:#FFBD2E"></span>
+        <span class="fp-dot" style="background:#28C840"></span>
+        <span class="fp-title">quanthq / community-feed</span>
+        <span class="fp-live"><span class="blink"></span>LIVE</span>
+      </div>
+      <div class="fp-posts" id="feedposts"></div>
+      <div class="fp-footer">
+        <span>500+ posts this week</span>
+        <a href="#">View feed →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROOF BAR -->
+<div class="proof-bar">
+  <div class="wrap proof-inner">
+    <div class="pstat rv"><div class="n" data-count="1200" data-suffix="+">0</div><div class="l">Community Members</div></div>
+    <div class="psep"></div>
+    <div class="pstat rv" data-d="1"><div class="n" data-count="500" data-suffix="+">0</div><div class="l">Posts This Week</div></div>
+    <div class="psep"></div>
+    <div class="pstat rv" data-d="2"><div class="n" data-count="6">0</div><div class="l">Platform Surfaces</div></div>
+    <div class="psep"></div>
+    <div class="pstat rv" data-d="3"><div class="n mono" style="font-size:clamp(18px,2.5vw,28px)">Free</div><div class="l">Early Access</div></div>
+  </div>
+</div>
+
+<!-- COMMUNITY SURFACES -->
+<section class="sec surfaces" id="community">
+  <div class="wrap">
+    <div class="sh rv">
+      <span class="eyebrow" style="color:var(--blue)"><span class="pip" style="background:var(--blue)"></span>The Community</span>
+      <h2>Six ways to connect,<br>collaborate, and grow.</h2>
+      <p>QuantHQ is built around the ways quant professionals actually work — sharing ideas, finding collaborators, discussing markets, and building together.</p>
+    </div>
+    <div class="surf-grid">
+      <div class="surf-card rv">
+        <div class="surf-ico"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M4 12h16M4 18h10"/></svg></div>
+        <h3>Feed</h3>
+        <p>A living timeline of quant research, market observations, and ideas — curated by the community, for the community.</p>
+        <span class="surf-pill">Core surface</span>
+      </div>
+      <div class="surf-card rv" data-d="1">
+        <div class="surf-ico"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg></div>
+        <h3>Reach</h3>
+        <p>Search for collaborators, co-founders, and researchers by skill, strategy style, or market focus. Filtered for quant professionals only.</p>
+        <span class="surf-pill">Discovery</span>
+      </div>
+      <div class="surf-card rv" data-d="2">
+        <div class="surf-ico"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+        <h3>Chat</h3>
+        <p>Real-time discussion around markets, research, and live events. Topic-based channels for equities, crypto, macro, and more.</p>
+        <span class="surf-pill">Real-time</span>
+      </div>
+      <div class="surf-card rv">
+        <div class="surf-ico"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+        <h3>Research</h3>
+        <p>Publish and discover quantitative research. Build a public reputation in the space. Co-author with members who share your focus.</p>
+        <span class="surf-pill">Publish</span>
+      </div>
+      <div class="surf-card rv" data-d="1">
+        <div class="surf-ico"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></div>
+        <h3>Create</h3>
+        <p>Build strategies and quantitative workflows with AI assistance and community input. From hypothesis to implementation in one place.</p>
+        <span class="surf-pill">Build</span>
+      </div>
+      <div class="surf-card rv" data-d="2">
+        <div class="surf-ico"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+        <h3>Backtest</h3>
+        <p>Validate ideas with historical performance data. Share results with the community. Compare against anonymized member benchmarks.</p>
+        <span class="surf-pill">Validate</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ALPHA TOOLKIT -->
+<section class="alpha" id="alpha">
+  <div class="wrap">
+    <div class="sh rv">
+      <span class="eyebrow"><span class="pip" style="background:var(--accent)"></span>Alpha Toolkit</span>
+      <h2>AI-powered signal intelligence,<br>built into the community.</h2>
+      <p>Beyond the network — QuantHQ embeds a factor research engine and backtesting suite directly into the platform. Community-sourced data makes every signal sharper.</p>
+    </div>
+
+    <div class="alpha-layout rv" data-d="1">
+      <div class="alpha-intro">
+        <h3>What the toolkit gives you</h3>
+        <p>Every community member gets access to the Alpha Toolkit — no separate subscription, no separate login. It's the analytical layer built underneath the social one.</p>
+        <div class="alpha-features">
+          <div class="af">
+            <div class="af-ico"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9.663 17h4.673M12 3v1m6.364 1.636-.707.707M21 12h-1M4 12H3m3.343-5.657-.707-.707m2.828 9.9a5 5 0 1 1 7.072 0l-.548.547A3.374 3.374 0 0 0 14 18.469V19a2 2 0 1 1-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg></div>
+            <div class="af-text">
+              <h4>AI Factor Research</h4>
+              <p>Ask plain-English questions. Get factor breakdowns with full source attribution across 8,000+ instruments.</p>
+            </div>
+          </div>
+          <div class="af">
+            <div class="af-ico"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+            <div class="af-text">
+              <h4>Signal Generation</h4>
+              <p>Live directional signals with confidence scores, expected alpha, and Sharpe — refreshed continuously.</p>
+            </div>
+          </div>
+          <div class="af">
+            <div class="af-ico"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg></div>
+            <div class="af-text">
+              <h4>Collaborative Backtesting</h4>
+              <p>Walk-forward validation with realistic costs. Share tearsheets to the community feed with one click.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SIGNAL PANEL -->
+      <div class="panel">
+        <div class="panel-bar">
+          <span class="panel-dot" style="background:#FF5F57"></span>
+          <span class="panel-dot" style="background:#FFBD2E"></span>
+          <span class="panel-dot" style="background:#28C840"></span>
+          <span class="panel-title">alpha-toolkit / signal-feed</span>
+          <span class="panel-live"><span class="blink"></span>LIVE</span>
+        </div>
+        <div class="panel-col-heads">
+          <span class="pch ticker">TICKER</span>
+          <span class="pch dir">DIR</span>
+          <span class="pch" style="flex:1">CONFIDENCE</span>
+          <span class="pch conf">CONF</span>
+          <span class="pch alpha">α 5D</span>
+        </div>
+        <div class="signal-list" id="siglist"></div>
+        <div class="panel-footer">
+          <span class="pf-l">143 signals today · 38 factors</span>
+          <span class="pf-r">View full feed →</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- API -->
+    <div class="sh rv" style="margin-top:72px;margin-bottom:36px">
+      <span class="eyebrow"><span class="pip" style="background:var(--accent)"></span>The API</span>
+      <h2>What you get in one call.</h2>
+      <p>Full factor attribution, directional signal, confidence score, and expected alpha — structured JSON ready for your own stack.</p>
+    </div>
+    <div class="api-grid rv" data-d="1">
+      <div>
+        <div class="api-endpoint">
+          <div class="api-ep-bar">
+            <span class="method">GET</span>
+            <span class="ep-url">/v1/signals<span class="ep-accent">?ticker=AAPL&lookback=30d</span></span>
+          </div>
+          <div class="api-params">
+            <div class="param-row"><span class="param-name">ticker</span><span class="param-type">string</span><span class="param-desc" style="color:rgba(255,255,255,.5)">e.g. AAPL, BTC, SPY</span></div>
+            <div class="param-row"><span class="param-name">lookback</span><span class="param-type">string</span><span class="param-desc" style="color:rgba(255,255,255,.5)">7d · 30d · 90d · 1y</span></div>
+            <div class="param-row"><span class="param-name">factors</span><span class="param-type">array?</span><span class="param-desc" style="color:rgba(255,255,255,.5)">filter factor set</span></div>
+            <div class="param-row"><span class="param-name">confidence_min</span><span class="param-type">float?</span><span class="param-desc" style="color:rgba(255,255,255,.5)">0.0 – 1.0 threshold</span></div>
+          </div>
+        </div>
+        <div class="api-note" style="margin-top:20px">
+          <p><strong>Community members get API access included</strong> — no separate tier, no credit card. Shape the schema before v1 ships.</p>
+        </div>
+      </div>
+      <div class="api-response">
+        <div class="api-res-bar">
+          <span class="status">200 OK</span>
+          <span class="ms">187ms · application/json</span>
+        </div>
+        <pre>{
+  <span style="color:#79B8FF">"ticker"</span>:      <span style="color:#9ECBFF">"AAPL"</span>,
+  <span style="color:#79B8FF">"direction"</span>:   <span style="color:var(--green)">"long"</span>,
+  <span style="color:#79B8FF">"confidence"</span>:  <span style="color:#B5CEA8">0.87</span>,
+  <span style="color:#79B8FF">"factors"</span>: {
+    <span style="color:#79B8FF">"momentum_3m"</span>:        <span style="color:#B5CEA8">+0.72</span>,
+    <span style="color:#79B8FF">"earnings_revision"</span>:  <span style="color:#B5CEA8">+0.91</span>,
+    <span style="color:#79B8FF">"short_interest_delta"</span>:<span style="color:#B5CEA8">-0.43</span>,
+    <span style="color:#79B8FF">"quality_score"</span>:      <span style="color:#B5CEA8">+0.68</span>
+  },
+  <span style="color:#79B8FF">"expected_alpha_5d"</span>:  <span style="color:var(--green)">"+2.4%"</span>,
+  <span style="color:#79B8FF">"backtest_sharpe_1y"</span>: <span style="color:#B5CEA8">1.74</span>,
+  <span style="color:#79B8FF">"community_rank"</span>:     <span style="color:#B5CEA8">12</span>  <span style="color:rgba(255,255,255,.3)">// of 143 today</span>
+}</pre>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="sec how">
+  <div class="wrap">
+    <div class="sh rv">
+      <span class="eyebrow" style="color:var(--blue)"><span class="pip" style="background:var(--blue)"></span>How It Works</span>
+      <h2>Join → research → build → share.</h2>
+    </div>
+    <div class="how-steps rv" data-d="1">
+      <div class="step">
+        <div class="step-ico"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+        <div class="step-n">01</div>
+        <h3>Join the community</h3>
+        <p>Create a profile, share your focus — systematic, macro, crypto, HFT — and connect with members who work in the same space.</p>
+      </div>
+      <div class="step">
+        <div class="step-ico"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9.663 17h4.673M12 3v1m6.364 1.636-.707.707M21 12h-1M4 12H3m3.343-5.657-.707-.707m2.828 9.9a5 5 0 1 1 7.072 0l-.548.547A3.374 3.374 0 0 0 14 18.469V19a2 2 0 1 1-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg></div>
+        <div class="step-n">02</div>
+        <h3>Research with AI</h3>
+        <p>Use the Alpha Toolkit to surface factor signals, run backtests, and get structured outputs — all within the same platform as your community.</p>
+      </div>
+      <div class="step">
+        <div class="step-ico"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg></div>
+        <div class="step-n">03</div>
+        <h3>Share &amp; collaborate</h3>
+        <p>Publish research to the feed, find co-authors, propose collaborations, or just discuss your findings. The community stress-tests every idea.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TRUST -->
+<section class="sec trust">
+  <div class="wrap">
+    <div class="sh rv">
+      <span class="eyebrow" style="color:var(--blue)"><span class="pip" style="background:var(--blue)"></span>Why Community Wins</span>
+      <h2>Collaborative research outperforms solo work.</h2>
+      <p>When a community stress-tests your factors, blind spots collapse and alpha compounds.</p>
+    </div>
+    <div class="trust-grid">
+      <div class="trust-card rv">
+        <div class="trust-n">1.84<span>×</span></div>
+        <div class="trust-label">Average Sharpe — top community strategies</div>
+        <div class="trust-sub">Across 30+ backtested factor portfolios published by members. Solo baseline is 0.9×.</div>
+      </div>
+      <div class="trust-card rv" data-d="1">
+        <div class="trust-n">38</div>
+        <div class="trust-label">Alpha factors tracked</div>
+        <div class="trust-sub">Momentum, quality, value, sentiment, alt-data, macro — community-curated and refreshed daily.</div>
+      </div>
+      <div class="trust-card rv" data-d="2">
+        <div class="trust-n">&lt;200<span>ms</span></div>
+        <div class="trust-label">Signal generation latency</div>
+        <div class="trust-sub">Full factor attribution, confidence scoring, and expected alpha in one API call.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ROADMAP -->
+<section class="sec road" id="roadmap">
+  <div class="wrap">
+    <div class="sh rv">
+      <span class="eyebrow"><span class="pip" style="background:var(--blue)"></span>Roadmap</span>
+      <h2>Building in public.</h2>
+      <p>Every phase ships to the community first. Early members shape what gets built next.</p>
+    </div>
+    <div class="road-grid">
+      <div class="road-phase rv"><div class="rp-n">Phase 1</div><div class="rp-h">Community &amp; Feed</div><div class="rp-d">Core social layer — Feed, Chat, Reach, and Research publishing.</div><span class="rp-badge now"><span style="width:5px;height:5px;border-radius:50%;background:var(--green);display:inline-block"></span>&nbsp;Now</span></div>
+      <div class="road-phase rv" data-d="1"><div class="rp-n">Phase 2</div><div class="rp-h">AI Analyst</div><div class="rp-d">Factor research, signal generation, and source attribution for all members.</div><span class="rp-badge next">Next</span></div>
+      <div class="road-phase rv" data-d="2"><div class="rp-n">Phase 3</div><div class="rp-h">Alpha Engine</div><div class="rp-d">Cross-sectional signal scanning across 8,000+ instruments.</div><span class="rp-badge later">Planned</span></div>
+      <div class="road-phase rv" data-d="1"><div class="rp-n">Phase 4</div><div class="rp-h">Strategy Builder</div><div class="rp-d">AI-assisted factor combination and strategy construction in the browser.</div><span class="rp-badge later">Planned</span></div>
+      <div class="road-phase rv" data-d="2"><div class="rp-n">Phase 5</div><div class="rp-h">Portfolio Simulation</div><div class="rp-d">Full portfolio construction with risk attribution and stress testing.</div><span class="rp-badge later">Planned</span></div>
+      <div class="road-phase rv" data-d="3"><div class="rp-n">Phase 6</div><div class="rp-h">Full Quant OS</div><div class="rp-d">End-to-end platform: idea → research → backtest → deploy, all in one place.</div><span class="rp-badge later">Planned</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section class="fcta" id="join">
+  <div class="fcta-bg"></div>
+  <div class="wrap fcta-inner rv">
+    <span class="eyebrow"><span class="pip" style="background:var(--accent-2)"></span>Free Early Access</span>
+    <h2>Join before we launch.</h2>
+    <p>Shape the community. Build your quant network. Get Alpha Toolkit access from day one.</p>
+    <div class="fcta-btns">
+      <a href="#" class="btn bp">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;stroke:var(--blue-d)"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        Join Community
+      </a>
+      <a href="#" class="btn bs">Follow on LinkedIn</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="wrap">
+    <div class="fi">
+      <div class="fb">
+        <a href="#" class="logo">
+          <svg width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path d="M28 4H6C4.895 4 4 4.895 4 6V28C4 28 4 30 6 30H24" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M30 6V24" stroke="white" stroke-width="2.2" stroke-linecap="round"/>
+            <text x="9" y="22" font-family="Inter,system-ui,sans-serif" font-weight="700" font-size="11" fill="white" letter-spacing="-0.5">HQ</text>
+            <rect x="25" y="25" width="7" height="7" rx="1.5" fill="#7BB8FF"/>
+          </svg>
+          <span class="logo-wordmark">Quant<strong>HQ</strong></span>
+        </a>
+        <p>The professional home for quantitative finance.</p>
+      </div>
+      <div class="flc">
+        <h4>Community</h4>
+        <a href="#">Feed</a>
+        <a href="#">Reach</a>
+        <a href="#">Chat</a>
+        <a href="#">Research</a>
+      </div>
+      <div class="flc">
+        <h4>Alpha Toolkit</h4>
+        <a href="#">Signal Feed</a>
+        <a href="#">Backtest</a>
+        <a href="#">API Docs</a>
+      </div>
+      <div class="flc">
+        <h4>Company</h4>
+        <a href="#">Roadmap</a>
+        <a href="#">LinkedIn</a>
+        <a href="#">Contact</a>
+      </div>
+    </div>
+    <div class="fbot">
+      <p>QuantHQ © 2026</p>
+      <p>Where quant minds build together.</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+const reduced=matchMedia('(prefers-reduced-motion:reduce)').matches;
+
+/* ── Scroll progress bar ── */
+const prog=document.getElementById('progress');
+function updateProgress(){
+  const h=document.documentElement;
+  prog.style.width=(scrollY/(h.scrollHeight-h.clientHeight)*100)+'%';
+}
+addEventListener('scroll',updateProgress,{passive:true});
+
+/* ── Nav scroll ── */
+const nav=document.getElementById('nav');
+addEventListener('scroll',()=>nav.classList.toggle('sc',scrollY>20),{passive:true});
+
+/* ── Mobile menu ── */
+const ham=document.getElementById('ham'),mm=document.getElementById('mm');
+ham.addEventListener('click',()=>{const o=ham.classList.toggle('o');mm.classList.toggle('o',o)});
+mm.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{ham.classList.remove('o');mm.classList.remove('o')}));
+
+/* ── Reveal ── */
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:0,rootMargin:'0px 0px -40px 0px'});
+document.querySelectorAll('.rv').forEach(el=>io.observe(el));
+
+/* ── Stat counters ── */
+function animCount(el,target,suffix){
+  let s=null;const dur=1200;
+  const fmt=n=>n>=1000?n.toLocaleString():n;
+  const step=ts=>{if(!s)s=ts;const p=Math.min((ts-s)/dur,1);const e2=p<.5?2*p*p:1-Math.pow(-2*p+2,2)/2;el.textContent=fmt(Math.round(e2*target))+(suffix||'');if(p<1)requestAnimationFrame(step)};
+  requestAnimationFrame(step);
+}
+const cio=new IntersectionObserver(es=>es.forEach(e=>{if(!e.isIntersecting)return;animCount(e.target,+e.target.dataset.count,e.target.dataset.suffix);cio.unobserve(e.target)}),{threshold:.5});
+document.querySelectorAll('[data-count]').forEach(el=>cio.observe(el));
+
+/* ── Typing headline ── */
+const PHRASES=['build together.','think together.','research together.','grow together.'];
+let pi=0,ci=0,deleting=false;
+const typed=document.getElementById('typed-text');
+function typeStep(){
+  if(!typed)return;
+  const word=PHRASES[pi];
+  if(!deleting){
+    typed.textContent=word.slice(0,++ci);
+    if(ci===word.length){deleting=true;setTimeout(typeStep,1800);return}
+  } else {
+    typed.textContent=word.slice(0,--ci);
+    if(ci===0){deleting=false;pi=(pi+1)%PHRASES.length;setTimeout(typeStep,300);return}
+  }
+  setTimeout(typeStep,deleting?40:70);
+}
+if(!reduced) setTimeout(typeStep,1200);
+else if(typed) typed.textContent=PHRASES[0];
+
+/* ── Cursor glow on dark sections ── */
+const glow=document.getElementById('cursor-glow');
+const darkSections=['.alpha','.fcta','footer'];
+let glowVisible=false;
+function updateGlow(e){
+  glow.style.left=e.clientX+'px';
+  glow.style.top=e.clientY+'px';
+  const el=document.elementFromPoint(e.clientX,e.clientY);
+  const inDark=el&&darkSections.some(s=>el.closest(s));
+  if(inDark!==glowVisible){glowVisible=inDark;glow.style.opacity=inDark?'1':'0'}
+}
+if(!reduced) addEventListener('mousemove',updateGlow,{passive:true});
+
+/* ── Card tilt on hover ── */
+document.querySelectorAll('.surf-card,.trust-card,.road-phase').forEach(card=>{
+  if(reduced)return;
+  card.addEventListener('mousemove',e=>{
+    const r=card.getBoundingClientRect();
+    const x=(e.clientX-r.left)/r.width-.5;
+    const y=(e.clientY-r.top)/r.height-.5;
+    card.classList.add('tilting');
+    card.style.transform=`perspective(600px) rotateY(${x*8}deg) rotateX(${-y*8}deg) translateY(-4px)`;
+  });
+  card.addEventListener('mouseleave',()=>{
+    card.classList.remove('tilting');
+    card.style.transform='';
+  });
+});
+
+/* ── Community feed panel ── */
+const POSTS=[
+  {initials:'AC',color:'#2B4FBF',name:'Alex Chen',role:'Researcher',type:'research',typeClass:'research',
+   text:'New paper: <strong>Earnings revision momentum decays faster post-2023</strong> — factor still valid but needs 5d hold, not 10d.',likes:47,comments:12,delay:0},
+  {initials:'PR',color:'#1E3A9F',name:'Priya R.',role:'Data Scientist',type:'backtest',typeClass:'backtest',
+   text:'Backtested NLP earnings sentiment vs. 3d returns across S&P 500. Sharpe 1.72 OOS. Sharing tearsheet in Research tab.',likes:31,comments:8,delay:1},
+  {initials:'MT',color:'#0F2D8A',name:'Mike T.',role:'Trader',type:'signal',typeClass:'signal',
+   text:'<strong>NVDA momentum signal</strong> fired again this morning — third consecutive week. Conf: 91%. Anyone watching the same setup?',likes:28,comments:15,delay:2},
+  {initials:'SL',color:'#0A2370',name:'Sarah L.',role:'Quant Dev',type:'discuss',typeClass:'discuss',
+   text:'Looking for co-author on a macro regime paper (yield curve + credit spreads → equity factor rotation). DM if interested.',likes:19,comments:6,delay:3},
+];
+function renderFeed(){
+  document.getElementById('feedposts').innerHTML=POSTS.map((p,i)=>`
+    <div class="fp-post" style="animation-delay:${i*.08}s">
+      <div class="fp-meta">
+        <div class="fp-avatar" style="background:${p.color}">${p.initials}</div>
+        <span class="fp-name">${p.name}</span>
+        <span class="fp-role">· ${p.role}</span>
+        <span class="fp-type ${p.typeClass}">${p.type}</span>
+      </div>
+      <div class="fp-text">${p.text}</div>
+      <div class="fp-actions">
+        <span class="fp-act">♡ ${p.likes}</span>
+        <span class="fp-act">💬 ${p.comments}</span>
+        <span class="fp-act">↗ share</span>
+      </div>
+    </div>`).join('');
+}
+renderFeed();
+
+/* ── Tabs with sliding indicator ── */
+const tabs=document.querySelectorAll('.wg-tab');
+const indicator=document.querySelector('.tab-indicator');
+function moveIndicator(tab){
+  if(!indicator)return;
+  indicator.style.left=tab.offsetLeft+'px';
+  indicator.style.width=tab.offsetWidth+'px';
+}
+tabs.forEach(tab=>{
+  tab.addEventListener('click',()=>{
+    tabs.forEach(t=>t.classList.remove('active'));
+    document.querySelectorAll('.wg-panel').forEach(p=>p.classList.remove('active'));
+    tab.classList.add('active');
+    moveIndicator(tab);
+    const panel=document.getElementById('tab-'+tab.dataset.tab);
+    if(panel){panel.classList.add('active');panel.querySelectorAll('.rv').forEach(el=>el.classList.add('in'))}
+  });
+});
+const activeTab=document.querySelector('.wg-tab.active');
+if(activeTab&&indicator) setTimeout(()=>moveIndicator(activeTab),100);
+
+/* ── Signal panel ── */
+const SIGS=[
+  {ticker:'NVDA',dir:'long',conf:.91,alpha:'+2.8%',w:91},
+  {ticker:'AAPL',dir:'long',conf:.87,alpha:'+2.4%',w:87},
+  {ticker:'MSFT',dir:'hold',conf:.63,alpha:'+0.4%',w:63},
+  {ticker:'META',dir:'long',conf:.79,alpha:'+1.9%',w:79},
+  {ticker:'TSLA',dir:'short',conf:.72,alpha:'-1.6%',w:72},
+  {ticker:'SPY',dir:'hold',conf:.55,alpha:'+0.2%',w:55},
+  {ticker:'BTC',dir:'long',conf:.84,alpha:'+3.1%',w:84},
+];
+function renderSigs(){
+  const list=document.getElementById('siglist');
+  if(!list)return;
+  list.innerHTML=SIGS.map(s=>`
+    <div class="sig-row">
+      <span class="sig-ticker">${s.ticker}</span>
+      <span class="sig-dir ${s.dir}">${s.dir.toUpperCase()}</span>
+      <div class="sig-bar-wrap"><div class="sig-bar ${s.dir}" style="width:0%" data-w="${s.w}%"></div></div>
+      <span class="sig-conf">${Math.round(s.conf*100)}%</span>
+      <span class="sig-alpha ${s.alpha.startsWith('+')?'pos':'neg'}">${s.alpha}</span>
+    </div>`).join('');
+  setTimeout(()=>list.querySelectorAll('.sig-bar').forEach(b=>b.style.width=b.dataset.w),80);
+}
+renderSigs();
+if(!reduced){
+  setInterval(()=>{
+    const row=SIGS[Math.floor(Math.random()*SIGS.length)];
+    row.conf=Math.max(.4,Math.min(.98,row.conf+(Math.random()-.45)*.04));
+    row.w=Math.round(row.conf*100);
+    renderSigs();
+  },3200);
+}
+
+/* ── Hero canvas ── */
+const cv=document.getElementById('cn'),cx2=cv.getContext('2d');
+let W,H,pts;
+const rsz=()=>{W=cv.width=cv.offsetWidth;H=cv.height=cv.offsetHeight;pts=Array.from({length:28},()=>({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.18,vy:(Math.random()-.5)*.18}))};
+const draw=()=>{
+  cx2.clearRect(0,0,W,H);
+  for(const p of pts){p.x+=p.vx;p.y+=p.vy;if(p.x<0||p.x>W)p.vx*=-1;if(p.y<0||p.y>H)p.vy*=-1}
+  for(let i=0;i<pts.length;i++)for(let j=i+1;j<pts.length;j++){const a=pts[i],b=pts[j],d=Math.hypot(a.x-b.x,a.y-b.y);if(d<120){cx2.strokeStyle=`rgba(15,60,200,${.08*(1-d/120)})`;cx2.lineWidth=.7;cx2.beginPath();cx2.moveTo(a.x,a.y);cx2.lineTo(b.x,b.y);cx2.stroke()}}
+  for(const p of pts){cx2.fillStyle='rgba(15,60,200,.2)';cx2.beginPath();cx2.arc(p.x,p.y,1.5,0,Math.PI*2);cx2.fill()}
+  requestAnimationFrame(draw);
+};
+if(!reduced){rsz();draw();addEventListener('resize',rsz,{passive:true})}
+</script>
+<style>
+/* hero is light — ensure canvas particles match */
+canvas#cn{opacity:.35}
+/* type cursor dark on light hero */
+.type-cursor{background:var(--ink)}
+/* footer logo white */
+footer .logo{color:#fff}
+/* fcta button icon dark */
+.fcta .bp svg{stroke:var(--blue)!important}
+</style>
+</body>
+</html>
