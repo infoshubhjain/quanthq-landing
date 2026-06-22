@@ -1,0 +1,960 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QuantHQ — The Community Layer For Quantitative Finance</title>
+<meta name="description" content="A community for researchers, traders, developers, and builders shaping the future of quantitative finance.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ─── TOKENS ─────────────────────────────────────────── */
+:root{
+  --blue:#0037B8;--blue-2:#1557E8;--blue-3:#0A2E96;
+  --accent:#6BAEFF;--accent-2:#A7C8FF;
+  --white:#FFFFFF;--soft:#F4F7FD;--grey:#EEF1F8;
+  --navy:#07101F;--navy-2:#0B1628;
+  --ink:#080F1E;--muted:#5A6680;--muted-2:#8490A8;
+  --line:rgba(255,255,255,.12);--line-dark:rgba(11,18,32,.09);
+  --r:16px;--r-sm:10px;
+  --ease:cubic-bezier(.22,1,.36,1);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:80px}
+body{font-family:'Inter',system-ui,sans-serif;color:var(--ink);background:var(--white);-webkit-font-smoothing:antialiased;line-height:1.5;overflow-x:hidden}
+a{text-decoration:none;color:inherit}
+img,svg{display:block}
+.wrap{max-width:1160px;margin:0 auto;padding:0 28px}
+
+/* ─── UTILITY ────────────────────────────────────────── */
+.mono{font-family:'JetBrains Mono',monospace}
+.eyebrow{
+  font-family:'JetBrains Mono',monospace;font-size:11.5px;
+  letter-spacing:.16em;text-transform:uppercase;font-weight:500;
+  display:inline-flex;align-items:center;gap:8px;
+}
+.dot{width:6px;height:6px;border-radius:50%;background:currentColor;flex-shrink:0;opacity:.7}
+.sec-head{margin-bottom:60px}
+.sec-head h2{font-size:clamp(28px,4vw,46px);font-weight:800;letter-spacing:-.03em;line-height:1.07;margin-top:16px}
+.sec-head p{margin-top:16px;font-size:17px;color:var(--muted);line-height:1.65;max-width:560px}
+
+/* reveal */
+.rv{opacity:0;transform:translateY(24px);transition:opacity .65s var(--ease),transform .65s var(--ease)}
+.rv.in{opacity:1;transform:none}
+.rv[data-d="1"]{transition-delay:.08s}
+.rv[data-d="2"]{transition-delay:.16s}
+.rv[data-d="3"]{transition-delay:.24s}
+.rv[data-d="4"]{transition-delay:.32s}
+.rv[data-d="5"]{transition-delay:.4s}
+
+/* ─── NAVBAR ─────────────────────────────────────────── */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:200;height:72px;
+  display:flex;align-items:center;
+  transition:background .4s var(--ease),border-color .4s,backdrop-filter .4s;
+  border-bottom:1px solid transparent;
+}
+nav.scrolled{
+  background:rgba(7,16,31,.75);
+  backdrop-filter:blur(20px) saturate(1.6);
+  -webkit-backdrop-filter:blur(20px) saturate(1.6);
+  border-bottom-color:rgba(255,255,255,.07);
+}
+.nav-inner{
+  max-width:1160px;margin:0 auto;padding:0 28px;
+  width:100%;display:flex;align-items:center;justify-content:space-between;gap:24px;
+}
+.logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:17px;color:#fff;letter-spacing:-.02em}
+.logo-mark{
+  width:32px;height:32px;background:var(--white);border-radius:8px;
+  display:grid;place-items:center;position:relative;flex-shrink:0;
+}
+.logo-mark::before{content:"";width:12px;height:12px;background:var(--blue);border-radius:3px;position:absolute;top:6px;left:6px}
+.logo-mark::after{content:"";width:7px;height:7px;background:var(--accent);border-radius:2px;position:absolute;bottom:5px;right:5px}
+.nav-links{display:flex;gap:32px;align-items:center;margin-left:auto}
+.nav-links a{color:rgba(255,255,255,.7);font-size:14px;font-weight:500;transition:color .2s;position:relative}
+.nav-links a::after{
+  content:"";position:absolute;bottom:-4px;left:0;right:0;height:1px;
+  background:var(--accent-2);transform:scaleX(0);transform-origin:left;transition:transform .3s var(--ease);
+}
+.nav-links a:hover{color:#fff}
+.nav-links a:hover::after{transform:scaleX(1)}
+.nav-cta{
+  background:linear-gradient(135deg,rgba(255,255,255,.15),rgba(255,255,255,.08));
+  color:#fff;padding:9px 18px;border-radius:8px;font-size:13.5px;font-weight:600;
+  border:1px solid rgba(255,255,255,.2);transition:background .2s,border-color .2s,transform .2s;
+  backdrop-filter:blur(8px);
+}
+.nav-cta:hover{background:rgba(255,255,255,.22);border-color:rgba(255,255,255,.35);transform:translateY(-1px)}
+.ham{display:none;flex-direction:column;gap:4.5px;cursor:pointer;padding:4px;background:none;border:none}
+.ham span{width:22px;height:1.5px;background:rgba(255,255,255,.85);display:block;border-radius:2px;transition:transform .3s,opacity .3s}
+.ham.open span:nth-child(1){transform:translateY(6px) rotate(45deg)}
+.ham.open span:nth-child(2){opacity:0}
+.ham.open span:nth-child(3){transform:translateY(-6px) rotate(-45deg)}
+.mob-menu{
+  display:none;position:fixed;top:72px;left:0;right:0;
+  background:rgba(7,16,31,.97);backdrop-filter:blur(20px);
+  padding:24px 28px 32px;border-bottom:1px solid rgba(255,255,255,.07);
+  flex-direction:column;gap:4px;z-index:199;
+}
+.mob-menu.open{display:flex}
+.mob-menu a{color:rgba(255,255,255,.75);font-size:16px;font-weight:500;padding:12px 0;border-bottom:1px solid rgba(255,255,255,.06);transition:color .2s}
+.mob-menu a:last-child{border-bottom:none;margin-top:12px;color:#fff;font-weight:600}
+
+/* ─── HERO ───────────────────────────────────────────── */
+.hero{
+  min-height:100svh;display:flex;align-items:center;
+  background:var(--navy);overflow:hidden;
+  padding:120px 0 80px;position:relative;
+}
+/* radial mesh gradient */
+.hero-bg{
+  position:absolute;inset:0;pointer-events:none;
+  background:
+    radial-gradient(ellipse 80% 60% at 60% -10%,rgba(0,55,184,.55) 0%,transparent 65%),
+    radial-gradient(ellipse 50% 50% at 10% 80%,rgba(21,87,232,.25) 0%,transparent 60%),
+    radial-gradient(ellipse 40% 40% at 85% 75%,rgba(107,174,255,.08) 0%,transparent 60%),
+    #07101F;
+}
+.hero-grid{
+  position:absolute;inset:0;
+  background-image:
+    linear-gradient(rgba(255,255,255,.04) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.04) 1px,transparent 1px);
+  background-size:52px 52px;
+  mask-image:radial-gradient(ellipse 90% 80% at 55% 40%,#000 20%,transparent 75%);
+}
+canvas#nodes{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.hero-inner{position:relative;z-index:2;max-width:800px}
+.hero .eyebrow{
+  color:var(--accent);margin-bottom:28px;
+  background:rgba(107,174,255,.1);border:1px solid rgba(107,174,255,.2);
+  padding:6px 14px;border-radius:100px;
+  opacity:0;animation:fadeUp .8s var(--ease) forwards;
+}
+.hero h1{
+  font-size:clamp(38px,6.5vw,80px);font-weight:900;line-height:1.0;letter-spacing:-.04em;
+  color:#fff;margin-bottom:24px;
+  opacity:0;animation:fadeUp .8s var(--ease) .1s forwards;
+}
+.hero h1 .grad{
+  background:linear-gradient(100deg,#fff 40%,var(--accent) 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.hero .sub{
+  font-size:clamp(16px,1.8vw,20px);color:rgba(244,247,253,.65);
+  max-width:540px;line-height:1.6;margin-bottom:44px;font-weight:400;
+  opacity:0;animation:fadeUp .8s var(--ease) .2s forwards;
+}
+.hero-cta{display:flex;gap:12px;flex-wrap:wrap;opacity:0;animation:fadeUp .8s var(--ease) .3s forwards}
+.btn{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:14px 26px;border-radius:var(--r-sm);font-size:14.5px;font-weight:600;
+  cursor:pointer;border:none;transition:all .25s var(--ease);
+}
+.btn-prim{background:#fff;color:var(--blue-3)}
+.btn-prim:hover{background:var(--soft);transform:translateY(-2px);box-shadow:0 12px 32px rgba(0,0,0,.25)}
+.btn-prim svg{width:16px;height:16px;stroke:var(--blue-3);flex-shrink:0}
+.btn-sec{background:rgba(255,255,255,.08);color:#fff;border:1px solid rgba(255,255,255,.18)}
+.btn-sec:hover{background:rgba(255,255,255,.14);border-color:rgba(255,255,255,.3);transform:translateY(-2px)}
+.hero-proof{
+  display:flex;gap:0;flex-wrap:wrap;margin-top:72px;
+  border-top:1px solid rgba(255,255,255,.08);padding-top:28px;
+  opacity:0;animation:fadeUp .8s var(--ease) .42s forwards;
+}
+.hero-proof .tag{
+  font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;
+  color:rgba(255,255,255,.45);padding-right:24px;margin-right:24px;
+  border-right:1px solid rgba(255,255,255,.08);
+}
+.hero-proof .tag:last-child{border-right:none}
+.scroll-cue{
+  position:absolute;bottom:36px;left:50%;transform:translateX(-50%);
+  display:flex;flex-direction:column;align-items:center;gap:6px;
+  color:rgba(255,255,255,.3);font-size:11px;letter-spacing:.1em;text-transform:uppercase;
+  font-family:'JetBrains Mono',monospace;opacity:0;animation:fadeUp .8s var(--ease) .6s forwards;
+  z-index:2;
+}
+.scroll-cue .arr{width:18px;height:18px;stroke:currentColor;animation:bob 2s ease-in-out infinite}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(5px)}}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
+
+/* ─── STATS BAR ──────────────────────────────────────── */
+.stats-bar{
+  background:var(--soft);border-bottom:1px solid var(--line-dark);padding:20px 0;
+}
+.stats-inner{display:flex;align-items:center;justify-content:space-around;flex-wrap:wrap;gap:12px}
+.stat{text-align:center;padding:8px 20px}
+.stat .n{font-size:clamp(22px,3vw,32px);font-weight:800;letter-spacing:-.03em;color:var(--blue);line-height:1}
+.stat .l{font-size:12px;color:var(--muted-2);margin-top:4px;letter-spacing:.04em;text-transform:uppercase;font-weight:500}
+.stat-sep{width:1px;height:36px;background:var(--line-dark)}
+
+/* ─── THESIS ─────────────────────────────────────────── */
+.thesis{padding:130px 0;background:var(--white)}
+.thesis-grid{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center}
+.thesis .eyebrow{color:var(--blue);margin-bottom:16px}
+.thesis h2{font-size:clamp(28px,4vw,48px);font-weight:800;letter-spacing:-.03em;line-height:1.08}
+.thesis h2 em{font-style:normal;color:var(--blue)}
+.thesis p{margin-top:20px;font-size:17px;color:var(--muted);line-height:1.7;max-width:500px}
+.thesis p strong{color:var(--ink);font-weight:600}
+.net-wrap{position:relative}
+.net-wrap svg{width:100%;height:auto}
+.net-label{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  font-size:11px;font-family:'JetBrains Mono',monospace;
+  color:var(--blue);letter-spacing:.08em;font-weight:500;
+  background:var(--white);padding:4px 10px;border-radius:20px;
+  border:1px solid rgba(0,55,184,.2);white-space:nowrap;
+}
+
+/* ─── ECOSYSTEM ──────────────────────────────────────── */
+.eco{padding:130px 0;background:var(--soft)}
+.eco .eyebrow{color:var(--blue)}
+.bento{display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:auto auto;gap:16px;margin-top:8px}
+/* first card spans 2 cols */
+.bento .card:nth-child(1){grid-column:span 2}
+.card{
+  background:var(--white);border:1px solid var(--line-dark);border-radius:var(--r);
+  padding:32px;position:relative;overflow:hidden;
+  transition:transform .3s var(--ease),box-shadow .3s var(--ease),border-color .3s;
+}
+.card::before{
+  content:"";position:absolute;inset:0;
+  background:radial-gradient(circle at var(--mx,50%) var(--my,50%),rgba(0,55,184,.07) 0%,transparent 60%);
+  opacity:0;transition:opacity .4s;pointer-events:none;
+}
+.card:hover{transform:translateY(-5px);box-shadow:0 20px 44px -18px rgba(0,55,184,.22);border-color:rgba(0,55,184,.22)}
+.card:hover::before{opacity:1}
+.card-ico{
+  width:42px;height:42px;border-radius:10px;
+  background:linear-gradient(135deg,var(--soft),var(--grey));
+  display:grid;place-items:center;margin-bottom:22px;
+  box-shadow:0 2px 8px rgba(0,55,184,.1);
+  transition:background .3s,box-shadow .3s;
+}
+.card:hover .card-ico{background:linear-gradient(135deg,var(--blue),var(--blue-2));box-shadow:0 4px 16px rgba(0,55,184,.35)}
+.card-ico svg{width:20px;height:20px;stroke:var(--blue);transition:stroke .3s}
+.card:hover .card-ico svg{stroke:#fff}
+.card h3{font-size:18px;font-weight:700;letter-spacing:-.015em;margin-bottom:8px}
+.card p{font-size:14.5px;color:var(--muted);line-height:1.55}
+.card .card-tag{
+  margin-top:18px;display:inline-flex;align-items:center;gap:5px;
+  font-size:11px;font-family:'JetBrains Mono',monospace;letter-spacing:.08em;
+  color:var(--blue);background:rgba(0,55,184,.06);padding:4px 10px;border-radius:100px;
+}
+
+/* ─── WHY ────────────────────────────────────────────── */
+.why{
+  padding:140px 0;
+  background:linear-gradient(160deg,var(--navy) 0%,#0A2070 100%);
+  color:#fff;overflow:hidden;position:relative;
+}
+.why::before{
+  content:"";position:absolute;top:-100px;right:-100px;
+  width:500px;height:500px;border-radius:50%;
+  background:radial-gradient(circle,rgba(107,174,255,.12) 0%,transparent 70%);
+  pointer-events:none;
+}
+.why .sec-head h2{color:#fff}
+.why .eyebrow{color:var(--accent)}
+.why-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:rgba(255,255,255,.07);border-radius:var(--r);overflow:hidden}
+.why-col{
+  padding:52px 40px;background:rgba(255,255,255,.03);
+  transition:background .3s;position:relative;overflow:hidden;
+}
+.why-col:hover{background:rgba(255,255,255,.07)}
+.why-col::after{
+  content:attr(data-n);position:absolute;top:-10px;right:20px;
+  font-family:'JetBrains Mono',monospace;font-size:80px;font-weight:700;
+  color:rgba(255,255,255,.03);line-height:1;pointer-events:none;
+  transition:color .3s;
+}
+.why-col:hover::after{color:rgba(107,174,255,.07)}
+.why-col .n{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent);letter-spacing:.12em;opacity:.8}
+.why-col h3{font-size:clamp(20px,2.2vw,26px);font-weight:700;letter-spacing:-.02em;margin:16px 0 12px;line-height:1.2}
+.why-col p{font-size:15px;color:rgba(244,247,253,.65);line-height:1.65}
+.why-col .icon-wrap{
+  width:44px;height:44px;border-radius:10px;background:rgba(107,174,255,.1);
+  display:grid;place-items:center;margin-bottom:24px;
+  border:1px solid rgba(107,174,255,.15);
+}
+.why-col .icon-wrap svg{width:20px;height:20px;stroke:var(--accent)}
+
+/* ─── WHO ────────────────────────────────────────────── */
+.who{padding:130px 0;background:var(--white)}
+.who .eyebrow{color:var(--blue)}
+.who-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.who-card{
+  padding:32px;border-radius:var(--r);background:var(--soft);
+  border:1px solid var(--line-dark);
+  transition:transform .3s var(--ease),box-shadow .3s,border-color .3s,background .3s;
+  position:relative;overflow:hidden;
+}
+.who-card:hover{
+  transform:translateY(-4px);
+  box-shadow:0 16px 36px -16px rgba(0,55,184,.2);
+  border-color:rgba(0,55,184,.25);
+  background:var(--white);
+}
+.who-ico{
+  width:36px;height:36px;border-radius:8px;
+  background:rgba(0,55,184,.08);display:grid;place-items:center;margin-bottom:18px;
+  transition:background .3s;
+}
+.who-card:hover .who-ico{background:rgba(0,55,184,.15)}
+.who-ico svg{width:18px;height:18px;stroke:var(--blue)}
+.who-card h3{font-size:18px;font-weight:700;letter-spacing:-.015em;margin-bottom:7px}
+.who-card p{font-size:14.5px;color:var(--muted);line-height:1.5}
+
+/* ─── ROADMAP ────────────────────────────────────────── */
+.road{padding:140px 0;background:var(--navy-2);color:#fff;overflow:hidden;position:relative}
+.road .eyebrow{color:var(--accent)}
+.road .sec-head h2{color:#fff}
+.road .sec-head p{color:rgba(244,247,253,.55);max-width:500px}
+.tl{margin-top:16px;position:relative}
+.tl::before{
+  content:"";position:absolute;left:0;top:0;bottom:0;width:1px;
+  background:linear-gradient(to bottom,rgba(255,255,255,.15),rgba(255,255,255,.04));
+  margin-left:65px;
+}
+.phase{
+  display:grid;grid-template-columns:130px 1fr;gap:24px;
+  padding:28px 0;border-bottom:1px solid rgba(255,255,255,.06);
+  align-items:center;cursor:default;
+  transition:background .2s;border-radius:0;
+}
+.phase:last-child{border-bottom:none}
+.phase:hover .phase-h{color:var(--accent)}
+.phase-label{font-family:'JetBrains Mono',monospace;font-size:11px;color:rgba(255,255,255,.35);letter-spacing:.1em;display:flex;align-items:center;gap:14px}
+.phase-dot{
+  width:9px;height:9px;border-radius:50%;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);
+  flex-shrink:0;transition:background .3s,border-color .3s,box-shadow .3s;
+}
+.phase:hover .phase-dot{background:var(--accent);border-color:var(--accent);box-shadow:0 0 0 4px rgba(107,174,255,.18)}
+.phase-h{font-size:clamp(20px,2.8vw,30px);font-weight:700;letter-spacing:-.025em;transition:color .3s}
+.phase-desc{font-size:14px;color:rgba(255,255,255,.4);margin-top:4px;font-weight:400;line-height:1.4}
+.road-note{margin-top:40px;font-family:'JetBrains Mono',monospace;font-size:11.5px;color:rgba(255,255,255,.3);letter-spacing:.06em}
+
+/* ─── BENEFITS ───────────────────────────────────────── */
+.ben{padding:130px 0;background:var(--soft)}
+.ben .eyebrow{color:var(--blue)}
+.ben-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.ben-card{
+  padding:36px 28px;border-radius:var(--r);background:var(--white);
+  border:1px solid var(--line-dark);
+  transition:transform .3s var(--ease),box-shadow .3s,border-color .3s;
+  position:relative;overflow:hidden;
+}
+.ben-card::after{
+  content:"";position:absolute;bottom:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--blue),var(--accent));
+  transform:scaleX(0);transform-origin:left;transition:transform .35s var(--ease);
+}
+.ben-card:hover{transform:translateY(-5px);box-shadow:0 20px 44px -18px rgba(0,55,184,.2);border-color:rgba(0,55,184,.18)}
+.ben-card:hover::after{transform:scaleX(1)}
+.ben-n{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--blue);letter-spacing:.1em;margin-bottom:20px;opacity:.8}
+.ben-card h3{font-size:17px;font-weight:700;letter-spacing:-.015em;line-height:1.3;margin-bottom:8px}
+.ben-card p{font-size:14px;color:var(--muted);line-height:1.5}
+
+/* ─── FINAL CTA ──────────────────────────────────────── */
+.cta{
+  padding:150px 0;overflow:hidden;position:relative;
+  background:linear-gradient(150deg,var(--blue-3) 0%,var(--blue-2) 60%,#1F6BFF 100%);
+  color:#fff;text-align:center;
+}
+.cta-bg{
+  position:absolute;inset:0;
+  background-image:linear-gradient(rgba(255,255,255,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.04) 1px,transparent 1px);
+  background-size:52px 52px;
+  mask-image:radial-gradient(ellipse 70% 80% at 50% 50%,#000 10%,transparent 70%);
+}
+.cta::before{
+  content:"";position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  width:800px;height:400px;
+  background:radial-gradient(ellipse,rgba(167,200,255,.12) 0%,transparent 70%);
+}
+.cta-inner{position:relative;z-index:2;max-width:680px;margin:0 auto}
+.cta .eyebrow{color:var(--accent-2);margin-bottom:20px;justify-content:center}
+.cta h2{font-size:clamp(32px,5vw,60px);font-weight:900;letter-spacing:-.04em;line-height:1.04}
+.cta p{font-size:18px;color:rgba(244,247,253,.7);margin:20px auto 40px;max-width:480px;line-height:1.6}
+.cta-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+
+/* ─── FOOTER ─────────────────────────────────────────── */
+footer{background:var(--navy);color:#fff;padding:60px 0 36px}
+.foot-inner{display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:36px;padding-bottom:36px;border-bottom:1px solid rgba(255,255,255,.07)}
+.foot-brand p{font-size:14px;color:rgba(255,255,255,.4);margin-top:12px;max-width:220px;line-height:1.5}
+.foot-links-col h4{font-size:11px;font-family:'JetBrains Mono',monospace;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:16px}
+.foot-links-col a{display:block;font-size:14px;font-weight:500;color:rgba(255,255,255,.6);margin-bottom:10px;transition:color .2s}
+.foot-links-col a:hover{color:#fff}
+.foot-bottom{padding-top:24px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+.foot-bottom p{font-size:12.5px;color:rgba(255,255,255,.3)}
+
+/* ─── RESPONSIVE ─────────────────────────────────────── */
+@media(max-width:960px){
+  .thesis-grid{grid-template-columns:1fr;gap:52px}
+  .bento{grid-template-columns:1fr 1fr}
+  .bento .card:nth-child(1){grid-column:span 2}
+  .who-grid{grid-template-columns:repeat(2,1fr)}
+  .why-grid{grid-template-columns:1fr}
+  .ben-grid{grid-template-columns:repeat(2,1fr)}
+  .phase{grid-template-columns:100px 1fr;gap:16px}
+  .tl::before{margin-left:49px}
+}
+@media(max-width:720px){
+  .bento{grid-template-columns:1fr}
+  .bento .card:nth-child(1){grid-column:span 1}
+  .who-grid{grid-template-columns:1fr}
+  .ben-grid{grid-template-columns:1fr}
+  .nav-links{display:none}
+  .ham{display:flex}
+  .foot-inner{flex-direction:column;gap:32px}
+  .stats-inner .stat-sep{display:none}
+}
+@media(max-width:480px){
+  .wrap,.nav-inner{padding:0 20px}
+  .phase{grid-template-columns:1fr;gap:8px}
+  .tl::before{display:none}
+  .hero-proof .tag{padding-right:14px;margin-right:14px}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  .rv{opacity:1;transform:none}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="nav">
+  <div class="nav-inner">
+    <a href="#" class="logo">
+      <span class="logo-mark" aria-hidden="true"></span>QuantHQ
+    </a>
+    <div class="nav-links">
+      <a href="#community">Community</a>
+      <a href="#ecosystem">Ecosystem</a>
+      <a href="#roadmap">Roadmap</a>
+    </div>
+    <a href="#join" class="nav-cta">Join Community</a>
+    <button class="ham" id="ham" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+<div class="mob-menu" id="mob">
+  <a href="#community" class="mob-link">Community</a>
+  <a href="#ecosystem" class="mob-link">Ecosystem</a>
+  <a href="#roadmap" class="mob-link">Roadmap</a>
+  <a href="#join" class="mob-link">Join Community →</a>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <canvas id="nodes" aria-hidden="true"></canvas>
+  <div class="wrap hero-inner">
+    <span class="eyebrow"><span class="dot"></span>Quantitative Finance Community</span>
+    <h1>Where <span class="grad">quantitative</span><br>minds build together.</h1>
+    <p class="sub">A community for researchers, traders, developers, and builders shaping the future of quantitative finance.</p>
+    <div class="hero-cta">
+      <a href="#join" class="btn btn-prim">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        Join Community
+      </a>
+      <a href="#" class="btn btn-sec">Follow on LinkedIn</a>
+    </div>
+    <div class="hero-proof">
+      <span class="tag">Research</span>
+      <span class="tag">Build</span>
+      <span class="tag">Collaborate</span>
+      <span class="tag">Backtest</span>
+      <span class="tag">Grow</span>
+    </div>
+  </div>
+  <div class="scroll-cue" aria-hidden="true">
+    <svg class="arr" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+  </div>
+</section>
+
+<!-- STATS BAR -->
+<div class="stats-bar">
+  <div class="wrap stats-inner">
+    <div class="stat rv"><div class="n" data-count="1200">0</div><div class="l">Members</div></div>
+    <div class="stat-sep"></div>
+    <div class="stat rv" data-d="1"><div class="n" data-count="6">0</div><div class="l">Platform Surfaces</div></div>
+    <div class="stat-sep"></div>
+    <div class="stat rv" data-d="2"><div class="n" data-count="6">0</div><div class="l">Development Phases</div></div>
+    <div class="stat-sep"></div>
+    <div class="stat rv" data-d="3"><div class="n mono">2026</div><div class="l">Year Founded</div></div>
+  </div>
+</div>
+
+<!-- THESIS -->
+<section class="thesis" id="community">
+  <div class="wrap">
+    <div class="thesis-grid">
+      <div class="rv">
+        <span class="eyebrow"><span class="dot"></span>The Thesis</span>
+        <h2>Tools are everywhere.<br><em>Community is rare.</em></h2>
+        <p>The best strategies rarely emerge in isolation. QuantHQ connects researchers, traders, developers, students, and builders into a single ecosystem where <strong>ideas become models, models become strategies, and strategies become businesses.</strong></p>
+        <p style="margin-top:16px">Most platforms stop at tools. We start with people.</p>
+      </div>
+      <div class="rv net-wrap" data-d="2">
+        <svg id="net" viewBox="0 0 400 360" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"></svg>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ECOSYSTEM -->
+<section class="eco" id="ecosystem">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <span class="eyebrow"><span class="dot"></span>The Ecosystem</span>
+      <h2>Six surfaces.<br>One quant platform.</h2>
+    </div>
+    <div class="bento">
+      <div class="card rv">
+        <div class="card-ico">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M4 12h16M4 18h10"/></svg>
+        </div>
+        <h3>Feed</h3>
+        <p>Share research, market observations, and insights. A living timeline of quantitative thinking — curated by the community, for the community.</p>
+        <span class="card-tag"><span class="dot" style="background:var(--blue)"></span>Community</span>
+      </div>
+      <div class="card rv" data-d="1">
+        <div class="card-ico">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg>
+        </div>
+        <h3>Reach</h3>
+        <p>Discover collaborators, co-founders, researchers, and opportunities across the quant ecosystem.</p>
+        <span class="card-tag"><span class="dot" style="background:var(--blue)"></span>Discovery</span>
+      </div>
+      <div class="card rv" data-d="1">
+        <div class="card-ico">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9.663 17h4.673M12 3v1m6.364 1.636-.707.707M21 12h-1M4 12H3m3.343-5.657-.707-.707m2.828 9.9a5 5 0 1 1 7.072 0l-.548.547A3.374 3.374 0 0 0 14 18.469V19a2 2 0 1 1-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>
+        </div>
+        <h3>Research</h3>
+        <p>AI-powered financial analysis and market intelligence to accelerate your edge.</p>
+        <span class="card-tag"><span class="dot" style="background:var(--blue)"></span>AI-Powered</span>
+      </div>
+      <div class="card rv">
+        <div class="card-ico">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+        </div>
+        <h3>Create</h3>
+        <p>Build strategies and quantitative workflows alongside AI and community members.</p>
+        <span class="card-tag"><span class="dot" style="background:var(--blue)"></span>Build</span>
+      </div>
+      <div class="card rv" data-d="1">
+        <div class="card-ico">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        </div>
+        <h3>Backtest</h3>
+        <p>Validate ideas with historical performance analysis before risking capital.</p>
+        <span class="card-tag"><span class="dot" style="background:var(--blue)"></span>Analytics</span>
+      </div>
+      <div class="card rv" data-d="2">
+        <div class="card-ico">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        </div>
+        <h3>Chat</h3>
+        <p>Real-time discussion around markets, research, and projects with the people who matter.</p>
+        <span class="card-tag"><span class="dot" style="background:var(--blue)"></span>Real-time</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHY -->
+<section class="why">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <span class="eyebrow"><span class="dot" style="background:var(--accent)"></span>Why QuantHQ Exists</span>
+      <h2>The future of quant finance<br>is collaborative.</h2>
+    </div>
+    <div class="why-grid rv" data-d="1">
+      <div class="why-col" data-n="01">
+        <div class="icon-wrap">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        </div>
+        <span class="n">01</span>
+        <h3>Research alone</h3>
+        <p>Limited perspectives. Blind spots compound when no one challenges the model or the assumptions behind it.</p>
+      </div>
+      <div class="why-col" data-n="02">
+        <div class="icon-wrap">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+        </div>
+        <span class="n">02</span>
+        <h3>Build alone</h3>
+        <p>Limited execution. Infrastructure and edge stay locked inside one head, slowing everything down.</p>
+      </div>
+      <div class="why-col" data-n="03">
+        <div class="icon-wrap">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        </div>
+        <span class="n">03</span>
+        <h3>Grow together</h3>
+        <p>Compounding knowledge, networks, and opportunities. The whole community benefits when each member wins.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHO -->
+<section class="who">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <span class="eyebrow"><span class="dot"></span>Who It's For</span>
+      <h2>Built for every quant.</h2>
+      <p>Whether you're a first-year student or a seasoned fund manager — if you work with numbers and markets, this is your community.</p>
+    </div>
+    <div class="who-grid">
+      <div class="who-card rv">
+        <div class="who-ico"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg></div>
+        <h3>Students</h3>
+        <p>Learn faster from experienced builders and researchers working at the frontier.</p>
+      </div>
+      <div class="who-card rv" data-d="1">
+        <div class="who-ico"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg></div>
+        <h3>Researchers</h3>
+        <p>Share ideas, publish work, and find collaborators who can pressure-test your models.</p>
+      </div>
+      <div class="who-card rv" data-d="2">
+        <div class="who-ico"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></div>
+        <h3>Developers</h3>
+        <p>Build models, tools, and infrastructure alongside a technical community that gets it.</p>
+      </div>
+      <div class="who-card rv">
+        <div class="who-ico"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+        <h3>Traders</h3>
+        <p>Discover signals, discuss alpha, and collaborate with researchers who share your edge.</p>
+      </div>
+      <div class="who-card rv" data-d="1">
+        <div class="who-ico"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg></div>
+        <h3>Data Scientists</h3>
+        <p>Experiment with factors and strategies using shared datasets and community knowledge.</p>
+      </div>
+      <div class="who-card rv" data-d="2">
+        <div class="who-ico"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg></div>
+        <h3>Founders</h3>
+        <p>Meet technical and financial talent. Build your cap table and your team simultaneously.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ROADMAP -->
+<section class="road" id="roadmap">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <span class="eyebrow"><span class="dot" style="background:var(--accent)"></span>What We're Building</span>
+      <h2>From AI analyst<br>to a full quant OS.</h2>
+      <p>Building publicly. Iterating with the community. Each phase unlocks the next.</p>
+    </div>
+    <div class="tl">
+      <div class="phase rv">
+        <div class="phase-label"><span class="phase-dot"></span>Phase 1</div>
+        <div>
+          <div class="phase-h">AI Analyst</div>
+          <div class="phase-desc">AI-powered financial research and market intelligence</div>
+        </div>
+      </div>
+      <div class="phase rv" data-d="1">
+        <div class="phase-label"><span class="phase-dot"></span>Phase 2</div>
+        <div>
+          <div class="phase-h">Alpha Engine</div>
+          <div class="phase-desc">Signal discovery and factor research at scale</div>
+        </div>
+      </div>
+      <div class="phase rv" data-d="2">
+        <div class="phase-label"><span class="phase-dot"></span>Phase 3</div>
+        <div>
+          <div class="phase-h">Strategy Creation Layer</div>
+          <div class="phase-desc">Collaborative strategy building with AI co-pilot</div>
+        </div>
+      </div>
+      <div class="phase rv" data-d="3">
+        <div class="phase-label"><span class="phase-dot"></span>Phase 4</div>
+        <div>
+          <div class="phase-h">Portfolio Simulation</div>
+          <div class="phase-desc">Historical backtesting and risk attribution</div>
+        </div>
+      </div>
+      <div class="phase rv" data-d="4">
+        <div class="phase-label"><span class="phase-dot"></span>Phase 5</div>
+        <div>
+          <div class="phase-h">Quant Social Network</div>
+          <div class="phase-desc">The professional graph for quantitative finance</div>
+        </div>
+      </div>
+      <div class="phase rv" data-d="5">
+        <div class="phase-label"><span class="phase-dot"></span>Phase 6</div>
+        <div>
+          <div class="phase-h">Full Quant Operating System</div>
+          <div class="phase-desc">The end-to-end platform from idea to execution</div>
+        </div>
+      </div>
+    </div>
+    <p class="road-note rv">// building publicly · iterating with the community</p>
+  </div>
+</section>
+
+<!-- BENEFITS -->
+<section class="ben">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <span class="eyebrow"><span class="dot"></span>Early Community Benefits</span>
+      <h2>Early members get a front row seat.</h2>
+      <p>Shape the product, build your network, and access the platform before anyone else.</p>
+    </div>
+    <div class="ben-grid">
+      <div class="ben-card rv">
+        <div class="ben-n">01</div>
+        <h3>Shape product direction</h3>
+        <p>Your feedback determines what gets built next. Direct access to the founding team.</p>
+      </div>
+      <div class="ben-card rv" data-d="1">
+        <div class="ben-n">02</div>
+        <h3>Build your quant network</h3>
+        <p>Meet researchers, traders, and founders from day one — before the crowd.</p>
+      </div>
+      <div class="ben-card rv" data-d="2">
+        <div class="ben-n">03</div>
+        <h3>Access future releases early</h3>
+        <p>Beta access to every new surface before public launch. No waitlist.</p>
+      </div>
+      <div class="ben-card rv" data-d="3">
+        <div class="ben-n">04</div>
+        <h3>Showcase your research</h3>
+        <p>Publish and be discovered by the most relevant audience in quant finance.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section class="cta" id="join">
+  <div class="cta-bg"></div>
+  <div class="wrap cta-inner rv">
+    <span class="eyebrow"><span class="dot" style="background:var(--accent-2)"></span>Ready to join?</span>
+    <h2>Join the next generation<br>of quant builders.</h2>
+    <p>Connect with researchers, traders, developers, and builders from around the world.</p>
+    <div class="cta-btns">
+      <a href="#" class="btn btn-prim">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;stroke:var(--blue-3)"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        Join Community
+      </a>
+      <a href="#" class="btn btn-sec">Follow on LinkedIn</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="wrap">
+    <div class="foot-inner">
+      <div class="foot-brand">
+        <a href="#" class="logo"><span class="logo-mark" aria-hidden="true"></span>QuantHQ</a>
+        <p>Building the home of quantitative finance.</p>
+      </div>
+      <div class="foot-links-col">
+        <h4>Platform</h4>
+        <a href="#">Feed</a>
+        <a href="#">Reach</a>
+        <a href="#">Research</a>
+        <a href="#">Backtest</a>
+      </div>
+      <div class="foot-links-col">
+        <h4>Company</h4>
+        <a href="#">About</a>
+        <a href="#">Roadmap</a>
+        <a href="#">Contact</a>
+      </div>
+      <div class="foot-links-col">
+        <h4>Connect</h4>
+        <a href="#">LinkedIn</a>
+        <a href="#">GitHub</a>
+        <a href="#">X / Twitter</a>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <p>QuantHQ © 2026</p>
+      <p>The community layer for quantitative finance.</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* ── Navbar scroll ── */
+const nav=document.getElementById('nav');
+const onScroll=()=>nav.classList.toggle('scrolled',scrollY>24);
+addEventListener('scroll',onScroll,{passive:true});
+
+/* ── Mobile menu ── */
+const ham=document.getElementById('ham'),mob=document.getElementById('mob');
+ham.addEventListener('click',()=>{
+  const open=ham.classList.toggle('open');
+  mob.classList.toggle('open',open);
+});
+mob.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{
+  ham.classList.remove('open');mob.classList.remove('open');
+}));
+
+/* ── Reveal on scroll ── */
+const io=new IntersectionObserver(es=>{
+  es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}});
+},{threshold:0,rootMargin:'0px 0px -40px 0px'});
+document.querySelectorAll('.rv').forEach(el=>io.observe(el));
+
+/* ── Animated counters ── */
+function animCount(el,target,suffix=''){
+  let start=null;const dur=1400;
+  const fmt=n=>n>=1000?n.toLocaleString():n;
+  const step=ts=>{
+    if(!start)start=ts;
+    const p=Math.min((ts-start)/dur,1);
+    const ease=p<.5?2*p*p:1-Math.pow(-2*p+2,2)/2;
+    el.textContent=fmt(Math.round(ease*target))+suffix;
+    if(p<1)requestAnimationFrame(step);
+  };
+  requestAnimationFrame(step);
+}
+const countIO=new IntersectionObserver(es=>{
+  es.forEach(e=>{
+    if(!e.isIntersecting)return;
+    const target=+e.target.dataset.count;
+    const suffix=e.target.dataset.suffix||'';
+    animCount(e.target,target,suffix);
+    countIO.unobserve(e.target);
+  });
+},{threshold:.5});
+document.querySelectorAll('[data-count]').forEach(el=>countIO.observe(el));
+
+/* ── Hero canvas particle network ── */
+const canvas=document.getElementById('nodes');
+const ctx=canvas.getContext('2d');
+let W,H,pts;
+const resize=()=>{
+  W=canvas.width=canvas.offsetWidth;
+  H=canvas.height=canvas.offsetHeight;
+  pts=Array.from({length:40},()=>({
+    x:Math.random()*W,y:Math.random()*H,
+    vx:(Math.random()-.5)*.22,vy:(Math.random()-.5)*.22
+  }));
+};
+const loop=()=>{
+  ctx.clearRect(0,0,W,H);
+  for(const p of pts){
+    p.x+=p.vx;p.y+=p.vy;
+    if(p.x<0||p.x>W)p.vx*=-1;
+    if(p.y<0||p.y>H)p.vy*=-1;
+  }
+  for(let i=0;i<pts.length;i++){
+    for(let j=i+1;j<pts.length;j++){
+      const a=pts[i],b=pts[j];
+      const d=Math.hypot(a.x-b.x,a.y-b.y);
+      if(d<120){
+        ctx.strokeStyle=`rgba(107,174,255,${.15*(1-d/120)})`;
+        ctx.lineWidth=.8;
+        ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.stroke();
+      }
+    }
+  }
+  for(const p of pts){
+    ctx.fillStyle='rgba(167,200,255,.45)';
+    ctx.beginPath();ctx.arc(p.x,p.y,1.4,0,Math.PI*2);ctx.fill();
+  }
+  requestAnimationFrame(loop);
+};
+if(!matchMedia('(prefers-reduced-motion:reduce)').matches){
+  resize();loop();addEventListener('resize',resize,{passive:true});
+}
+
+/* ── Card mouse-light effect ── */
+document.querySelectorAll('.card').forEach(card=>{
+  card.addEventListener('mousemove',e=>{
+    const r=card.getBoundingClientRect();
+    card.style.setProperty('--mx',((e.clientX-r.left)/r.width*100)+'%');
+    card.style.setProperty('--my',((e.clientY-r.top)/r.height*100)+'%');
+  });
+});
+
+/* ── Thesis network SVG ── */
+(()=>{
+  const svg=document.getElementById('net');
+  const ns='http://www.w3.org/2000/svg';
+  const cx=200,cy=175;
+  const nodes=[
+    {x:200,y:42,label:'Research'},
+    {x:336,y:100,label:'Build'},
+    {x:350,y:248,label:'Backtest'},
+    {x:224,y:318,label:'Network'},
+    {x:82,y:290,label:'Collaborate'},
+    {x:50,y:148,label:'Grow'},
+    {x:110,y:58,label:'Trade'},
+  ];
+
+  /* glow filter */
+  const defs=document.createElementNS(ns,'defs');
+  const filt=document.createElementNS(ns,'filter');
+  filt.setAttribute('id','glow');filt.setAttribute('x','-50%');filt.setAttribute('y','-50%');filt.setAttribute('width','200%');filt.setAttribute('height','200%');
+  const blur=document.createElementNS(ns,'feGaussianBlur');blur.setAttribute('stdDeviation','3');blur.setAttribute('result','blur');
+  const merge=document.createElementNS(ns,'feMerge');
+  const m1=document.createElementNS(ns,'feMergeNode');m1.setAttribute('in','blur');
+  const m2=document.createElementNS(ns,'feMergeNode');m2.setAttribute('in','SourceGraphic');
+  merge.appendChild(m1);merge.appendChild(m2);
+  filt.appendChild(blur);filt.appendChild(merge);defs.appendChild(filt);svg.appendChild(defs);
+
+  /* edges */
+  nodes.forEach(n=>{
+    const l=document.createElementNS(ns,'line');
+    l.setAttribute('x1',cx);l.setAttribute('y1',cy);
+    l.setAttribute('x2',n.x);l.setAttribute('y2',n.y);
+    l.setAttribute('stroke','#0037B8');l.setAttribute('stroke-opacity','.14');l.setAttribute('stroke-width','1.2');
+    svg.appendChild(l);
+  });
+
+  /* outer nodes */
+  nodes.forEach(n=>{
+    const g=document.createElementNS(ns,'g');
+    const c=document.createElementNS(ns,'circle');
+    c.setAttribute('cx',n.x);c.setAttribute('cy',n.y);c.setAttribute('r','6');
+    c.setAttribute('fill','#fff');c.setAttribute('stroke','#0037B8');c.setAttribute('stroke-width','1.5');c.setAttribute('stroke-opacity','.4');
+    g.appendChild(c);
+    svg.appendChild(g);
+  });
+
+  /* center node */
+  const gCore=document.createElementNS(ns,'g');
+  gCore.setAttribute('filter','url(#glow)');
+  const core=document.createElementNS(ns,'circle');
+  core.setAttribute('cx',cx);core.setAttribute('cy',cy);core.setAttribute('r','18');
+  core.setAttribute('fill','#0037B8');
+  gCore.appendChild(core);
+  const sq=document.createElementNS(ns,'rect');
+  sq.setAttribute('x',cx-5);sq.setAttribute('y',cy-5);sq.setAttribute('width','10');sq.setAttribute('height','10');
+  sq.setAttribute('fill','#A7C8FF');sq.setAttribute('rx','2');
+  gCore.appendChild(sq);
+  svg.appendChild(gCore);
+
+  /* pulse ring */
+  const pulse=document.createElementNS(ns,'circle');
+  pulse.setAttribute('cx',cx);pulse.setAttribute('cy',cy);pulse.setAttribute('r','18');
+  pulse.setAttribute('fill','none');pulse.setAttribute('stroke','#0037B8');pulse.setAttribute('stroke-width','1.5');
+  if(!matchMedia('(prefers-reduced-motion:reduce)').matches){
+    const ar=document.createElementNS(ns,'animate');
+    ar.setAttribute('attributeName','r');ar.setAttribute('values','18;36');ar.setAttribute('dur','2.8s');ar.setAttribute('repeatCount','indefinite');
+    const ao=document.createElementNS(ns,'animate');
+    ao.setAttribute('attributeName','stroke-opacity');ao.setAttribute('values','.5;0');ao.setAttribute('dur','2.8s');ao.setAttribute('repeatCount','indefinite');
+    pulse.appendChild(ar);pulse.appendChild(ao);
+  }
+  svg.appendChild(pulse);
+})();
+</script>
+</body>
+</html>
