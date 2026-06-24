@@ -14,20 +14,28 @@
 <style>
 /* ─── TOKENS ──────────────────────────────────────── */
 :root{
-  --blue:#0F3CC8;--blue-d:#0A2FA0;--blue-l:#2350E0;
+  --blue:#0F3CC8;--blue-d:#0A2FA0;--blue-l:#2655E8;
   --navy:#05091A;--navy-2:#0C1230;
   --white:#fff;--soft:#F5F7FF;
   --ink:#0A0F1E;--muted:#64718F;--muted-2:#9099AE;
   --line:rgba(255,255,255,.08);--line-d:rgba(10,15,30,.07);
   --code-bg:#080E1E;
-  --r:14px;--r-sm:8px;
+  --r:14px;--r-sm:8px;--r-lg:32px;
   --ease:cubic-bezier(.22,1,.36,1);
 }
+
+/* ─── REDUCED MOTION ───────────────────────────────── */
+@media(prefers-reduced-motion:reduce){
+  *{animation:none!important;transition:none!important}
+}
+
+/* ─── BASE STYLES ──────────────────────────────────── */
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth;scroll-padding-top:72px}
 body{font-family:'Nunito','Inter',system-ui,sans-serif;color:var(--ink);background:#fff;-webkit-font-smoothing:antialiased;line-height:1.5;overflow-x:hidden}
 a{text-decoration:none;color:inherit}
 .wrap{max-width:1140px;margin:0 auto;padding:0 24px}
+
 
 /* ─── TYPE ────────────────────────────────────────── */
 .mono{font-family:'JetBrains Mono',monospace}
@@ -38,6 +46,8 @@ a{text-decoration:none;color:inherit}
 }
 .pip{width:5px;height:5px;border-radius:50%;background:currentColor}
 
+@keyframes slideIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
 @keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
 /* ─── REVEAL ──────────────────────────────────────── */
 .rv{opacity:0;transform:translateY(20px);transition:opacity .6s var(--ease),transform .6s var(--ease)}
@@ -515,27 +525,25 @@ footer{background:var(--navy);color:#fff;padding:56px 0 32px}
 <div id="cursor-glow"></div>
 
 <!-- NAV -->
-<nav id="nav">
-  <div class="ni">
-    <a href="#" class="logo">
-      <svg width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-        <!-- closed rounded square, open notch at bottom-right corner -->
-        <rect x="3" y="3" width="22" height="22" rx="3" stroke="white" stroke-width="2.2" fill="none"/>
-        <text x="7.5" y="19.5" font-family="Nunito,system-ui,sans-serif" font-weight="800" font-size="10.5" fill="white" letter-spacing="0">HQ</text>
-        <!-- accent dot at bottom-right, matching logo -->
-        <rect x="22" y="22" width="9" height="9" rx="2" fill="#6B9FDA"/>
-      </svg>
-      <span class="logo-wordmark">Quant<strong>HQ</strong></span>
-    </a>
-    <div class="nl">
-      <a href="#community">Community</a>
-      <a href="#alpha">Alpha Toolkit</a>
-      <a href="#roadmap">Roadmap</a>
+  <nav id="nav">
+    <div class="ni">
+      <a href="#" class="logo">
+        <svg width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <rect x="3" y="3" width="22" height="22" rx="3" stroke="#0F3CC8" stroke-width="2.2" fill="none"/>
+          <text x="7.5" y="19.5" font-family="Nunito,system-ui,sans-serif" font-weight="800" font-size="10.5" fill="#0F3CC8" letter-spacing="0">HQ</text>
+          <rect x="22" y="22" width="9" height="9" rx="2" fill="#0F3CC8"/>
+        </svg>
+        <span class="logo-wordmark">Quant<strong>HQ</strong></span>
+      </a>
+      <div class="nl">
+        <a href="#community">Community</a>
+        <a href="#alpha">Alpha Toolkit</a>
+        <a href="#roadmap">Roadmap</a>
+      </div>
+      <a href="#join" class="nc">Join Community</a>
+      <button class="ham" id="ham" aria-label="Menu"><span></span><span></span><span></span></button>
     </div>
-    <a href="#join" class="nc">Join Community</a>
-    <button class="ham" id="ham" aria-label="Menu"><span></span><span></span><span></span></button>
-  </div>
-</nav>
+  </nav>
 <div class="mm" id="mm">
   <a href="#community" class="ml">Community</a>
   <a href="#alpha" class="ml">Alpha Toolkit</a>
