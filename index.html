@@ -739,10 +739,20 @@ section{position:relative;z-index:10}
   transition:transform 0.5s var(--ease-out);
 }
 .stat-cell:hover::before{transform:scaleX(1)}
+.stat-cell:hover .stat-num{
+  animation:statPop 0.4s var(--ease-spring);
+  color:var(--blue);text-shadow:0 0 20px rgba(0,217,255,0.5);
+}
+@keyframes statPop{
+  0%{transform:scale(1)}
+  50%{transform:scale(1.08)}
+  100%{transform:scale(1)}
+}
 .stat-num{
   font-size:clamp(36px,4vw,56px);
   font-weight:800;letter-spacing:-0.04em;
   line-height:1;color:var(--white);
+  transition:color 0.3s,text-shadow 0.3s;
 }
 .stat-unit{
   font-size:0.45em;font-weight:500;
@@ -751,10 +761,14 @@ section{position:relative;z-index:10}
 .stat-label{
   font-size:11px;letter-spacing:0.08em;text-transform:uppercase;
   color:rgba(255,255,255,0.3);margin-top:12px;font-weight:500;
+  transition:color 0.3s;
 }
+.stat-cell:hover .stat-label{color:rgba(255,255,255,0.6)}
 .stat-sub{
   font-size:12px;color:rgba(255,255,255,0.2);margin-top:6px;line-height:1.5;
+  transition:color 0.3s;
 }
+.stat-cell:hover .stat-sub{color:rgba(255,255,255,0.35)}
 .stat-live{
   position:absolute;top:16px;right:16px;
   font-size:8px;letter-spacing:0.15em;text-transform:uppercase;
@@ -765,9 +779,16 @@ section{position:relative;z-index:10}
   width:4px;height:4px;border-radius:50%;
   background:#00FF88;
   animation:livePulse 1.5s ease-in-out infinite;
+  box-shadow:0 0 8px rgba(0,255,136,0.6);
 }
 @keyframes livePulse{
-  0%,100%{opacity:1}50%{opacity:0.3}
+  0%,100%{opacity:1;box-shadow:0 0 8px rgba(0,255,136,0.6)}
+  50%{opacity:0.3;box-shadow:0 0 2px rgba(0,255,136,0.2)}
+}
+@keyframes statGlow{
+  0%{text-shadow:0 0 0 transparent;transform:scale(0.8)}
+  50%{text-shadow:0 0 30px rgba(0,217,255,0.6);transform:scale(1.05)}
+  100%{text-shadow:0 0 20px rgba(0,217,255,0.4);transform:scale(1)}
 }
 
 /* ── FORCE GRAPH ── */
@@ -912,7 +933,12 @@ footer{
 <nav id="nav">
   <div class="nav-inner">
     <a href="#" class="nav-logo">
-      <div class="nav-logo-mark">HQ</div>
+      <svg width="28" height="28" viewBox="0 0 28 28" fill="none" style="flex-shrink:0">
+        <rect x="2" y="2" width="16" height="16" rx="2" stroke="currentColor" stroke-width="1.5" fill="none"/>
+        <text x="5" y="14" font-family="Inter,system-ui" font-size="8" font-weight="700" fill="currentColor" letter-spacing="-0.02em">HQ</text>
+        <rect x="16" y="16" width="8" height="8" rx="1.5" fill="currentColor"/>
+        <line x1="18" y1="2" x2="18" y2="18" stroke="currentColor" stroke-width="1" opacity="0.5"/>
+      </svg>
       QuantHQ
     </a>
     <div class="nav-links">
@@ -929,7 +955,7 @@ footer{
 <section class="hero">
   <div class="float-field" id="float-field"></div>
   <div class="hero-inner">
-    <div class="hero-eyebrow">AI Research Institution · Est. 2024</div>
+    <div class="hero-eyebrow">AI Research Institution</div>
     <h1 class="hero-h1">
       <span class="hero-line">QUANT</span>
       <span class="hero-line">INTELLIGENCE</span>
@@ -1387,12 +1413,13 @@ document.querySelectorAll('.rv2').forEach(el => rio.observe(el));
 
 /* ── STAT COUNTERS ── */
 function animCount(el, target) {
-  let start = null; const dur = 1600;
+  let start = null; const dur = 2000;
   const fmt = n => n >= 1000 ? n.toLocaleString() : String(n);
+  el.style.animation = 'statGlow 0.6s ease-out';
   const step = ts => {
     if (!start) start = ts;
     const p = Math.min((ts - start) / dur, 1);
-    const e = 1 - Math.pow(1 - p, 3);
+    const e = p<0.5 ? 2*p*p : 1-Math.pow(-2*p+2,2)/2;
     el.textContent = fmt(Math.round(e * target));
     if (p < 1) requestAnimationFrame(step);
   };
@@ -1750,24 +1777,57 @@ function stepForce() {
     fNodes[i].y=Math.max(20,Math.min(fH-20,fNodes[i].y));
   }
 }
+let fMouseX = -1, fMouseY = -1, fHoverNode = -1;
+fc.addEventListener('mousemove', e => {
+  const rect = fc.getBoundingClientRect();
+  fMouseX = e.clientX - rect.left;
+  fMouseY = e.clientY - rect.top;
+  fHoverNode = -1;
+  for (let i=0; i<fNodes.length; i++) {
+    const d = Math.hypot(fNodes[i].x-fMouseX, fNodes[i].y-fMouseY);
+    if (d < 12) { fHoverNode = i; break; }
+  }
+}, {passive:true});
+fc.addEventListener('mouseleave', () => { fMouseX=-1; fMouseY=-1; fHoverNode=-1; });
+
 function drawForce() {
   fctx.clearRect(0,0,fW,fH);
   stepForce();
+
+  // Draw edges with hover highlighting
   fEdges.forEach(([a,b])=>{
     const na=fNodes[a],nb=fNodes[b];
-    fctx.strokeStyle='rgba(255,255,255,0.04)';
-    fctx.lineWidth=0.7;
+    const isHovered = fHoverNode === a || fHoverNode === b;
+    fctx.strokeStyle = isHovered ? 'rgba(0,217,255,0.35)' : 'rgba(255,255,255,0.04)';
+    fctx.lineWidth = isHovered ? 1.5 : 0.7;
     fctx.beginPath();fctx.moveTo(na.x,na.y);fctx.lineTo(nb.x,nb.y);fctx.stroke();
   });
-  fNodes.forEach(n=>{
+
+  // Draw nodes with hover effects
+  fNodes.forEach((n,i)=>{
     const c=nodeTypes[n.type].color;
-    fctx.beginPath();fctx.arc(n.x,n.y,n.r,0,Math.PI*2);
-    fctx.fillStyle=c;fctx.fill();
-    const grad=fctx.createRadialGradient(n.x,n.y,n.r,n.x,n.y,n.r*4);
-    grad.addColorStop(0,c.replace('0.8','0.15').replace('0.4','0.08'));
+    const isHovered = fHoverNode === i;
+    const scale = isHovered ? 1.6 : 1;
+    const glowRadius = isHovered ? n.r*8 : n.r*4;
+
+    // Glow
+    const grad=fctx.createRadialGradient(n.x,n.y,n.r,n.x,n.y,glowRadius);
+    grad.addColorStop(0,c.replace('0.8','0.25').replace('0.4','0.15'));
     grad.addColorStop(1,'transparent');
-    fctx.beginPath();fctx.arc(n.x,n.y,n.r*4,0,Math.PI*2);
+    fctx.beginPath();fctx.arc(n.x,n.y,glowRadius,0,Math.PI*2);
     fctx.fillStyle=grad;fctx.fill();
+
+    // Node
+    fctx.beginPath();fctx.arc(n.x,n.y,n.r*scale,0,Math.PI*2);
+    fctx.fillStyle=c;fctx.fill();
+
+    // Highlight ring on hover
+    if (isHovered) {
+      fctx.strokeStyle = 'rgba(255,255,255,0.6)';
+      fctx.lineWidth = 1.5;
+      fctx.beginPath();fctx.arc(n.x,n.y,n.r*scale+2,0,Math.PI*2);
+      fctx.stroke();
+    }
   });
   requestAnimationFrame(drawForce);
 }
