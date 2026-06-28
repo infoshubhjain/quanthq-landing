@@ -5,6 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>QuantHQ — AI Research Institution for Quantitative Finance</title>
 <meta name="description" content="QuantHQ is a digital research institution. Where quant researchers, engineers, mathematicians, and AI scientists build the future of quantitative finance.">
+<meta property="og:title" content="QuantHQ — AI Research Institution for Quantitative Finance">
+<meta property="og:description" content="A living research ecosystem for quant researchers, engineers, mathematicians, and AI scientists building the future of quantitative finance.">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="QuantHQ — AI Research Institution">
+<meta name="twitter:description" content="A living research ecosystem for quant researchers, engineers, and AI scientists.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -26,11 +32,26 @@ body{
   background:var(--black);
   color:var(--white);
   overflow-x:hidden;
-  cursor:none;
   -webkit-font-smoothing:antialiased;
 }
+@media(hover:hover){body{cursor:none}button{cursor:none}}
 a{text-decoration:none;color:inherit}
-button{border:none;background:none;cursor:none;color:inherit;font:inherit}
+button{border:none;background:none;color:inherit;font:inherit}
+
+/* ── SKIP LINK ── */
+.skip-link{
+  position:absolute;top:-100%;left:16px;z-index:9999;
+  padding:8px 16px;background:var(--blue);color:#000;
+  font-size:13px;font-weight:600;border-radius:4px;
+  transition:top 0.2s;
+}
+.skip-link:focus{top:8px}
+
+/* ── FOCUS STYLES ── */
+*:focus-visible{
+  outline:2px solid var(--blue);
+  outline-offset:2px;
+}
 
 /* ── LOADER ── */
 #loader{
@@ -140,7 +161,7 @@ nav.scrolled{
 }
 .nav-links{display:flex;gap:32px;margin-left:auto}
 .nav-links a{
-  font-size:13px;color:rgba(255,255,255,0.45);
+  font-size:13px;color:rgba(255,255,255,0.55);
   font-weight:500;letter-spacing:0.01em;
   transition:color 0.2s;
 }
@@ -160,6 +181,21 @@ nav.scrolled{
   border-color:var(--blue);
   box-shadow:0 0 20px rgba(0,217,255,0.15);
 }
+/* ── MOBILE MENU ── */
+.nav-hamburger{
+  display:none;flex-direction:column;gap:5px;
+  padding:8px;margin-left:auto;cursor:pointer;
+  z-index:900;
+}
+.nav-hamburger span{
+  display:block;width:22px;height:2px;
+  background:rgba(255,255,255,0.7);
+  border-radius:2px;
+  transition:transform 0.3s var(--ease-out),opacity 0.2s;
+}
+.nav-hamburger.active span:nth-child(1){transform:rotate(45deg) translate(5px,5px)}
+.nav-hamburger.active span:nth-child(2){opacity:0}
+.nav-hamburger.active span:nth-child(3){transform:rotate(-45deg) translate(5px,-5px)}
 
 /* ── BACKGROUND SYSTEM ── */
 #bg-canvas{position:fixed;inset:0;z-index:0;pointer-events:none}
@@ -189,7 +225,7 @@ section{position:relative;z-index:10}
 
 /* ── HERO ── */
 .hero{
-  min-height:140vh;
+  min-height:100vh;
   display:flex;align-items:center;
   padding:120px 32px 80px;
   position:relative;
@@ -203,7 +239,7 @@ section{position:relative;z-index:10}
   display:inline-flex;align-items:center;gap:10px;
   font-size:10px;letter-spacing:0.3em;text-transform:uppercase;
   color:var(--blue);font-weight:600;margin-bottom:40px;
-  opacity:0;animation:heroFadeUp 0.8s var(--ease-out) 3.2s both;
+  opacity:0;animation:heroFadeUp 0.8s var(--ease-out) 0.3s both;
 }
 .hero-eyebrow::before{
   content:'';width:32px;height:1px;
@@ -220,11 +256,11 @@ section{position:relative;z-index:10}
   display:block;overflow:hidden;
   opacity:0;animation:heroLine 1s var(--ease-out) both;
 }
-.hero-line:nth-child(1){animation-delay:3.3s}
-.hero-line:nth-child(2){animation-delay:3.45s;color:rgba(255,255,255,0.3)}
-.hero-line:nth-child(3){animation-delay:3.6s}
+.hero-line:nth-child(1){animation-delay:0.4s}
+.hero-line:nth-child(2){animation-delay:0.55s;color:rgba(255,255,255,0.3)}
+.hero-line:nth-child(3){animation-delay:0.7s}
 .hero-line:nth-child(4){
-  animation-delay:3.75s;
+  animation-delay:0.85s;
   background:linear-gradient(135deg,var(--blue),var(--violet));
   -webkit-background-clip:text;-webkit-text-fill-color:transparent;
   background-clip:text;
@@ -240,12 +276,12 @@ section{position:relative;z-index:10}
 .hero-sub{
   margin-top:48px;max-width:480px;
   font-size:16px;line-height:1.7;
-  color:rgba(255,255,255,0.4);font-weight:400;
-  opacity:0;animation:heroFadeUp 0.8s var(--ease-out) 4s both;
+  color:rgba(255,255,255,0.45);font-weight:400;
+  opacity:0;animation:heroFadeUp 0.8s var(--ease-out) 1.1s both;
 }
 .hero-ctas{
   margin-top:40px;display:flex;gap:16px;align-items:center;
-  opacity:0;animation:heroFadeUp 0.8s var(--ease-out) 4.2s both;
+  opacity:0;animation:heroFadeUp 0.8s var(--ease-out) 1.3s both;
 }
 .btn-primary{
   display:inline-flex;align-items:center;gap:8px;
@@ -281,7 +317,7 @@ section{position:relative;z-index:10}
 }
 .hero-metrics{
   margin-top:64px;display:flex;gap:48px;
-  opacity:0;animation:heroFadeUp 0.8s var(--ease-out) 4.4s both;
+  opacity:0;animation:heroFadeUp 0.8s var(--ease-out) 1.5s both;
 }
 .hero-metric .n{
   font-size:28px;font-weight:700;letter-spacing:-0.03em;
@@ -289,7 +325,7 @@ section{position:relative;z-index:10}
 }
 .hero-metric .l{
   font-size:11px;letter-spacing:0.08em;text-transform:uppercase;
-  color:rgba(255,255,255,0.3);margin-top:4px;font-weight:500;
+  color:rgba(255,255,255,0.4);margin-top:4px;font-weight:500;
 }
 
 /* ── FLOATING RESEARCH OBJECTS ── */
@@ -313,7 +349,7 @@ section{position:relative;z-index:10}
 
 /* ── SCROLL NARRATIVE ── */
 .narrative{
-  min-height:600vh;
+  min-height:350vh;
   position:relative;
 }
 .narrative-sticky{
@@ -376,7 +412,7 @@ section{position:relative;z-index:10}
   margin-bottom:20px;
 }
 .section-sub{
-  font-size:16px;color:rgba(255,255,255,0.35);
+  font-size:16px;color:rgba(255,255,255,0.45);
   line-height:1.7;max-width:480px;
 }
 .ds-inner{max-width:1280px;margin:0 auto}
@@ -557,8 +593,8 @@ section{position:relative;z-index:10}
   border-radius:10px;padding:28px;
   transition:all 0.3s var(--ease-out);
   position:relative;overflow:hidden;
-  cursor:none;
 }
+@media(hover:hover){.paper-card{cursor:none}}
 .paper-card::after{
   content:'';position:absolute;bottom:0;left:0;right:0;height:2px;
   background:linear-gradient(90deg,var(--blue),var(--violet));
@@ -584,17 +620,24 @@ section{position:relative;z-index:10}
   color:rgba(255,255,255,0.85);
 }
 .paper-abstract{
-  font-size:13px;color:rgba(255,255,255,0.3);
+  font-size:13px;color:rgba(255,255,255,0.35);
   line-height:1.65;margin-bottom:20px;
   display:-webkit-box;-webkit-line-clamp:3;
   -webkit-box-orient:vertical;overflow:hidden;
 }
 .paper-meta{
   display:flex;align-items:center;justify-content:space-between;
-  font-size:11px;color:rgba(255,255,255,0.2);
+  font-size:11px;color:rgba(255,255,255,0.25);
   letter-spacing:0.02em;
 }
-.paper-authors{color:rgba(255,255,255,0.4);font-weight:500}
+.paper-authors{color:rgba(255,255,255,0.5);font-weight:500}
+.paper-read{
+  font-size:11px;color:var(--blue);font-weight:600;
+  letter-spacing:0.06em;text-transform:uppercase;
+  opacity:0;transition:opacity 0.3s;
+  margin-top:16px;
+}
+.paper-card:hover .paper-read{opacity:1}
 
 /* ── HORIZONTAL SCROLL ── */
 .hscroll-section{
@@ -820,10 +863,45 @@ section{position:relative;z-index:10}
   line-height:1;margin-bottom:24px;
 }
 .fcta-sub{
-  font-size:16px;color:rgba(255,255,255,0.35);
+  font-size:16px;color:rgba(255,255,255,0.45);
   line-height:1.7;margin-bottom:40px;
 }
 .fcta-btns{display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
+
+/* ── EMAIL FORM ── */
+.signup-form{
+  display:flex;gap:0;max-width:440px;margin:0 auto 24px;
+  border:1px solid rgba(255,255,255,0.1);
+  border-radius:6px;overflow:hidden;
+  transition:border-color 0.3s;
+  background:rgba(9,13,21,0.8);
+}
+.signup-form:focus-within{
+  border-color:rgba(0,217,255,0.4);
+  box-shadow:0 0 24px rgba(0,217,255,0.08);
+}
+.signup-input{
+  flex:1;padding:14px 16px;
+  background:transparent;border:none;
+  color:var(--white);font-size:14px;
+  font-family:'Inter',system-ui,sans-serif;
+  outline:none;
+}
+.signup-input::placeholder{color:rgba(255,255,255,0.25)}
+.signup-btn{
+  padding:14px 24px;
+  background:linear-gradient(135deg,var(--blue),var(--violet));
+  color:#000;font-size:13px;font-weight:700;
+  letter-spacing:0.04em;text-transform:uppercase;
+  border:none;cursor:pointer;
+  transition:opacity 0.2s;
+  white-space:nowrap;
+}
+.signup-btn:hover{opacity:0.9}
+.signup-note{
+  font-size:12px;color:rgba(255,255,255,0.2);
+  margin-bottom:32px;
+}
 
 /* ── FOOTER ── */
 footer{
@@ -841,7 +919,7 @@ footer{
   margin-bottom:12px;
 }
 .footer-brand p{
-  font-size:13px;color:rgba(255,255,255,0.25);
+  font-size:13px;color:rgba(255,255,255,0.35);
   line-height:1.6;max-width:220px;
 }
 .footer-links h4{
@@ -850,7 +928,7 @@ footer{
 }
 .footer-links a{
   display:block;font-size:13px;font-weight:500;
-  color:rgba(255,255,255,0.35);margin-bottom:12px;
+  color:rgba(255,255,255,0.45);margin-bottom:12px;
   transition:color 0.2s;
 }
 .footer-links a:hover{color:rgba(255,255,255,0.8)}
@@ -886,7 +964,14 @@ footer{
   .bento-card{grid-column:span 3}
 }
 @media(max-width:768px){
-  .nav-links{display:none}
+  .nav-links{display:none;position:fixed;top:0;left:0;right:0;bottom:0;
+    background:rgba(4,6,11,0.97);backdrop-filter:blur(24px);
+    flex-direction:column;align-items:center;justify-content:center;
+    gap:28px;z-index:850;margin:0;
+  }
+  .nav-links.open{display:flex}
+  .nav-links a{font-size:20px;color:rgba(255,255,255,0.7)}
+  .nav-hamburger{display:flex}
   .hero-h1{font-size:clamp(52px,14vw,100px)}
   .hero-metrics{flex-wrap:wrap;gap:24px}
   .papers-grid{grid-template-columns:1fr}
@@ -894,6 +979,8 @@ footer{
   .bento-grid{grid-template-columns:1fr 1fr}
   .bento-card,.bento-card.wide,.bento-card.tall,.bento-card.full{grid-column:span 2}
   .footer-top{flex-direction:column;gap:32px}
+  .signup-form{flex-direction:column}
+  .signup-btn{padding:12px}
 }
 @media(max-width:480px){
   .stats-grid{grid-template-columns:1fr}
@@ -909,6 +996,9 @@ footer{
 </head>
 <body>
 
+<!-- SKIP LINK -->
+<a href="#dashboard" class="skip-link">Skip to main content</a>
+
 <!-- LOADER -->
 <div id="loader">
   <div class="loader-quant">QUANTHQ</div>
@@ -919,13 +1009,13 @@ footer{
 <!-- CURSOR -->
 <div id="cursor-outer"></div>
 <div id="cursor-inner"></div>
-<div id="cursor-label" id="clabel"></div>
+<div id="cursor-label"></div>
 
 <!-- SCROLL PROGRESS -->
 <div id="scroll-prog"></div>
 
 <!-- BACKGROUND -->
-<canvas id="bg-canvas"></canvas>
+<canvas id="bg-canvas" aria-hidden="true"></canvas>
 <div class="bg-aurora"></div>
 <div id="mouse-spotlight"></div>
 
@@ -936,12 +1026,15 @@ footer{
       <img src="78d3a7a8-551f-44a1-8411-60b6b6f05e08.jpeg" alt="QuantHQ" style="height:40px;width:auto;flex-shrink:0;object-fit:contain">
       QuantHQ
     </a>
-    <div class="nav-links">
+    <div class="nav-links" id="nav-links">
       <a href="#research">Research</a>
       <a href="#dashboard">Intelligence</a>
       <a href="#network">Network</a>
       <a href="#terminal">Terminal</a>
     </div>
+    <button class="nav-hamburger" id="nav-hamburger" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
     <a href="#join" class="nav-cta">Enter →</a>
   </div>
 </nav>
@@ -1158,6 +1251,7 @@ footer{
           <span class="paper-authors">Chen, A. · Patel, R.</span>
           <span>Jun 2026</span>
         </div>
+        <div class="paper-read">Read paper →</div>
       </div>
       <div class="paper-card rv2" data-d="1" data-cursor="READ">
         <div class="paper-cat">NLP · Signal</div>
@@ -1167,6 +1261,7 @@ footer{
           <span class="paper-authors">Rodriguez, M. · Kim, S.</span>
           <span>May 2026</span>
         </div>
+        <div class="paper-read">Read paper →</div>
       </div>
       <div class="paper-card rv2" data-d="2" data-cursor="READ">
         <div class="paper-cat">Macro · Regime</div>
@@ -1176,6 +1271,7 @@ footer{
           <span class="paper-authors">Liu, J. · Nakamura, T.</span>
           <span>Apr 2026</span>
         </div>
+        <div class="paper-read">Read paper →</div>
       </div>
     </div>
   </div>
@@ -1200,7 +1296,7 @@ footer{
       <div class="section-h2">Everywhere<br>intelligence lives.</div>
     </div>
     <div class="world-map-wrap rv2" data-d="1">
-      <canvas id="world-canvas" height="400"></canvas>
+      <canvas id="world-canvas" height="400" aria-label="World map showing QuantHQ global research network nodes" role="img"></canvas>
       <div class="world-nodes" id="world-nodes"></div>
     </div>
   </div>
@@ -1213,7 +1309,7 @@ footer{
       <div class="section-label">Knowledge Network</div>
       <div class="section-h2">A living neural<br>network of ideas.</div>
     </div>
-    <canvas id="force-canvas"></canvas>
+    <canvas id="force-canvas" aria-label="Interactive force-directed knowledge graph" role="img"></canvas>
   </div>
 </section>
 
@@ -1284,9 +1380,13 @@ footer{
   <div class="fcta-inner rv2">
     <div class="section-label" style="justify-content:center">Free Early Access</div>
     <div class="fcta-h2">Enter the<br><span style="background:linear-gradient(135deg,var(--blue),var(--violet));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">institution.</span></div>
-    <div class="fcta-sub">Shape the community. Build your network. Get Alpha Toolkit access from day one. No credit card. No waitlist theater.</div>
+    <div class="fcta-sub">Shape the community. Build your network. Get Alpha Toolkit access from day one.</div>
+    <form class="signup-form" id="signup-form" onsubmit="return false">
+      <input type="email" class="signup-input" placeholder="you@example.com" required aria-label="Email address">
+      <button type="submit" class="signup-btn">Get Access</button>
+    </form>
+    <div class="signup-note">No credit card required. No waitlist theater.</div>
     <div class="fcta-btns">
-      <a href="#" class="btn-primary" data-cursor="JOIN">Join QuantHQ →</a>
       <a href="#" class="btn-ghost" data-cursor="OPEN">Follow on LinkedIn</a>
     </div>
   </div>
@@ -1338,11 +1438,11 @@ const reduced = matchMedia('(prefers-reduced-motion:reduce)').matches;
   const loader = document.getElementById('loader');
   let p = 0;
   const iv = setInterval(() => {
-    p += Math.random() * 12;
+    p += Math.random() * 18 + 8; // much faster increments
     if (p >= 100) { p = 100; clearInterval(iv); }
     bar.style.width = p + '%';
-    if (p >= 100) setTimeout(() => { loader.classList.add('hide'); setTimeout(()=>{loader.style.display='none'},800); }, 600);
-  }, 120);
+    if (p >= 100) setTimeout(() => { loader.classList.add('hide'); setTimeout(()=>{loader.style.display='none'},600); }, 200);
+  }, 60); // faster interval
 })();
 
 /* ── CURSOR ── */
@@ -1388,16 +1488,38 @@ if (!reduced) {
   });
 }
 
-/* ── SCROLL PROGRESS ── */
+/* ── HAMBURGER MENU ── */
+const hamburger = document.getElementById('nav-hamburger');
+const navLinks = document.getElementById('nav-links');
+if (hamburger && navLinks) {
+  hamburger.addEventListener('click', () => {
+    const open = navLinks.classList.toggle('open');
+    hamburger.classList.toggle('active', open);
+    document.body.style.overflow = open ? 'hidden' : '';
+  });
+  // Close on nav link click
+  navLinks.querySelectorAll('a').forEach(a => {
+    a.addEventListener('click', () => {
+      navLinks.classList.remove('open');
+      hamburger.classList.remove('active');
+      document.body.style.overflow = '';
+    });
+  });
+}
+
+/* ── CONSOLIDATED SCROLL HANDLER ── */
 const sp = document.getElementById('scroll-prog');
-addEventListener('scroll', () => {
+const navEl = document.getElementById('nav');
+let ticking = false;
+function onScroll() {
   const h = document.documentElement;
   sp.style.width = (scrollY / (h.scrollHeight - h.clientHeight) * 100) + '%';
-}, {passive:true});
-
-/* ── NAV ── */
+  navEl.classList.toggle('scrolled', scrollY > 40);
+  updateNarrative();
+  ticking = false;
+}
 addEventListener('scroll', () => {
-  document.getElementById('nav').classList.toggle('scrolled', scrollY > 40);
+  if (!ticking) { requestAnimationFrame(onScroll); ticking = true; }
 }, {passive:true});
 
 /* ── REVEAL ── */
@@ -1440,7 +1562,10 @@ function bResize() {
     o: Math.random()*0.15+0.03
   }));
 }
+// bDraw defined below after bgAnimActive flag
+let bgAnimActive = true;
 function bDraw() {
+  if (!bgAnimActive) return;
   bctx.clearRect(0,0,bW,bH);
   for (const p of bPts) {
     p.x += p.vx; p.y += p.vy;
@@ -1498,7 +1623,7 @@ function updateNarrative() {
   });
   currScreen = idx;
 }
-addEventListener('scroll', updateNarrative, {passive:true});
+// Initial call on load
 updateNarrative();
 
 /* ── BLOOMBERG DASHBOARD ── */
@@ -1566,24 +1691,38 @@ const tickers = [
 ];
 const tf = document.getElementById('ticker-feed');
 tf.innerHTML = tickers.map(t=>`
-  <div class="ticker-row">
+  <div class="ticker-row" data-sym="${t.sym}">
     <span class="ticker-sym">${t.sym}</span>
     <span class="ticker-price">${t.price}</span>
     <span class="ticker-chg ${t.dir}">${t.chg}</span>
   </div>`).join('');
+// Build ticker rows once, then update only changed values
+const tickerRows = {};
+tickers.forEach(t => {
+  const row = tf.querySelector(`[data-sym="${t.sym}"]`);
+  if (row) tickerRows[t.sym] = row;
+});
+// Re-grab after initial render
 if (!reduced) {
   setInterval(()=>{
     const t = tickers[Math.floor(Math.random()*tickers.length)];
-    const delta = (Math.random()-.48)*0.5;
     const pct = parseFloat(t.chg)+(Math.random()-.5)*0.2;
     t.chg = (pct>=0?'+':'')+pct.toFixed(1)+'%';
     t.dir = pct>=0?'up':'down';
-    tf.innerHTML = tickers.map(t=>`
-      <div class="ticker-row">
-        <span class="ticker-sym">${t.sym}</span>
-        <span class="ticker-price">${t.price}</span>
-        <span class="ticker-chg ${t.dir}">${t.chg}</span>
-      </div>`).join('');
+    // Update only the changed row's chg span efficiently
+    const row = tf.querySelector(`.ticker-row[data-sym="${t.sym}"] .ticker-chg`);
+    if (row) {
+      row.textContent = t.chg;
+      row.className = 'ticker-chg ' + t.dir;
+    } else {
+      // fallback: rebuild
+      tf.innerHTML = tickers.map(t=>`
+        <div class="ticker-row" data-sym="${t.sym}">
+          <span class="ticker-sym">${t.sym}</span>
+          <span class="ticker-price">${t.price}</span>
+          <span class="ticker-chg ${t.dir}">${t.chg}</span>
+        </div>`).join('');
+    }
   }, 2200);
 }
 
@@ -1662,12 +1801,11 @@ const nodes = [
 ];
 function drawWorldMap() {
   const W = wCanvas.offsetWidth;
-  wCanvas.width = W; wCanvas.height = 400;
-  wCtx.fillStyle = 'rgba(9,13,21,0)';
-  wCtx.fillRect(0,0,W,400);
-  // simplified landmass outlines as connected dots
+  if (!wCanvas.width || wCanvas.width !== W) wCanvas.width = W;
+  wCanvas.height = 400;
+  wCtx.clearRect(0,0,W,400);
   const t = Date.now()/1000;
-  // Draw connection lines with animation
+  // Draw connection lines with animated pulse
   for (let i=0; i<nodes.length; i++) {
     for (let j=i+1; j<nodes.length; j++) {
       const a = nodes[i], b = nodes[j];
@@ -1686,7 +1824,7 @@ function drawWorldMap() {
       }
     }
   }
-  // Draw nodes
+  // Draw nodes — NO DOM writes here
   nodes.forEach(n => {
     const x = n.x*W, y = n.y*400;
     wCtx.beginPath(); wCtx.arc(x,y,3,0,Math.PI*2);
@@ -1696,9 +1834,10 @@ function drawWorldMap() {
     wCtx.strokeStyle = `rgba(0,217,255,${0.3*(1-pulse)})`;
     wCtx.lineWidth = 1; wCtx.stroke();
   });
-  // Labels via HTML
+}
+if (!reduced) {
+  // Build node label elements ONCE — stop DOM thrashing on every frame
   const nodesEl = document.getElementById('world-nodes');
-  nodesEl.innerHTML = '';
   nodes.forEach(n => {
     const el = document.createElement('div');
     el.className = 'world-node';
@@ -1707,13 +1846,31 @@ function drawWorldMap() {
     el.innerHTML = `<div class="world-node-label">${n.name}</div>`;
     nodesEl.appendChild(el);
   });
-}
-if (!reduced) {
-  drawWorldMap();
-  let wAnim;
-  function wLoop(){drawWorldMap();wAnim=requestAnimationFrame(wLoop);}
-  wLoop();
-  addEventListener('resize',drawWorldMap,{passive:true});
+
+  let wActive = false;
+  let wAnimId;
+  function wLoop(){
+    if (!wActive) return;
+    drawWorldMap();
+    wAnimId = requestAnimationFrame(wLoop);
+  }
+
+  // Pause world map when off-screen
+  const wObserver = new IntersectionObserver(entries => {
+    const vis = entries[0].isIntersecting;
+    if (vis && !wActive) { wActive = true; wLoop(); }
+    else if (!vis) { wActive = false; cancelAnimationFrame(wAnimId); }
+  }, {threshold: 0.05});
+  wObserver.observe(wCanvas);
+
+  addEventListener('resize', () => {
+    const W = wCanvas.offsetWidth;
+    wCanvas.width = W;
+    nodes.forEach((n, i) => {
+      const el = nodesEl.children[i];
+      if (el) { el.style.left = (n.x*100)+'%'; el.style.top = (n.y*100)+'%'; }
+    });
+  }, {passive:true});
 }
 
 /* ── FORCE-DIRECTED GRAPH ── */
@@ -1798,7 +1955,7 @@ function drawForce() {
     fctx.beginPath();fctx.moveTo(na.x,na.y);fctx.lineTo(nb.x,nb.y);fctx.stroke();
   });
 
-  // Draw nodes with hover effects
+  // Draw nodes with hover effects + label tooltip
   fNodes.forEach((n,i)=>{
     const c=nodeTypes[n.type].color;
     const isHovered = fHoverNode === i;
@@ -1816,19 +1973,61 @@ function drawForce() {
     fctx.beginPath();fctx.arc(n.x,n.y,n.r*scale,0,Math.PI*2);
     fctx.fillStyle=c;fctx.fill();
 
-    // Highlight ring on hover
+    // Highlight ring + label on hover
     if (isHovered) {
       fctx.strokeStyle = 'rgba(255,255,255,0.6)';
       fctx.lineWidth = 1.5;
       fctx.beginPath();fctx.arc(n.x,n.y,n.r*scale+2,0,Math.PI*2);
       fctx.stroke();
+
+      // Tooltip label
+      const label = n.label;
+      const padding = 8;
+      fctx.font = '600 11px Inter, system-ui, sans-serif';
+      const tw = fctx.measureText(label).width;
+      const bx = Math.min(n.x - tw/2 - padding, fW - tw - padding*2 - 4);
+      const by = n.y - n.r*scale - 36;
+      const bxClamped = Math.max(4, bx);
+      const byClamped = Math.max(4, by);
+
+      // Tooltip background
+      fctx.fillStyle = 'rgba(9,13,21,0.92)';
+      fctx.beginPath();
+      fctx.roundRect(bxClamped, byClamped, tw + padding*2, 24, 4);
+      fctx.fill();
+
+      // Tooltip border
+      fctx.strokeStyle = 'rgba(0,217,255,0.3)';
+      fctx.lineWidth = 1;
+      fctx.beginPath();
+      fctx.roundRect(bxClamped, byClamped, tw + padding*2, 24, 4);
+      fctx.stroke();
+
+      // Tooltip text
+      fctx.fillStyle = nodeTypes[n.type].color;
+      fctx.fillText(label, bxClamped + padding, byClamped + 16);
     }
   });
-  requestAnimationFrame(drawForce);
 }
 if (!reduced) {
-  initForce(); drawForce();
-  addEventListener('resize',()=>{initForce();},{ passive:true});
+  initForce();
+
+  // Pause force graph when off-screen
+  let fActive = false;
+  let fAnimId;
+  function fLoop() {
+    if (!fActive) return;
+    drawForce();
+    fAnimId = requestAnimationFrame(fLoop);
+  }
+  const fObserver = new IntersectionObserver(entries => {
+    const vis = entries[0].isIntersecting;
+    if (vis && !fActive) { fActive = true; fLoop(); }
+    else if (!vis) { fActive = false; cancelAnimationFrame(fAnimId); }
+  }, {threshold: 0.05});
+  fObserver.observe(fc);
+
+  addEventListener('resize', ()=>{ initForce(); }, {passive:true});
 }
 
 /* ── TERMINAL ── */
@@ -1863,7 +2062,27 @@ function typeTermLine() {
   tl.parentElement.scrollTop = tl.parentElement.scrollHeight;
   setTimeout(typeTermLine, 600+Math.random()*800);
 }
-if (!reduced) setTimeout(typeTermLine, 4000);
+if (!reduced) setTimeout(typeTermLine, 1200);
+
+/* ── EMAIL FORM ── */
+const signupForm = document.getElementById('signup-form');
+if (signupForm) {
+  signupForm.addEventListener('submit', e => {
+    e.preventDefault();
+    const input = signupForm.querySelector('.signup-input');
+    const btn = signupForm.querySelector('.signup-btn');
+    const email = input.value.trim();
+    if (!email) return;
+    // Show success state
+    btn.textContent = '✓ You\'re in!';
+    btn.style.background = 'linear-gradient(135deg,#00FF88,#00D9FF)';
+    input.disabled = true;
+    btn.disabled = true;
+    // Show note update
+    const note = document.querySelector('.signup-note');
+    if (note) note.textContent = `We'll reach out to ${email} when we launch.`;
+  });
+}
 
 /* ── KONAMI CODE EASTER EGG ── */
 const konami = [38,38,40,40,37,39,37,39,66,65];
@@ -1892,13 +2111,16 @@ function activateAlphaLab() {
   document.body.appendChild(el);
 }
 
-/* ── PARALLAX ON SCROLL ── */
+/* ── PARALLAX ON SCROLL (merged into consolidated handler) ── */
 if (!reduced) {
-  addEventListener('scroll', () => {
-    const y = scrollY;
-    const heroInner = document.querySelector('.hero-inner');
-    if (heroInner) heroInner.style.transform = `translateY(${y*0.2}px)`;
-  }, {passive:true});
+  const heroInner = document.querySelector('.hero-inner');
+  const origOnScroll = onScroll;
+  window.onScroll = function() {
+    origOnScroll();
+    if (heroInner) heroInner.style.transform = `translateY(${scrollY*0.15}px)`;
+  };
+  // Also apply on first load
+  if (heroInner) heroInner.style.transform = 'translateY(0)';
 }
 </script>
 </body>
