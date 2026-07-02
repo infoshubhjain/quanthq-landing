@@ -1,0 +1,26 @@
+---
+import Base from '../layouts/Base.astro';
+const projects = [
+  { title: 'Agent Framework', status: 'Open Source', desc: 'Composable research agents for automated factor discovery and backtesting.' },
+  { title: 'Trading Infrastructure', status: 'Private', desc: 'Low-latency execution and portfolio management stack used by member strategies.' },
+  { title: 'Vision Models', status: 'Research', desc: 'Chart-understanding and document-extraction models for alternative data.' },
+  { title: 'Cybersecurity', status: 'Coming Soon', desc: 'Adversarial robustness research for financial ML pipelines.' },
+];
+---
+<Base title="Projects — QuantHQ">
+  <section class="px-6 pt-20">
+    <div class="max-w-6xl mx-auto">
+      <div class="section-label mb-6">Active Projects</div>
+      <h1 class="text-[clamp(40px,6vw,80px)] font-extrabold tracking-[-0.04em] leading-none">What we're<br />building.</h1>
+      <div class="mt-14 grid md:grid-cols-2 gap-4">
+        {projects.map((p) => (
+          <div class="card p-8 rv">
+            <div class="text-[10px] uppercase tracking-[0.15em] text-neon font-semibold">{p.status}</div>
+            <h2 class="mt-3 text-xl font-semibold text-white/90">{p.title}</h2>
+            <p class="mt-3 text-sm text-white/40 leading-relaxed">{p.desc}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+</Base>

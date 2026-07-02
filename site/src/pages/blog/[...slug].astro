@@ -1,0 +1,75 @@
+---
+import Base from '../../layouts/Base.astro';
+import { getCollection, render } from 'astro:content';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog');
+  return posts.map((p) => ({ params: { slug: p.id }, props: { post: p } }));
+}
+const { post } = Astro.props;
+const { Content, headings } = await render(post);
+const toc = headings.filter((h) => h.depth <= 3);
+---
+<Base title={`${post.data.title} — QuantHQ Blog`} description={post.data.description}>
+  <div id="read-prog" class="fixed top-16 left-0 h-px w-0 bg-gradient-to-r from-neon to-violet z-40 shadow-[0_0_8px_#00D9FF]"></div>
+
+  <article class="px-6 pt-20 pb-10">
+    <div class="max-w-6xl mx-auto lg:grid lg:grid-cols-[1fr_240px] lg:gap-16">
+      <div class="max-w-3xl">
+        <a href="/blog/" class="text-[12px] text-white/35 hover:text-white/70">← All posts</a>
+        <div class="mt-8 text-[10px] uppercase tracking-[0.15em] text-violet font-semibold">{post.data.category}</div>
+        <h1 class="mt-4 text-[clamp(30px,4.5vw,52px)] font-extrabold tracking-[-0.03em] leading-tight">{post.data.title}</h1>
+        <div class="mt-5 flex items-center gap-3 text-[13px] text-white/40">
+          <span class="text-white/60 font-medium">{post.data.author}</span>
+          <span>{post.data.date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</span>
+          {post.data.readingTime && <span>· {post.data.readingTime}</span>}
+        </div>
+        <div class="mt-10 prose-dark text-[15.5px]">
+          <Content />
+        </div>
+
+        <div class="mt-16 border-t border-white/8 pt-8">
+          <div class="text-[10px] uppercase tracking-[0.2em] text-white/25 font-semibold mb-4">Was this helpful?</div>
+          <div class="flex gap-3" id="reactions">
+            {['💡 Insightful', '🔧 Useful', '✨ Interesting'].map((r) => (
+              <button data-r={r} class="react-btn px-5 py-2.5 rounded-full border border-white/10 text-white/55 text-[13px] hover:border-neon/40 hover:text-neon transition-colors cursor-pointer">{r} <span class="count text-white/30 ml-1">0</span></button>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {toc.length > 0 && (
+        <aside class="hidden lg:block">
+          <div class="sticky top-28">
+            <div class="text-[10px] uppercase tracking-[0.2em] text-white/25 font-semibold mb-4">Contents</div>
+            <nav class="flex flex-col gap-2.5 text-[13px] border-l border-white/8">
+              {toc.map((h) => (
+                <a href={`#${h.slug}`} class={`text-white/40 hover:text-white/80 pl-4 ${h.depth === 3 ? 'pl-8' : ''}`}>{h.text}</a>
+              ))}
+            </nav>
+          </div>
+        </aside>
+      )}
+    </div>
+  </article>
+
+  <script define:vars={{ slug: post.id }}>
+    const prog = document.getElementById('read-prog');
+    addEventListener('scroll', () => {
+      const h = document.documentElement;
+      prog.style.width = (h.scrollTop / (h.scrollHeight - h.clientHeight)) * 100 + '%';
+    }, { passive: true });
+
+    const key = `qhq-react-${slug}`;
+    const saved = JSON.parse(localStorage.getItem(key) || '{}');
+    document.querySelectorAll('.react-btn').forEach((b) => {
+      const r = b.dataset.r;
+      b.querySelector('.count').textContent = saved[r] || 0;
+      b.addEventListener('click', () => {
+        saved[r] = (saved[r] || 0) + 1;
+        localStorage.setItem(key, JSON.stringify(saved));
+        b.querySelector('.count').textContent = saved[r];
+      });
+    });
+  </script>
+</Base>

@@ -1,0 +1,12 @@
+---
+import Base from '../layouts/Base.astro';
+import AboutTabs from '../components/AboutTabs.jsx';
+---
+<Base title="About — QuantHQ">
+  <section class="px-6 pt-20 pb-10">
+    <div class="max-w-6xl mx-auto">
+      <div class="section-label mb-6">About QuantHQ</div>
+      <AboutTabs client:load />
+    </div>
+  </section>
+</Base>

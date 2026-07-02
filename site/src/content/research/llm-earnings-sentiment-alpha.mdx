@@ -1,0 +1,17 @@
+---
+title: "LLM-Extracted Earnings Sentiment as an Alpha Factor"
+authors: ["Rodriguez, M.", "Kim, S."]
+date: 2026-05-10
+status: technical-report
+abstract: "We evaluate frontier LLMs as extractors of forward-looking sentiment from earnings call transcripts. Our factor, constructed from semantic delta across consecutive calls, achieves a 3-day alpha of 1.8% with Sharpe 1.72 OOS across the S&P 500."
+tags: ["NLP", "AI"]
+featured: true
+---
+
+## Method
+
+We prompt frontier LLMs to score forward-looking sentiment in earnings call transcripts, then construct a factor from the semantic delta between consecutive quarterly calls for each issuer.
+
+## Results
+
+The factor achieves a 3-day alpha of 1.8% with an out-of-sample Sharpe of 1.72 across the S&P 500, robust to transaction cost assumptions up to 15bps.

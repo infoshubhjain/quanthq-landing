@@ -1,0 +1,28 @@
+---
+title: "Five Backtesting Pitfalls That Fake Your Sharpe"
+author: "QuantHQ Team"
+date: 2026-05-28
+category: "Tutorials"
+description: "Lookahead bias, survivorship, cost models, overfitting, and regime blindness — how each one inflates your backtest and how to catch it."
+readingTime: "9 min read"
+---
+
+## 1. Lookahead bias
+
+Using data that wasn't available at decision time. Point-in-time databases are non-negotiable.
+
+## 2. Survivorship bias
+
+Backtesting on today's index constituents overstates returns by 1–2% annually.
+
+## 3. Unrealistic cost models
+
+Flat cost-per-trade assumptions break down for anything beyond small size. Model spread, impact, and borrow.
+
+## 4. Overfitting
+
+If you tested 100 variants and report the best one, your Sharpe is a statistic of the maximum, not the strategy. Use deflated Sharpe ratios.
+
+## 5. Regime blindness
+
+A strategy validated in one volatility regime often dies in the next. Walk-forward across regime boundaries or don't ship it.
