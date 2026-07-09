@@ -78,7 +78,7 @@ export default function AboutTabs() {
             onClick={() => setActive(t.id)}
             className={`px-5 py-2 rounded-full text-[13px] font-medium border transition-colors cursor-pointer ${
               active === t.id
-                ? 'border-[#FFFFFF] text-[#FFFFFF] bg-[#FFFFFF]/8'
+                ? 'border-[#3D7BFF] text-[#3D7BFF] bg-[#3D7BFF]/8'
                 : 'border-white/10 text-white/50 hover:text-white/80 hover:border-white/25'
             }`}
           >
@@ -113,7 +113,7 @@ export default function AboutTabs() {
             <div className="mt-12 border-l border-white/10 pl-8 space-y-10">
               {tab.timeline.map(([year, items]) => (
                 <div key={year}>
-                  <div className="text-2xl font-bold text-[#FFFFFF]">{year}</div>
+                  <div className="text-2xl font-bold text-[#3D7BFF]">{year}</div>
                   <ul className="mt-3 space-y-2">
                     {items.map((i) => (
                       <li key={i} className="text-white/60 before:content-['├─'] before:text-white/20 before:mr-3 font-mono text-sm">{i}</li>
@@ -129,7 +129,7 @@ export default function AboutTabs() {
               {tab.cards.map(([title, badge]) => (
                 <div key={title} className="card p-6">
                   <div className="font-semibold text-white/85">{title}</div>
-                  <div className="mt-2 text-[10px] uppercase tracking-[0.15em] text-[#FFFFFF]">{badge}</div>
+                  <div className="mt-2 text-[10px] uppercase tracking-[0.15em] text-[#3D7BFF]">{badge}</div>
                 </div>
               ))}
             </div>

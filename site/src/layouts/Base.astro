@@ -1,12 +1,22 @@
 ---
 import '../styles/global.css';
 const { title = 'QuantHQ', description = 'QuantHQ is a digital research institution building the future of quantitative finance and AI.' } = Astro.props;
+const tickers = [
+  { sym: 'NVDA', px: '131.42', chg: '+2.8%', dir: 'up' },
+  { sym: 'AAPL', px: '212.18', chg: '+1.4%', dir: 'up' },
+  { sym: 'MSFT', px: '448.62', chg: '+0.4%', dir: 'up' },
+  { sym: 'META', px: '562.90', chg: '+1.9%', dir: 'up' },
+  { sym: 'TSLA', px: '189.34', chg: '-1.6%', dir: 'down' },
+  { sym: 'BTC', px: '68,420', chg: '+3.1%', dir: 'up' },
+  { sym: 'ETH', px: '3,840', chg: '+2.2%', dir: 'up' },
+  { sym: 'VIX', px: '16.3', chg: '-2.1%', dir: 'down' },
+];
+const tapeList = [...tickers, ...tickers];
 const nav = [
   { href: '/research/', label: 'Research' },
   { href: '/blog/', label: 'Blogs' },
   { href: '/projects/', label: 'Projects' },
   { href: '/community/', label: 'Community' },
-  { href: '/team/', label: 'Team' },
   { href: '/contact/', label: 'Contact' },
 ];
 const aboutTabs = ['Mission', 'Research', 'Build', 'Community', 'Education', 'Future'];
@@ -23,18 +33,38 @@ const aboutTabs = ['Mission', 'Research', 'Build', 'Community', 'Education', 'Fu
   <meta property="og:type" content="website" />
   <meta name="twitter:card" content="summary_large_image" />
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 34 34'%3E%3Crect x='3' y='3' width='22' height='22' rx='3' fill='none' stroke='white' stroke-width='2.2'/%3E%3Ctext x='7.5' y='19.5' font-family='sans-serif' font-weight='800' font-size='10.5' fill='white'%3EHQ%3C/text%3E%3Crect x='22' y='22' width='9' height='9' rx='2' fill='white'/%3E%3C/svg%3E" />
+  <script is:inline>if(localStorage.theme==='light')document.documentElement.classList.add('light')</script>
+  <style is:inline>
+    .theme-invert{position:fixed;inset:0;z-index:100;pointer-events:none;backdrop-filter:invert(1) hue-rotate(180deg);-webkit-backdrop-filter:invert(1) hue-rotate(180deg);display:none}
+    html.light .theme-invert{display:block}
+  </style>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
 </head>
 <body class="min-h-screen antialiased">
+  <div aria-hidden="true">
+    <div class="bgfx-blob bgfx-b1"></div>
+    <div class="bgfx-blob bgfx-b2"></div>
+    <div class="bgfx-aurora"></div>
+    <div class="bgfx-grid"></div>
+    <div class="bgfx-grain"></div>
+    <div class="theme-invert"></div>
+  </div>
+  <div class="tape" aria-hidden="true">
+    <div class="tape-track">
+      {tapeList.map((t) => (
+        <span><span class="tape-sym">{t.sym}</span><span class="tape-px">{t.px}</span><span class={`tape-chg ${t.dir}`}>{t.chg}</span></span>
+      ))}
+    </div>
+  </div>
   <nav class="fixed top-0 inset-x-0 z-50 h-16 border-b border-white/5 bg-ink/85 backdrop-blur-xl">
     <div class="max-w-6xl mx-auto px-6 h-full flex items-center gap-10">
       <a href="/" class="flex items-center gap-2.5 font-bold text-[15px] tracking-tight">
         <svg width="26" height="26" viewBox="0 0 34 34" fill="none" aria-hidden="true" class="shrink-0">
           <rect x="3" y="3" width="22" height="22" rx="3" stroke="currentColor" stroke-width="2.2" fill="none"/>
           <text x="7.5" y="19.5" font-family="Inter,system-ui,sans-serif" font-weight="800" font-size="10.5" fill="currentColor">HQ</text>
-          <rect x="22" y="22" width="9" height="9" rx="2" fill="#FFFFFF"/>
+          <rect x="22" y="22" width="9" height="9" rx="2" fill="#3D7BFF"/>
         </svg>
         QuantHQ
       </a>
@@ -52,6 +82,11 @@ const aboutTabs = ['Mission', 'Research', 'Build', 'Community', 'Education', 'Fu
         {nav.map((n) => (
           <a href={n.href} class="text-white/55 hover:text-white/90 transition-colors">{n.label}</a>
         ))}
+        <button class="theme-toggle" id="theme-toggle" aria-label="Toggle light mode">
+          <svg class="tt-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+          <svg class="tt-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        </button>
+        <a href="/#join" class="btn-glass" style="padding:8px 18px;font-size:12px">Join →</a>
       </div>
       <button id="mnav-btn" class="md:hidden ml-auto p-2" aria-label="Toggle menu">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h10"/></svg>
@@ -63,7 +98,7 @@ const aboutTabs = ['Mission', 'Research', 'Build', 'Community', 'Education', 'Fu
     </div>
   </nav>
 
-  <main class="pt-16">
+  <main class="pt-16 md:pt-[92px]">
     <slot />
   </main>
 
@@ -83,7 +118,6 @@ const aboutTabs = ['Mission', 'Research', 'Build', 'Community', 'Education', 'Fu
         <div class="flex flex-col gap-2.5">
           <span class="text-[10px] uppercase tracking-[0.2em] text-white/25 font-semibold mb-1">Org</span>
           <a href="/about/" class="text-white/45 hover:text-white/80">About</a>
-          <a href="/team/" class="text-white/45 hover:text-white/80">Team</a>
           <a href="/contact/" class="text-white/45 hover:text-white/80">Contact</a>
         </div>
       </div>
@@ -99,6 +133,15 @@ const aboutTabs = ['Mission', 'Research', 'Build', 'Community', 'Education', 'Fu
       if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
     }), { threshold: 0.12 });
     document.querySelectorAll('.rv').forEach((el) => io.observe(el));
+    document.querySelectorAll('.card').forEach((c) => c.addEventListener('mousemove', (e) => {
+      const r = c.getBoundingClientRect();
+      c.style.setProperty('--mx', (e.clientX - r.left) + 'px');
+      c.style.setProperty('--my', (e.clientY - r.top) + 'px');
+    }, { passive: true }));
+    document.getElementById('theme-toggle')?.addEventListener('click', () => {
+      const light = document.documentElement.classList.toggle('light');
+      localStorage.theme = light ? 'light' : 'dark';
+    });
   </script>
 </body>
 </html>
