@@ -11,7 +11,7 @@ const { Content, headings } = await render(post);
 const toc = headings.filter((h) => h.depth <= 3);
 ---
 <Base title={`${post.data.title} — QuantHQ Blog`} description={post.data.description}>
-  <div id="read-prog" class="fixed top-16 left-0 h-px w-0 bg-gradient-to-r from-neon to-violet z-40 shadow-[0_0_8px_#00D9FF]"></div>
+  <div id="read-prog" class="fixed top-16 left-0 h-px w-0 bg-gradient-to-r from-neon to-violet z-40 shadow-[0_0_8px_#FFFFFF]"></div>
 
   <article class="px-6 pt-20 pb-10">
     <div class="max-w-6xl mx-auto lg:grid lg:grid-cols-[1fr_240px] lg:gap-16">
