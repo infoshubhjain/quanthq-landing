@@ -9,13 +9,13 @@ const categories = ['AI', 'Research', 'Engineering', 'Quantitative Finance', 'Op
     <div class="max-w-6xl mx-auto">
       <div class="section-label mb-6">Writing</div>
       <h1 class="text-[clamp(40px,6vw,80px)] font-extrabold tracking-[-0.04em] leading-none">Blogs</h1>
-      <p class="mt-5 text-white/45 max-w-md">Approachable writing on AI, engineering, and quantitative finance.</p>
+      <p class="mt-5 text-[var(--text-2)] max-w-md">Approachable writing on AI, engineering, and quantitative finance.</p>
       <input id="blog-search" type="search" placeholder="Search articles…"
-        class="mt-9 w-full max-w-lg px-5 py-3.5 rounded-lg bg-carbon border border-white/10 text-sm placeholder:text-white/25 focus:border-neon/40 focus:outline-none" />
+        class="mt-9 w-full max-w-lg px-5 py-3.5 rounded-lg bg-[var(--card-bg)] border border-[var(--border)] text-sm text-[var(--text)] placeholder:text-[var(--text-3)] focus:border-accent-40 focus:outline-none" />
       <div class="mt-5 flex flex-wrap gap-2">
-        <button data-cat="" class="cat-btn px-4 py-1.5 rounded-full text-xs font-medium border border-violet/50 text-violet">All</button>
+        <button data-cat="" class="cat-btn px-4 py-1.5 rounded-full text-xs font-medium border border-accent2-50 text-[var(--accent2)]">All</button>
         {categories.map((c) => (
-          <button data-cat={c} class="cat-btn px-4 py-1.5 rounded-full text-xs font-medium border border-white/10 text-white/50 hover:text-white/80">{c}</button>
+          <button data-cat={c} class="cat-btn px-4 py-1.5 rounded-full text-xs font-medium border border-[var(--border)] text-[var(--text-2)] hover:text-[var(--text-1)]">{c}</button>
         ))}
       </div>
     </div>
@@ -23,13 +23,14 @@ const categories = ['AI', 'Research', 'Engineering', 'Quantitative Finance', 'Op
 
   <section class="px-6">
     <div class="max-w-6xl mx-auto grid md:grid-cols-2 gap-4" id="blog-list">
-      {posts.map((p) => (
-        <a href={`/blog/${p.id}/`} class="card p-8 block blog-item" data-cat={p.data.category} data-text={`${p.data.title} ${p.data.description}`.toLowerCase()}>
-          <span class="text-[10px] uppercase tracking-[0.15em] text-violet font-semibold">{p.data.category}</span>
-          <h2 class="mt-3 text-xl font-semibold text-white/90 leading-snug">{p.data.title}</h2>
-          <p class="mt-3 text-sm text-white/40 leading-relaxed">{p.data.description}</p>
-          <div class="mt-5 flex items-center gap-3 text-[12px] text-white/30">
-            <span class="text-white/50 font-medium">{p.data.author}</span>
+      {posts.map((p, i) => (
+        <a href={`/blog/${p.id}/`} class:list={['card p-8 block blog-item group', { 'md:col-span-2': i === 0 }]} data-cat={p.data.category} data-text={`${p.data.title} ${p.data.description}`.toLowerCase()}>
+          {i === 0 && <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[var(--accent2)] to-[var(--accent)]"></div>}
+          <span class="text-[10px] uppercase tracking-[0.15em] text-[var(--accent2)] font-semibold">{p.data.category}</span>
+          <h2 class:list={['font-semibold text-[var(--text-1)] leading-snug group-hover:text-[var(--text)] transition-colors', i === 0 ? 'mt-3 text-2xl' : 'mt-3 text-xl']}>{p.data.title}</h2>
+          <p class="mt-3 text-sm text-[var(--text-2)] leading-relaxed">{p.data.description}</p>
+          <div class="mt-5 flex items-center gap-3 text-[12px] text-[var(--text-3)]">
+            <span class="text-[var(--text-2)] font-medium">{p.data.author}</span>
             <span>{p.data.date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
             {p.data.readingTime && <span class="ml-auto">{p.data.readingTime}</span>}
           </div>
@@ -53,8 +54,12 @@ const categories = ['AI', 'Research', 'Engineering', 'Quantitative Finance', 'Op
     input?.addEventListener('input', apply);
     btns.forEach((b) => b.addEventListener('click', () => {
       cat = b.dataset.cat;
-      btns.forEach((x) => x.className = x.className.replace('border-violet/50 text-violet', 'border-white/10 text-white/50'));
-      b.className = b.className.replace('border-white/10 text-white/50', 'border-violet/50 text-violet');
+      btns.forEach((x) => {
+        x.style.borderColor = '';
+        x.style.color = '';
+      });
+      b.style.borderColor = 'var(--accent2)';
+      b.style.color = 'var(--accent2)';
       apply();
     }));
   </script>

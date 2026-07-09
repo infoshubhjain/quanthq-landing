@@ -17,29 +17,29 @@ const bibtex = `@article{quanthq${paper.data.date.getFullYear()}${paper.id.split
 <Base title={`${paper.data.title} — QuantHQ Research`} description={paper.data.abstract.slice(0, 155)}>
   <article class="px-6 pt-20 pb-10">
     <div class="max-w-3xl mx-auto">
-      <a href="/research/" class="text-[12px] text-white/35 hover:text-white/70">← All research</a>
+      <a href="/research/" class="text-[12px] text-[var(--text-3)] hover:text-[var(--text-1)] transition-colors">← All research</a>
       <div class="mt-8 flex flex-wrap gap-2">
         {paper.data.tags.map((t) => (
-          <span class="text-[9px] uppercase tracking-[0.2em] px-2.5 py-1 rounded-full border border-neon/20 text-neon font-semibold">{t}</span>
+          <span class="text-[9px] uppercase tracking-[0.2em] px-2.5 py-1 rounded-full border border-accent-20 text-[var(--accent)] font-semibold">{t}</span>
         ))}
       </div>
       <h1 class="mt-5 text-[clamp(28px,4vw,48px)] font-extrabold tracking-[-0.03em] leading-tight">{paper.data.title}</h1>
-      <div class="mt-5 text-sm text-white/50">{paper.data.authors.join(' · ')}</div>
-      <div class="mt-1 text-[12px] text-white/30">
+      <div class="mt-5 text-sm text-[var(--text-2)]">{paper.data.authors.join(' · ')}</div>
+      <div class="mt-1 text-[12px] text-[var(--text-3)]">
         {paper.data.conference && <span>{paper.data.conference} · </span>}
         {paper.data.date.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
         {paper.data.doi && <span> · DOI: {paper.data.doi}</span>}
       </div>
 
       <div class="mt-8 flex flex-wrap gap-3">
-        {paper.data.pdf && <a href={paper.data.pdf} class="px-5 py-2.5 rounded bg-gradient-to-br from-neon to-violet text-black text-[12px] font-bold uppercase tracking-wide">PDF</a>}
-        {paper.data.github && <a href={paper.data.github} class="px-5 py-2.5 rounded border border-white/12 text-white/60 text-[12px] font-medium hover:border-white/30">GitHub</a>}
-        <button id="cite-btn" class="px-5 py-2.5 rounded border border-white/12 text-white/60 text-[12px] font-medium hover:border-white/30 cursor-pointer">Copy BibTeX</button>
+        {paper.data.pdf && <a href={paper.data.pdf} class="px-5 py-2.5 rounded bg-gradient-to-br from-[var(--accent)] to-[var(--accent2)] text-white text-[12px] font-bold uppercase tracking-wide">PDF</a>}
+        {paper.data.github && <a href={paper.data.github} class="px-5 py-2.5 rounded border border-[var(--border)] text-[var(--text-1)] text-[12px] font-medium hover:border-[var(--border-hover)] transition-colors">GitHub</a>}
+        <button id="cite-btn" class="px-5 py-2.5 rounded border border-[var(--border)] text-[var(--text-1)] text-[12px] font-medium hover:border-[var(--border-hover)] transition-colors cursor-pointer">Copy BibTeX</button>
       </div>
 
       <div class="mt-10 card p-7">
-        <div class="text-[10px] uppercase tracking-[0.2em] text-white/25 font-semibold mb-3">Abstract</div>
-        <p class="text-white/60 leading-relaxed text-[15px]">{paper.data.abstract}</p>
+        <div class="text-[10px] uppercase tracking-[0.2em] text-[var(--text-4)] font-semibold mb-3">Abstract</div>
+        <p class="text-[var(--text-1)] leading-relaxed text-[15px]">{paper.data.abstract}</p>
       </div>
 
       <div class="mt-10 prose-dark">
@@ -47,8 +47,8 @@ const bibtex = `@article{quanthq${paper.data.date.getFullYear()}${paper.id.split
       </div>
 
       <details class="mt-12 card p-6">
-        <summary class="cursor-pointer text-sm text-white/50 font-medium">BibTeX</summary>
-        <pre class="mt-4 text-xs text-white/60 overflow-x-auto"><code id="bibtex">{bibtex}</code></pre>
+        <summary class="cursor-pointer text-sm text-[var(--text-2)] font-medium">BibTeX</summary>
+        <pre class="mt-4 text-xs text-[var(--text-1)] overflow-x-auto"><code id="bibtex">{bibtex}</code></pre>
       </details>
     </div>
   </article>

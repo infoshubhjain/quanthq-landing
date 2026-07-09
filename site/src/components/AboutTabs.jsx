@@ -1,5 +1,4 @@
-import { useState } from 'react';
-import { motion } from 'framer-motion';
+import { useState, useEffect } from 'react';
 
 const TABS = [
   {
@@ -64,9 +63,47 @@ const TABS = [
   },
 ];
 
+const badgeColor = {
+  'Open Source': 'text-[var(--green)]',
+  'Private': 'text-[var(--text-3)]',
+  'Research': 'text-[var(--accent)]',
+  'Coming Soon': 'text-[var(--accent2)]',
+  'Live': 'text-[var(--green)]',
+  'Quarterly': 'text-[var(--accent)]',
+  'Weekly': 'text-[var(--accent2)]',
+  'Global': 'text-[var(--text-2)]',
+  'Ongoing': 'text-[var(--text-2)]',
+  'Hands-on': 'text-[var(--accent)]',
+  'Structured': 'text-[var(--accent2)]',
+  '1:1': 'text-[var(--green)]',
+  'Applications open': 'text-[var(--accent)]',
+};
+
 export default function AboutTabs() {
   const [active, setActive] = useState('mission');
+  const [visible, setVisible] = useState(true);
   const tab = TABS.find((t) => t.id === active);
+
+  useEffect(() => {
+    const hash = window.location.hash.replace('#', '');
+    if (TABS.some((t) => t.id === hash)) setActive(hash);
+    const onHashChange = () => {
+      const h = window.location.hash.replace('#', '');
+      if (TABS.some((t) => t.id === h)) setActive(h);
+    };
+    window.addEventListener('hashchange', onHashChange);
+    return () => window.removeEventListener('hashchange', onHashChange);
+  }, []);
+
+  const handleTabClick = (id) => {
+    if (id === active) return;
+    setVisible(false);
+    setTimeout(() => {
+      setActive(id);
+      history.replaceState(null, '', `#${id}`);
+      requestAnimationFrame(() => setVisible(true));
+    }, 150);
+  };
 
   return (
     <div>
@@ -75,11 +112,11 @@ export default function AboutTabs() {
           <button
             key={t.id}
             id={t.id}
-            onClick={() => setActive(t.id)}
+            onClick={() => handleTabClick(t.id)}
             className={`px-5 py-2 rounded-full text-[13px] font-medium border transition-colors cursor-pointer ${
               active === t.id
-                ? 'border-[#3D7BFF] text-[#3D7BFF] bg-[#3D7BFF]/8'
-                : 'border-white/10 text-white/50 hover:text-white/80 hover:border-white/25'
+                ? 'border-[var(--accent)] text-[var(--accent)] bg-accent-8'
+                : 'border-[var(--border)] text-[var(--text-2)] hover:text-[var(--text-1)] hover:border-[var(--border-hover)]'
             }`}
           >
             {t.label}
@@ -87,36 +124,33 @@ export default function AboutTabs() {
         ))}
       </div>
 
-      <motion.div
-          key={active}
-          initial={{ opacity: 0, y: 24 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-        >
+      <div
+        style={{ opacity: visible ? 1 : 0, transform: visible ? 'translateY(0)' : 'translateY(24px)', transition: 'opacity 0.3s ease, transform 0.3s ease' }}
+      >
           <h2 className="text-[clamp(32px,5vw,64px)] font-extrabold tracking-[-0.03em] leading-[1.05] max-w-3xl">
             {tab.headline}
           </h2>
-          <p className="mt-5 text-white/45 max-w-xl leading-relaxed">{tab.body}</p>
+          <p className="mt-5 text-[var(--text-2)] max-w-xl leading-relaxed">{tab.body}</p>
 
           {tab.stats && (
-            <div className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-px bg-white/5 border border-white/5 rounded-lg overflow-hidden">
+            <div className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-px bg-[var(--border)] border border-[var(--border)] rounded-lg overflow-hidden">
               {tab.stats.map(([n, l]) => (
-                <div key={l} className="bg-[#090D15] p-8">
+                <div key={l} className="bg-[var(--card-bg)] p-8">
                   <div className="text-4xl font-extrabold tracking-tight">{n}</div>
-                  <div className="mt-2 text-[11px] uppercase tracking-[0.1em] text-white/30 font-medium">{l}</div>
+                  <div className="mt-2 text-[11px] uppercase tracking-[0.1em] text-[var(--text-3)] font-medium">{l}</div>
                 </div>
               ))}
             </div>
           )}
 
           {tab.timeline && (
-            <div className="mt-12 border-l border-white/10 pl-8 space-y-10">
+            <div className="mt-12 border-l border-[var(--border)] pl-8 space-y-10">
               {tab.timeline.map(([year, items]) => (
                 <div key={year}>
-                  <div className="text-2xl font-bold text-[#3D7BFF]">{year}</div>
+                  <div className="text-2xl font-bold text-[var(--accent)]">{year}</div>
                   <ul className="mt-3 space-y-2">
                     {items.map((i) => (
-                      <li key={i} className="text-white/60 before:content-['├─'] before:text-white/20 before:mr-3 font-mono text-sm">{i}</li>
+                      <li key={i} className="text-[var(--text-1)] before:content-['├─'] before:text-[var(--text-4)] before:mr-3 font-mono text-sm">{i}</li>
                     ))}
                   </ul>
                 </div>
@@ -128,8 +162,8 @@ export default function AboutTabs() {
             <div className="mt-12 grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
               {tab.cards.map(([title, badge]) => (
                 <div key={title} className="card p-6">
-                  <div className="font-semibold text-white/85">{title}</div>
-                  <div className="mt-2 text-[10px] uppercase tracking-[0.15em] text-[#3D7BFF]">{badge}</div>
+                  <div className="font-semibold text-[var(--text-1)]">{title}</div>
+                  <div className={`mt-2 text-[10px] uppercase tracking-[0.15em] ${badgeColor[badge] || 'text-[var(--accent)]'}`}>{badge}</div>
                 </div>
               ))}
             </div>
@@ -137,16 +171,16 @@ export default function AboutTabs() {
 
           {tab.roadmap && (
             <div className="mt-12 flex flex-col items-start gap-1">
-              <div className="text-sm text-white/30 mb-3 font-mono">2026 →</div>
+              <div className="text-sm text-[var(--text-3)] mb-3 font-mono">2026 →</div>
               {tab.roadmap.map((step, i) => (
                 <div key={step} className="flex flex-col items-start">
-                  <div className="card px-6 py-4 font-semibold text-white/85">{step}</div>
-                  {i < tab.roadmap.length - 1 && <div className="text-white/25 pl-8 py-1">↓</div>}
+                  <div className="card px-6 py-4 font-semibold text-[var(--text-1)]">{step}</div>
+                  {i < tab.roadmap.length - 1 && <div className="text-[var(--text-4)] pl-8 py-1">↓</div>}
                 </div>
               ))}
             </div>
           )}
-        </motion.div>
+        </div>
     </div>
   );
 }
