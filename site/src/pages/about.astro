@@ -3,7 +3,17 @@ import Base from '../layouts/Base.astro';
 import AboutTabs from '../components/AboutTabs.jsx';
 ---
 <Base title="About — QuantHQ">
-  <section class="px-6 pt-20 pb-10">
+  <section class="px-6 pt-24 pb-16">
+    <div class="max-w-6xl mx-auto flex flex-col gap-6 text-[clamp(36px,5.5vw,72px)] font-extrabold tracking-tight leading-none">
+      <div class="rv">Most communities <span class="text-white/30">consume.</span></div>
+      <div class="rv">We <span class="gradient-text">research.</span></div>
+      <div class="rv">We <span class="gradient-text">build.</span></div>
+      <div class="rv">We <span class="gradient-text">publish.</span></div>
+      <div class="rv">We create <span class="gradient-text">intelligence.</span></div>
+      <div class="rv">Welcome to <span class="gradient-text">QuantHQ.</span></div>
+    </div>
+  </section>
+  <section class="px-6 pt-4 pb-10">
     <div class="max-w-6xl mx-auto">
       <div class="section-label mb-6">About QuantHQ</div>
       <AboutTabs client:load />

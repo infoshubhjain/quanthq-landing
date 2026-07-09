@@ -246,7 +246,7 @@ section{position:relative;z-index:10}
   background:linear-gradient(90deg,var(--blue),transparent);
 }
 .hero-h1{
-  font-size:clamp(72px,11vw,160px);
+  font-size:clamp(36px,5.5vw,80px);
   font-weight:800;
   line-height:0.92;
   letter-spacing:-0.04em;
@@ -285,9 +285,9 @@ section{position:relative;z-index:10}
 }
 .btn-primary{
   display:inline-flex;align-items:center;gap:8px;
-  padding:14px 28px;
+  padding:28px 56px;
   background:linear-gradient(135deg,var(--blue),var(--violet));
-  color:#000;font-size:13px;font-weight:700;
+  color:#000;font-size:26px;font-weight:700;
   letter-spacing:0.04em;text-transform:uppercase;
   border-radius:4px;
   transition:all 0.25s var(--ease-out);
@@ -348,50 +348,6 @@ section{position:relative;z-index:10}
 }
 
 /* ── SCROLL NARRATIVE ── */
-.narrative{
-  min-height:350vh;
-  position:relative;
-}
-.narrative-sticky{
-  position:sticky;top:0;height:100vh;
-  display:flex;align-items:center;justify-content:center;
-  overflow:hidden;
-}
-.narrative-screen{
-  position:absolute;inset:0;
-  display:flex;align-items:center;justify-content:center;
-  flex-direction:column;
-  text-align:center;
-  padding:40px;
-  opacity:0;
-  transition:opacity 0.6s var(--ease-out),transform 0.8s var(--ease-out),filter 0.6s;
-  transform:scale(0.96) translateY(20px);
-  filter:blur(4px);
-  pointer-events:none;
-}
-.narrative-screen.active{
-  opacity:1;transform:scale(1) translateY(0);filter:blur(0);
-  pointer-events:auto;
-}
-.narrative-screen.exit{
-  opacity:0;transform:scale(1.04) translateY(-20px);filter:blur(4px);
-}
-.narr-label{
-  font-size:10px;letter-spacing:0.3em;text-transform:uppercase;
-  color:rgba(255,255,255,0.25);margin-bottom:24px;font-weight:500;
-}
-.narr-text{
-  font-size:clamp(40px,6vw,88px);
-  font-weight:800;letter-spacing:-0.04em;
-  line-height:1;color:rgba(255,255,255,0.08);
-}
-.narr-text .hi{color:rgba(255,255,255,0.85)}
-.narr-text .accent{
-  background:linear-gradient(135deg,var(--blue),var(--violet));
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
-  background-clip:text;
-}
-
 /* ── DASHBOARD SECTION ── */
 .dashboard-section{
   padding:160px 32px;
@@ -972,7 +928,7 @@ footer{
   .nav-links.open{display:flex}
   .nav-links a{font-size:20px;color:rgba(255,255,255,0.7)}
   .nav-hamburger{display:flex}
-  .hero-h1{font-size:clamp(52px,14vw,100px)}
+  .hero-h1{font-size:clamp(26px,7vw,50px)}
   .hero-metrics{flex-wrap:wrap;gap:24px}
   .papers-grid{grid-template-columns:1fr}
   .stats-grid{grid-template-columns:1fr 1fr}
@@ -1061,7 +1017,7 @@ footer{
       A living research ecosystem built for the people who spend their weekends reading papers.
     </p>
     <div class="hero-ctas">
-      <a href="#join" class="btn-primary" data-cursor="JOIN">Enter the Institution →</a>
+      <a href="#join" class="btn-primary" data-cursor="JOIN">Join Us →</a>
       <a href="/research/" class="btn-ghost" data-cursor="READ">View Research</a>
     </div>
     <div class="hero-metrics">
@@ -1080,36 +1036,6 @@ footer{
     </div>
   </div>
 </section>
-
-<!-- SCROLL NARRATIVE -->
-<div class="narrative" id="narrative">
-  <div class="narrative-sticky" id="narr-sticky">
-    <div class="narrative-screen" id="ns0">
-      <div class="narr-label">01 / 06</div>
-      <div class="narr-text"><span class="hi">Most communities</span><br>consume.</div>
-    </div>
-    <div class="narrative-screen" id="ns1">
-      <div class="narr-label">02 / 06</div>
-      <div class="narr-text"><span class="hi">We</span><br><span class="accent">research.</span></div>
-    </div>
-    <div class="narrative-screen" id="ns2">
-      <div class="narr-label">03 / 06</div>
-      <div class="narr-text"><span class="hi">We</span><br><span class="accent">build.</span></div>
-    </div>
-    <div class="narrative-screen" id="ns3">
-      <div class="narr-label">04 / 06</div>
-      <div class="narr-text"><span class="hi">We</span><br><span class="accent">publish.</span></div>
-    </div>
-    <div class="narrative-screen" id="ns4">
-      <div class="narr-label">05 / 06</div>
-      <div class="narr-text"><span class="hi">We create</span><br><span class="accent">intelligence.</span></div>
-    </div>
-    <div class="narrative-screen" id="ns5">
-      <div class="narr-label">06 / 06</div>
-      <div class="narr-text">Welcome to<br><span class="accent">QuantHQ.</span></div>
-    </div>
-  </div>
-</div>
 
 <!-- DASHBOARD / BLOOMBERG TERMINAL -->
 <section class="dashboard-section" id="dashboard">
@@ -1525,7 +1451,6 @@ function onScroll() {
   const h = document.documentElement;
   sp.style.width = (scrollY / (h.scrollHeight - h.clientHeight) * 100) + '%';
   navEl.classList.toggle('scrolled', scrollY > 40);
-  updateNarrative();
   ticking = false;
 }
 addEventListener('scroll', () => {
@@ -1615,26 +1540,6 @@ if (!reduced && ff) {
     ff.appendChild(el);
   }
 }
-
-/* ── SCROLL NARRATIVE ── */
-const narr = document.getElementById('narrative');
-const screens = document.querySelectorAll('.narrative-screen');
-let currScreen = -1;
-function updateNarrative() {
-  if (!narr) return;
-  const rect = narr.getBoundingClientRect();
-  const progress = Math.max(0, Math.min(1, -rect.top / (narr.offsetHeight - innerHeight)));
-  const idx = Math.min(screens.length-1, Math.floor(progress * screens.length));
-  if (idx === currScreen) return;
-  screens.forEach((s,i) => {
-    s.classList.remove('active','exit');
-    if (i === idx) s.classList.add('active');
-    else if (i < idx) s.classList.add('exit');
-  });
-  currScreen = idx;
-}
-// Initial call on load
-updateNarrative();
 
 /* ── BLOOMBERG DASHBOARD ── */
 // Mini sparkline generator
