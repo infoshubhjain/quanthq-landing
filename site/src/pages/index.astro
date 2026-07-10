@@ -706,6 +706,14 @@ html.light .hm-cell{animation:none}
   0%,100%{filter:brightness(1)}
   50%{filter:brightness(1.3)}
 }
+/* price flash on ticker update */
+.ticker-row.flash-up{animation:rowFlashUp 0.5s var(--ease-out)}
+.ticker-row.flash-down{animation:rowFlashDown 0.5s var(--ease-out)}
+@keyframes rowFlashUp{from{background:color-mix(in srgb,var(--green) 16%,transparent)}to{background:transparent}}
+@keyframes rowFlashDown{from{background:color-mix(in srgb,var(--red) 16%,transparent)}to{background:transparent}}
+/* heatmap repricing flash */
+.hm-cell.hm-flash{animation:hmFlash 0.6s var(--ease-out)}
+@keyframes hmFlash{from{filter:brightness(2.2)}to{filter:brightness(1)}}
 .agent-row{
   display:flex;align-items:center;gap:10px;
   padding:10px 0;border-bottom:1px solid var(--border);
@@ -994,7 +1002,9 @@ html.light .hm-cell{animation:none}
   border-radius:12px;
   margin-top:64px;
   display:block;
+  cursor:grab;touch-action:pan-y;
 }
+#force-canvas:active{cursor:grabbing}
 
 /* ── FINAL CTA ── */
 .fcta-section{
@@ -1256,8 +1266,26 @@ html body,html nav,html footer,.bento-card,.bb-cell,.stat-cell,.hs-card,.termina
 .fade-in.in{opacity:1}
 
 /* ── SMOOTH STAT COUNTERS ── */
-.stat-num span,.hero-metric .n{
+.stat-num span,.hero-metric .n,.bb-val{
   font-variant-numeric:tabular-nums;
+}
+
+/* ── SCROLL-DRIVEN PARALLAX (animates `translate`, so it never fights
+   the transform-based reveals and hover tilts) ── */
+@supports (animation-timeline: view()) {
+  .bento-card,.stat-cell{
+    animation:viewDrift linear both;
+    animation-timeline:view();
+    animation-range:entry 0% exit 100%;
+  }
+  .bento-card:nth-child(even){--drift:36px}
+  .bento-card:nth-child(odd){--drift:18px}
+  .stat-cell:nth-child(even){--drift:24px}
+  .stat-cell:nth-child(odd){--drift:12px}
+}
+@keyframes viewDrift{
+  from{translate:0 var(--drift,24px)}
+  to{translate:0 calc(-1 * var(--drift,24px))}
 }
 </style>
 </head>
@@ -1278,12 +1306,12 @@ html body,html nav,html footer,.bento-card,.bb-cell,.stat-cell,.hs-card,.termina
 
 <!-- SECTION DOTS -->
 <div id="section-dots">
-  <button class="sd-dot active" data-target="hero" data-label="Home" aria-label="Go to hero"></button>
-  <button class="sd-dot" data-target="dashboard" data-label="Intelligence" aria-label="Go to dashboard"></button>
-  <button class="sd-dot" data-target="research" data-label="Ecosystem" aria-label="Go to research"></button>
-  <button class="sd-dot" data-target="network" data-label="Network" aria-label="Go to network"></button>
-  <button class="sd-dot" data-target="terminal" data-label="Terminal" aria-label="Go to terminal"></button>
-  <button class="sd-dot" data-target="join" data-label="Join" aria-label="Go to join"></button>
+  <button class="sd-dot active magnetic" data-target="hero" data-label="Home" aria-label="Go to hero"></button>
+  <button class="sd-dot magnetic" data-target="dashboard" data-label="Intelligence" aria-label="Go to dashboard"></button>
+  <button class="sd-dot magnetic" data-target="research" data-label="Ecosystem" aria-label="Go to research"></button>
+  <button class="sd-dot magnetic" data-target="network" data-label="Network" aria-label="Go to network"></button>
+  <button class="sd-dot magnetic" data-target="terminal" data-label="Terminal" aria-label="Go to terminal"></button>
+  <button class="sd-dot magnetic" data-target="join" data-label="Join" aria-label="Go to join"></button>
 </div>
 
 <!-- BACKGROUND -->
@@ -1305,12 +1333,12 @@ html body,html nav,html footer,.bento-card,.bb-cell,.stat-cell,.hs-card,.termina
       QuantHQ
     </a>
     <div class="nav-links" id="nav-links">
-      <a href="/research/">Research</a>
-      <a href="/blog/">Blog</a>
-      <a href="/about/">About</a>
-      <a href="#dashboard">Intelligence</a>
-      <a href="#network">Network</a>
-      <a href="#terminal">Terminal</a>
+      <a href="/research/" class="magnetic">Research</a>
+      <a href="/blog/" class="magnetic">Blog</a>
+      <a href="/about/" class="magnetic">About</a>
+      <a href="#dashboard" class="magnetic">Intelligence</a>
+      <a href="#network" class="magnetic">Network</a>
+      <a href="#terminal" class="magnetic">Terminal</a>
     </div>
     <button class="nav-hamburger" id="nav-hamburger" aria-label="Toggle menu">
       <span></span><span></span><span></span>
@@ -1558,7 +1586,7 @@ html body,html nav,html footer,.bento-card,.bb-cell,.stat-cell,.hs-card,.termina
         <div class="term-line">  QuantHQ Research Pipeline v2.4.1</div>
         <div class="term-line">─────────────────────────────────────────────</div>
         <div id="term-lines"></div>
-        <span class="term-prompt">$ </span><span class="term-cursor"></span>
+        <span class="term-prompt">$ </span><span id="term-input" class="term-cmd"></span><span class="term-cursor"></span><span id="term-hint" style="color:var(--text-4)">  click here, type 'help'</span>
       </div>
     </div>
   </div>
@@ -1769,13 +1797,24 @@ function toSVGPoints(arr, w, h) {
 }
 let spxData = makePoints(40, 5847, 12);
 let vixData = makePoints(40, 16.3, 0.4);
+let sparkDrawing = false; // pause polyline swaps while the draw-in animation runs
+function tweenNum(el, to, fmt) {
+  const from = parseFloat(el.textContent.replace(/,/g,'')) || to;
+  if (reduced || from === to) { el.textContent = fmt(to); return; }
+  const start = performance.now(), dur = 400;
+  (function step(now) {
+    const t = Math.min((now - start) / dur, 1), e = 1 - Math.pow(1 - t, 3);
+    el.textContent = fmt(from + (to - from) * e);
+    if (t < 1) requestAnimationFrame(step);
+  })(start);
+}
 function updateCharts() {
   spxData.push(spxData[spxData.length-1]+(Math.random()-.48)*8); spxData.shift();
   vixData.push(vixData[vixData.length-1]+(Math.random()-.48)*0.3); vixData.shift();
   const spxV = spxData[spxData.length-1];
   const vixV = vixData[vixData.length-1];
-  document.getElementById('spx-val').textContent = spxV.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g,',');
-  document.getElementById('vix-val').textContent = vixV.toFixed(1);
+  tweenNum(document.getElementById('spx-val'), spxV, v => Math.round(v).toLocaleString('en-US'));
+  tweenNum(document.getElementById('vix-val'), vixV, v => v.toFixed(1));
   document.getElementById('spx-time').textContent = new Date().toLocaleTimeString('en-US',{hour12:false});
   const spxPct = ((spxV/spxData[0]-1)*100).toFixed(2);
   const vixPct = ((vixV/vixData[0]-1)*100).toFixed(2);
@@ -1785,11 +1824,35 @@ function updateCharts() {
   const vixEl = document.getElementById('vix-chg');
   vixEl.textContent = (vixPct>=0?'+':'')+vixPct+'%';
   vixEl.className = 'bb-change '+(vixPct>=0?'up':'down');
-  document.getElementById('spx-line').setAttribute('points', toSVGPoints(spxData,200,48));
-  document.getElementById('vix-line').setAttribute('points', toSVGPoints(vixData,200,48));
+  if (!sparkDrawing) {
+    document.getElementById('spx-line').setAttribute('points', toSVGPoints(spxData,200,48));
+    document.getElementById('vix-line').setAttribute('points', toSVGPoints(vixData,200,48));
+  }
 }
 updateCharts();
 if (!reduced) setInterval(updateCharts, 1800);
+
+// Draw-in: sparklines trace themselves when the dashboard first scrolls into view
+if (!reduced) {
+  const sparkIO = new IntersectionObserver(es => {
+    if (!es[0].isIntersecting) return;
+    sparkIO.disconnect();
+    sparkDrawing = true;
+    const lines = ['spx-line','vix-line'].map(id => document.getElementById(id));
+    lines.forEach(l => {
+      const len = l.getTotalLength();
+      l.style.strokeDasharray = len;
+      l.style.strokeDashoffset = len;
+      l.style.transition = 'stroke-dashoffset 1.2s var(--ease-out)';
+      requestAnimationFrame(() => requestAnimationFrame(() => l.style.strokeDashoffset = 0));
+    });
+    setTimeout(() => {
+      lines.forEach(l => { l.style.strokeDasharray = l.style.strokeDashoffset = l.style.transition = ''; });
+      sparkDrawing = false;
+    }, 1350);
+  }, {threshold: 0.3});
+  sparkIO.observe(document.querySelector('.bloomberg-grid'));
+}
 
 // Heatmap — color-mix over theme vars so cells read in both modes
 const hmColors = [60,40,20].map(p=>`color-mix(in srgb,var(--green) ${p}%,transparent)`)
@@ -1823,6 +1886,26 @@ hmEl.addEventListener('click', e => {
   const p = +cell.dataset.pct;
   hmDetail.textContent = `${cell.dataset.sector.toUpperCase()} · ${p>=0?'+':''}${p}% today · ${Math.floor(Math.random()*40+12)} instruments tracked`;
 });
+// hover previews a sector in the detail strip (a pinned click wins)
+hmEl.addEventListener('mouseover', e => {
+  const cell = e.target.closest('.hm-cell');
+  if (!cell || hmEl.querySelector('.sel')) return;
+  const p = +cell.dataset.pct;
+  hmDetail.textContent = `${cell.dataset.sector.toUpperCase()} · ${p>=0?'+':''}${p}% today`;
+});
+hmEl.addEventListener('mouseleave', () => {
+  if (!hmEl.querySelector('.sel')) hmDetail.textContent = '';
+});
+// live repricing: one random cell re-colors with a flash every few seconds
+if (!reduced) setInterval(() => {
+  const c = hmEl.children[Math.floor(Math.random()*hmEl.children.length)];
+  const ci = Math.floor(Math.random()*hmColors.length);
+  c.style.background = hmColors[ci];
+  c.dataset.pct = (hmPcts[ci] + (Math.random()-0.5)*0.6).toFixed(1);
+  c.classList.remove('hm-flash');
+  void c.offsetWidth;
+  c.classList.add('hm-flash');
+}, 2400);
 
 // Ticker feed
 const tickers = [
@@ -1860,6 +1943,10 @@ if (!reduced) {
     if (row) {
       row.textContent = t.chg;
       row.className = 'ticker-chg ' + t.dir;
+      const tr = row.closest('.ticker-row');
+      tr.classList.remove('flash-up','flash-down');
+      void tr.offsetWidth;
+      tr.classList.add(t.dir === 'up' ? 'flash-up' : 'flash-down');
     } else {
       // fallback: rebuild
       tf.innerHTML = tickers.map(t=>`
@@ -2095,6 +2182,7 @@ function initForce() {
 function stepForce() {
   const k = 80, repK = 4000, damping = 0.88;
   for (let i=0;i<fNodes.length;i++) {
+    if (i === fDrag) continue; // dragged node follows the pointer, not physics
     let fx=0,fy=0;
     // repulsion
     for (let j=0;j<fNodes.length;j++) {
@@ -2122,17 +2210,39 @@ function stepForce() {
     fNodes[i].y=Math.max(20,Math.min(fH-20,fNodes[i].y));
   }
 }
-let fMouseX = -1, fMouseY = -1, fHoverNode = -1;
-fc.addEventListener('mousemove', e => {
+let fMouseX = -1, fMouseY = -1, fHoverNode = -1, fDrag = -1;
+fc.addEventListener('pointerdown', e => {
+  const rect = fc.getBoundingClientRect();
+  const x = e.clientX - rect.left, y = e.clientY - rect.top;
+  for (let i=0; i<fNodes.length; i++) {
+    if (Math.hypot(fNodes[i].x-x, fNodes[i].y-y) < 14) {
+      fDrag = i;
+      fc.setPointerCapture(e.pointerId);
+      e.preventDefault();
+      break;
+    }
+  }
+});
+fc.addEventListener('pointermove', e => {
   const rect = fc.getBoundingClientRect();
   fMouseX = e.clientX - rect.left;
   fMouseY = e.clientY - rect.top;
+  if (fDrag >= 0) {
+    const n = fNodes[fDrag];
+    n.x = Math.max(20, Math.min(fW-20, fMouseX));
+    n.y = Math.max(20, Math.min(fH-20, fMouseY));
+    n.vx = n.vy = 0;
+    fHoverNode = fDrag;
+    return;
+  }
   fHoverNode = -1;
   for (let i=0; i<fNodes.length; i++) {
     const d = Math.hypot(fNodes[i].x-fMouseX, fNodes[i].y-fMouseY);
     if (d < 12) { fHoverNode = i; break; }
   }
-}, {passive:true});
+});
+fc.addEventListener('pointerup', () => { fDrag = -1; });
+fc.addEventListener('pointercancel', () => { fDrag = -1; });
 fc.addEventListener('mouseleave', () => { fMouseX=-1; fMouseY=-1; fHoverNode=-1; });
 
 function drawForce() {
@@ -2246,7 +2356,9 @@ const termLines = [
 ];
 const tl = document.getElementById('term-lines');
 let ti = 0;
+let termUserMode = false; // once the visitor types, the demo loop stops
 function typeTermLine() {
+  if (termUserMode) return;
   if (ti >= termLines.length) { ti = 0; tl.innerHTML = ''; }
   const line = termLines[ti++];
   const el = document.createElement('div');
@@ -2258,6 +2370,65 @@ function typeTermLine() {
   setTimeout(typeTermLine, 600+Math.random()*800);
 }
 if (!reduced) setTimeout(typeTermLine, 1200);
+
+/* ── TERMINAL: VISITOR COMMANDS ── */
+const termBody = document.getElementById('terminal-body');
+const termInput = document.getElementById('term-input');
+const termHint = document.getElementById('term-hint');
+const TERM_CMDS = {
+  help: [
+    'available commands:',
+    '  agents      list active research agents',
+    '  backtest    run a demo walk-forward backtest',
+    '  factors     show factor attribution',
+    '  clear       clear the terminal',
+  ],
+  agents: [
+    '► alpha-extractor-v3   [running]',
+    '► regime-classifier    [training]',
+    '► earnings-nlp-agent   [idle]',
+    '► backtest-engine-5d   [running]',
+    '► signal-ranker        [running]',
+  ],
+  backtest: [
+    '► Running 5-year walk-forward validation...',
+    '► Sharpe: 1.84 | Max DD: -4.2% | Calmar: 2.1',
+    '✓ Tearsheet published to community',
+  ],
+  factors: [
+    '► momentum_3m +0.72 | earnings_rev +0.91 | quality +0.68',
+    '✓ Factor attribution complete in 1.2s',
+  ],
+};
+termBody.setAttribute('tabindex', '0');
+termBody.setAttribute('aria-label', "Interactive demo terminal. Type 'help' for commands.");
+termBody.style.cursor = 'text';
+termBody.addEventListener('keydown', e => {
+  if (e.metaKey || e.ctrlKey || e.altKey) return;
+  if (e.key.length === 1) {
+    termUserMode = true;
+    termHint.textContent = '';
+    termInput.textContent += e.key;
+  } else if (e.key === 'Backspace') {
+    termInput.textContent = termInput.textContent.slice(0, -1);
+  } else if (e.key === 'Enter') {
+    const cmd = termInput.textContent.trim().toLowerCase();
+    termInput.textContent = '';
+    if (!cmd) return;
+    const echo = document.createElement('div');
+    echo.innerHTML = '<span class="term-prompt">$ </span><span class="term-cmd"></span>';
+    echo.querySelector('.term-cmd').textContent = cmd;
+    tl.appendChild(echo);
+    if (cmd === 'clear') { tl.innerHTML = ''; return; }
+    (TERM_CMDS[cmd] || [`command not found: ${cmd} — try 'help'`]).forEach(text => {
+      const d = document.createElement('div');
+      d.className = text.startsWith('✓') ? 'term-ok' : 'term-out';
+      d.textContent = '  ' + text;
+      tl.appendChild(d);
+    });
+  } else return;
+  e.preventDefault();
+});
 
 /* ── EMAIL FORM ── */
 const signupForm = document.getElementById('signup-form');
@@ -2410,7 +2581,7 @@ if (!reduced) {
       el.style.transform = `translate(${x * 0.3}px, ${y * 0.3}px)`;
     }, {passive:true});
     el.addEventListener('mouseleave', () => {
-      el.style.transform = 'translate(0,0)';
+      el.style.transform = ''; // revert to stylesheet so states like .sd-dot.active keep their scale
       el.style.transition = 'transform 0.4s cubic-bezier(0.22,1,0.36,1)';
       setTimeout(() => el.style.transition = '', 400);
     });

@@ -46,7 +46,8 @@ const searchIndex = posts.map(p => ({
     </div>
   </section>
 
-  <script define:vars={{ searchIndex }}>
+  <script define:vars={{ searchIndex }} data-astro-rerun>
+    (function () {
     const input = document.getElementById('blog-search');
     const items = [...document.querySelectorAll('.blog-item')];
     const btns = [...document.querySelectorAll('.cat-btn')];
@@ -78,5 +79,6 @@ const searchIndex = posts.map(p => ({
     import('https://cdn.jsdelivr.net/npm/fuse.js@7/dist/fuse.mjs').then(({ default: Fuse }) => {
       fuse = new Fuse(searchIndex, { keys: ['title', 'description', 'author', 'category'], threshold: 0.35 });
     });
+    })();
   </script>
 </Base>

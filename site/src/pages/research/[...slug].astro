@@ -53,10 +53,13 @@ const bibtex = `@article{quanthq${paper.data.date.getFullYear()}${paper.id.split
     </div>
   </article>
   <script>
-    document.getElementById('cite-btn')?.addEventListener('click', (e) => {
-      navigator.clipboard.writeText(document.getElementById('bibtex')?.textContent ?? '');
-      e.target.textContent = 'Copied ✓';
-      setTimeout(() => (e.target.textContent = 'Copy BibTeX'), 1500);
+    // module scripts run once; re-bind on every ClientRouter navigation
+    document.addEventListener('astro:page-load', () => {
+      document.getElementById('cite-btn')?.addEventListener('click', (e) => {
+        navigator.clipboard.writeText(document.getElementById('bibtex')?.textContent ?? '');
+        e.target.textContent = 'Copied ✓';
+        setTimeout(() => (e.target.textContent = 'Copy BibTeX'), 1500);
+      });
     });
   </script>
 </Base>

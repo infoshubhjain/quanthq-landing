@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import { ClientRouter } from 'astro:transitions';
 const { title = 'QuantHQ', description = 'QuantHQ is a digital research institution building the future of quantitative finance and AI.' } = Astro.props;
 const tickers = [
   { sym: 'NVDA', px: '131.42', chg: '+2.8%', dir: 'up' },
@@ -36,6 +37,7 @@ const aboutTabs = ['Mission', 'Research', 'Build', 'Community', 'Education', 'Fu
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <ClientRouter />
 </head>
 <body class="min-h-screen antialiased">
   <div aria-hidden="true">
@@ -135,39 +137,46 @@ const aboutTabs = ['Mission', 'Research', 'Build', 'Community', 'Education', 'Fu
   <script>
     const FAVICON_DARK="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 34 34'%3E%3Crect x='3' y='3' width='22' height='22' rx='3' fill='none' stroke='white' stroke-width='2.2'/%3E%3Ctext x='7.5' y='19.5' font-family='sans-serif' font-weight='800' font-size='10.5' fill='white'%3EHQ%3C/text%3E%3Crect x='22' y='22' width='9' height='9' rx='2' fill='white'/%3E%3C/svg%3E";
     const FAVICON_LIGHT="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 34 34'%3E%3Crect x='3' y='3' width='22' height='22' rx='3' fill='none' stroke='black' stroke-width='2.2'/%3E%3Ctext x='7.5' y='19.5' font-family='sans-serif' font-weight='800' font-size='10.5' fill='black'%3EHQ%3C/text%3E%3Crect x='22' y='22' width='9' height='9' rx='2' fill='black'/%3E%3C/svg%3E";
-    if(document.documentElement.classList.contains('light'))document.getElementById('favicon').href=FAVICON_LIGHT;
-    window.addEventListener('load', () => document.querySelector('.bgfx-grain')?.classList.add('active'));
+    // The ClientRouter swaps the DOM on navigation, so all element bindings
+    // re-run on astro:page-load (which also fires on the initial load).
+    function initBase() {
+      if(document.documentElement.classList.contains('light'))document.getElementById('favicon').href=FAVICON_LIGHT;
+      document.querySelector('.bgfx-grain')?.classList.add('active');
 
-    document.getElementById('mnav-btn')?.addEventListener('click', () => {
-      document.getElementById('mnav')?.classList.toggle('hidden');
-    });
-    document.querySelectorAll('#mnav a').forEach(a => a.addEventListener('click', () => {
-      document.getElementById('mnav')?.classList.add('hidden');
-    }));
+      document.getElementById('mnav-btn')?.addEventListener('click', () => {
+        document.getElementById('mnav')?.classList.toggle('hidden');
+      });
+      document.querySelectorAll('#mnav a').forEach(a => a.addEventListener('click', () => {
+        document.getElementById('mnav')?.classList.add('hidden');
+      }));
 
-    // About dropdown — click-based (no hover tunnel)
-    const aboutDropdown = document.getElementById('about-dropdown');
-    const aboutBtn = document.getElementById('about-btn');
-    aboutBtn?.addEventListener('click', (e) => {
-      e.stopPropagation();
-      aboutDropdown?.classList.toggle('open');
-    });
-    document.addEventListener('click', () => aboutDropdown?.classList.remove('open'));
+      // About dropdown — click-based (no hover tunnel)
+      document.getElementById('about-btn')?.addEventListener('click', (e) => {
+        e.stopPropagation();
+        document.getElementById('about-dropdown')?.classList.toggle('open');
+      });
 
-    const io = new IntersectionObserver((es) => es.forEach((e) => {
-      if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
-    }), { threshold: 0.12 });
-    document.querySelectorAll('.rv').forEach((el) => io.observe(el));
-    document.querySelectorAll('.card').forEach((c) => c.addEventListener('mousemove', (e) => {
-      const r = c.getBoundingClientRect();
-      c.style.setProperty('--mx', (e.clientX - r.left) + 'px');
-      c.style.setProperty('--my', (e.clientY - r.top) + 'px');
-    }, { passive: true }));
-    document.getElementById('theme-toggle')?.addEventListener('click', () => {
-      const light = document.documentElement.classList.toggle('light');
-      localStorage.theme = light ? 'light' : 'dark';
-      document.getElementById('favicon').href = light ? FAVICON_LIGHT : FAVICON_DARK;
+      const io = new IntersectionObserver((es) => es.forEach((e) => {
+        if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+      }), { threshold: 0.12 });
+      document.querySelectorAll('.rv').forEach((el) => io.observe(el));
+      document.querySelectorAll('.card').forEach((c) => c.addEventListener('mousemove', (e) => {
+        const r = c.getBoundingClientRect();
+        c.style.setProperty('--mx', (e.clientX - r.left) + 'px');
+        c.style.setProperty('--my', (e.clientY - r.top) + 'px');
+      }, { passive: true }));
+      document.getElementById('theme-toggle')?.addEventListener('click', () => {
+        const light = document.documentElement.classList.toggle('light');
+        localStorage.theme = light ? 'light' : 'dark';
+        document.getElementById('favicon').href = light ? FAVICON_LIGHT : FAVICON_DARK;
+      });
+    }
+    document.addEventListener('astro:page-load', initBase);
+    // the swap replaces <html>, so re-apply the persisted theme class
+    document.addEventListener('astro:after-swap', () => {
+      if (localStorage.theme === 'light') document.documentElement.classList.add('light');
     });
+    document.addEventListener('click', () => document.getElementById('about-dropdown')?.classList.remove('open'));
   </script>
 </body>
 </html>

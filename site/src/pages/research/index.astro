@@ -81,7 +81,8 @@ const searchIndex = papers.map((p) => ({
     </div>
   </section>
 
-  <script define:vars={{ searchIndex }}>
+  <script define:vars={{ searchIndex }} data-astro-rerun>
+    (function () {
     const items = [...document.querySelectorAll('.paper-item')];
     const tagBtns = [...document.querySelectorAll('.tag-btn')];
     let activeTag = '';
@@ -110,5 +111,6 @@ const searchIndex = papers.map((p) => ({
     import('https://cdn.jsdelivr.net/npm/fuse.js@7/dist/fuse.mjs').then(({ default: Fuse }) => {
       fuse = new Fuse(searchIndex, { keys: ['title', 'abstract', 'authors', 'tags'], threshold: 0.35 });
     });
+    })();
   </script>
 </Base>

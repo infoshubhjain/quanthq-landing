@@ -53,7 +53,8 @@ const toc = headings.filter((h) => h.depth <= 3);
     </div>
   </article>
 
-  <script define:vars={{ slug: post.id }}>
+  <script define:vars={{ slug: post.id }} data-astro-rerun>
+    (function () {
     const prog = document.getElementById('read-prog');
     addEventListener('scroll', () => {
       const h = document.documentElement;
@@ -71,5 +72,6 @@ const toc = headings.filter((h) => h.depth <= 3);
         b.querySelector('.count').textContent = saved[r];
       });
     });
+    })();
   </script>
 </Base>
