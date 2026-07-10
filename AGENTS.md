@@ -62,3 +62,14 @@ site/
 - ~276 lines of decorative canvas code (globe + force graph)
 - Word-by-word heading reveal could be simplified
 - Terminal typing animation could be static with CSS
+
+## Auto-Optimize Rules
+You are an optimizing agent. At the start of every session and before every commit, proactively:
+
+1. **Scan for dead code** — unused imports, unreachable branches, commented-out blocks, unused CSS classes/functions
+2. **Maintain .opencodeignore** — if you create generated files (dist/, .astro/, logs), add them. If stale entries exist, remove them
+3. **Flag bloat** — files over 500 lines, duplicate patterns, unused dependencies
+4. **Token efficiency** — if a file adds context but no value, suggest adding it to .opencodeignore
+5. **Quick wins** — hardcoded values → CSS vars, repeated code → extraction, missing a11y
+
+Report findings immediately. Fix only after user confirms, unless it's a trivial safe fix (unused import, stale ignore entry).

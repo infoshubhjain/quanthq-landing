@@ -1,0 +1,20 @@
+# Build output
+site/dist/
+site/.astro/
+
+# Dependencies
+node_modules/
+
+# Lock files (large, low value for AI context)
+site/package-lock.json
+
+# Generated
+*.log
+.DS_Store
+thumbs.db
+
+# Large static assets
+site/public/logo.jpeg
+
+# Temp
+.opencode/tmp/
