@@ -1,6 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
-import AboutTabs from '../components/AboutTabs.jsx';
+import AboutTabs from '../components/AboutTabs.astro';
 ---
 <Base title="About — QuantHQ">
   <section class="px-6 pt-24 pb-16">
@@ -16,7 +16,7 @@ import AboutTabs from '../components/AboutTabs.jsx';
   <section class="px-6 pt-4 pb-10">
     <div class="max-w-6xl mx-auto">
       <div class="section-label mb-6">About QuantHQ</div>
-      <AboutTabs client:load />
+      <AboutTabs />
     </div>
   </section>
 </Base>
