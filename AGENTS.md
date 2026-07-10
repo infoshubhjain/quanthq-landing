@@ -28,9 +28,10 @@ site/
 ```
 
 ## Commands
-- `npm run dev` — starts dev server (run from site/ directory)
-- `npm run build` — builds for production
+- `npm run dev` — starts dev server (run from `site/` directory)
+- `npm run build` — builds for production (output to `site/dist/`)
 - `npm run preview` — preview production build
+- No test suite exists. No lint/typecheck commands configured.
 
 ## Conventions
 - Components are `.astro` files in `src/components/`
@@ -40,6 +41,7 @@ site/
 - Theme: dark by default, light mode via `html.light` class + localStorage
 - Animations: CSS keyframes + vanilla JS (IntersectionObserver, canvas)
 - Font: Inter from Google Fonts
+- Content schemas in `src/content.config.ts` (research + blog collections)
 
 ## Key Files
 - `src/styles/global.css` — shared styles, theme variables, background FX
@@ -55,6 +57,8 @@ site/
 - Ticker data is hardcoded (simulated, not real API)
 - All canvas code (globe, force graph) is decorative only
 - `prefers-reduced-motion` must be respected — disable animations when set
+- CI copies `CNAME` into `dist/` after build — don't remove that step
+- If you have any clarifying questions, ask them all upfront before starting work
 
 ## Known Tech Debt (from FURTHER_WORK.md)
 - index.astro duplicates ~1275 lines of CSS from global.css with different variable names

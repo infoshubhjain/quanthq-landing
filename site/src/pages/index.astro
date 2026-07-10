@@ -4,8 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>QuantHQ — AI Research Institution for Quantitative Finance</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 34 34'%3E%3Crect x='3' y='3' width='22' height='22' rx='3' fill='none' stroke='white' stroke-width='2.2'/%3E%3Ctext x='7.5' y='19.5' font-family='sans-serif' font-weight='800' font-size='10.5' fill='white'%3EHQ%3C/text%3E%3Crect x='22' y='22' width='9' height='9' rx='2' fill='white'/%3E%3C/svg%3E">
-<script>if(localStorage.theme==='light')document.documentElement.classList.add('light')</script>
+<link rel="icon" id="favicon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 34 34'%3E%3Crect x='3' y='3' width='22' height='22' rx='3' fill='none' stroke='white' stroke-width='2.2'/%3E%3Ctext x='7.5' y='19.5' font-family='sans-serif' font-weight='800' font-size='10.5' fill='white'%3EHQ%3C/text%3E%3Crect x='22' y='22' width='9' height='9' rx='2' fill='white'/%3E%3C/svg%3E">
+<script>
+const FAVICON_DARK="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 34 34'%3E%3Crect x='3' y='3' width='22' height='22' rx='3' fill='none' stroke='white' stroke-width='2.2'/%3E%3Ctext x='7.5' y='19.5' font-family='sans-serif' font-weight='800' font-size='10.5' fill='white'%3EHQ%3C/text%3E%3Crect x='22' y='22' width='9' height='9' rx='2' fill='white'/%3E%3C/svg%3E";
+const FAVICON_LIGHT="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 34 34'%3E%3Crect x='3' y='3' width='22' height='22' rx='3' fill='none' stroke='black' stroke-width='2.2'/%3E%3Ctext x='7.5' y='19.5' font-family='sans-serif' font-weight='800' font-size='10.5' fill='black'%3EHQ%3C/text%3E%3Crect x='22' y='22' width='9' height='9' rx='2' fill='black'/%3E%3C/svg%3E";
+if(localStorage.theme==='light'){document.documentElement.classList.add('light');document.getElementById('favicon').href=FAVICON_LIGHT}
+</script>
 <meta name="description" content="QuantHQ is a digital research institution. Where quant researchers, engineers, mathematicians, and AI scientists build the future of quantitative finance.">
 <meta property="og:title" content="QuantHQ — AI Research Institution for Quantitative Finance">
 <meta property="og:description" content="A living research ecosystem for quant researchers, engineers, mathematicians, and AI scientists building the future of quantitative finance.">
@@ -16,7 +20,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<style>
+<style is:global>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 :root{
   --black:#04060B;
@@ -45,12 +49,12 @@ html.light{
   --white:#0F172A;
   --green:#16A34A;
   --red:#DC2626;
-  --text-1:rgba(15,23,42,0.85);
-  --text-2:rgba(15,23,42,0.55);
-  --text-3:rgba(15,23,42,0.40);
-  --text-4:rgba(15,23,42,0.20);
-  --border:rgba(0,0,0,0.08);
-  --border-hover:rgba(0,0,0,0.15);
+  --text-1:rgba(15,23,42,0.92);
+  --text-2:rgba(15,23,42,0.68);
+  --text-3:rgba(15,23,42,0.52);
+  --text-4:rgba(15,23,42,0.34);
+  --border:rgba(15,23,42,0.10);
+  --border-hover:rgba(15,23,42,0.20);
 }
 html{scroll-behavior:smooth;background:var(--black)}
 body{
@@ -105,14 +109,14 @@ button{border:none;background:none;color:inherit;font:inherit}
   font-size:clamp(60px,12vw,160px);
   font-weight:800;
   letter-spacing:-0.05em;
-  color:rgba(255,255,255,0);
-  -webkit-text-stroke:1px rgba(255,255,255,0.05);
+  color:transparent;
+  -webkit-text-stroke:1px var(--text-4);
   animation:loaderReveal 0.5s var(--ease-out) 0.05s both;
   pointer-events:none;
 }
 @keyframes loaderReveal{
-  from{-webkit-text-stroke-color:rgba(255,255,255,0.05);letter-spacing:0.2em}
-  to{-webkit-text-stroke-color:rgba(255,255,255,0.12);letter-spacing:-0.05em}
+  from{opacity:0.4;letter-spacing:0.2em}
+  to{opacity:1;letter-spacing:-0.05em}
 }
 @keyframes loaderPulse{0%,100%{opacity:0.3}50%{opacity:0.8}}
 
@@ -190,7 +194,7 @@ html.light nav.scrolled{
 }
 .nav-hamburger span{
   display:block;width:22px;height:2px;
-  background:rgba(255,255,255,0.7);
+  background:var(--text-1);
   border-radius:2px;
   transition:transform 0.3s var(--ease-out),opacity 0.2s;
 }
@@ -260,6 +264,15 @@ html.light .bento-card{background:rgba(255,255,255,0.8);border-color:var(--borde
 html.light .bento-card:hover{border-color:var(--border-hover);box-shadow:0 32px 64px -16px rgba(0,0,0,0.08)}
 html.light .hs-card{background:rgba(255,255,255,0.7);border-color:var(--border)}
 html.light .terminal-body{background:rgba(245,245,247,0.98)}
+html.light .terminal-body::after{background:repeating-linear-gradient(0deg,rgba(15,23,42,0.02) 0 1px,transparent 1px 3px)}
+html.light .terminal-window{box-shadow:0 32px 64px -24px rgba(15,23,42,0.18)}
+html.light .btn-primary,html.light .signup-btn{
+  background:rgba(37,99,235,0.88);
+  border-color:rgba(37,99,235,0.4);
+  box-shadow:0 12px 32px -8px rgba(37,99,235,0.45);
+}
+html.light .btn-primary:hover,html.light .signup-btn:hover{background:rgba(29,78,216,0.95)}
+html.light .bento-card:hover{box-shadow:0 32px 64px -16px rgba(15,23,42,0.12),0 0 0 1px var(--border)}
 html.light .stat-cell{background:rgba(255,255,255,0.9)}
 html.light .stat-cell:hover{background:rgba(255,255,255,1)}
 html.light .tape{background:rgba(245,245,247,0.75);border-bottom-color:var(--border)}
@@ -285,7 +298,7 @@ html.light ::-webkit-scrollbar-thumb{border-color:var(--black)}
 html.light .theme-toggle .tt-moon{display:block}
 html.light .theme-toggle .tt-sun{display:none}
 
-::selection{background:rgba(61,123,255,0.4);color:#fff}
+::selection{background:rgba(61,123,255,0.4);color:var(--white)}
 ::-webkit-scrollbar{width:10px}
 ::-webkit-scrollbar-track{background:#04060B}
 ::-webkit-scrollbar-thumb{
@@ -317,8 +330,8 @@ html.light .grain{opacity:0.02}
 /* ── MEGA MARQUEE ── */
 .mega-marquee{
   overflow:hidden;padding:56px 0;
-  border-top:1px solid rgba(255,255,255,0.04);
-  border-bottom:1px solid rgba(255,255,255,0.04);
+  border-top:1px solid var(--border);
+  border-bottom:1px solid var(--border);
 }
 .mega-track{
   display:flex;width:max-content;white-space:nowrap;
@@ -611,7 +624,7 @@ html.light .hero-floor{opacity:0.25}
   white-space:nowrap;z-index:5;
 }
 .hm-cell{cursor:pointer;transition:outline-color 0.15s}
-.hm-cell.sel{outline:1px solid rgba(255,255,255,0.8);outline-offset:1px}
+.hm-cell.sel{outline:1px solid var(--text-1);outline-offset:1px}
 .hm-detail{
   margin-top:10px;font-family:'Courier New',monospace;
   font-size:10px;color:var(--text-2);
@@ -624,8 +637,8 @@ html.light .hero-floor{opacity:0.25}
   grid-template-columns:1fr 1fr 1fr 1fr;
   grid-template-rows:auto auto auto;
   gap:1px;
-  background:rgba(255,255,255,0.04);
-  border:1px solid rgba(255,255,255,0.06);
+  background:var(--border);
+  border:1px solid var(--border);
   border-radius:8px;
   overflow:hidden;
 }
@@ -661,7 +674,7 @@ html.light .hero-floor{opacity:0.25}
 .ticker-row{
   display:flex;align-items:center;gap:12px;
   padding:8px 0;
-  border-bottom:1px solid rgba(255,255,255,0.04);
+  border-bottom:1px solid var(--border);
   font-size:12px;
 }
 .ticker-row:last-child{border-bottom:none}
@@ -681,11 +694,11 @@ html.light .hero-floor{opacity:0.25}
 .ticker-chg.up{color:var(--green)}
 .ticker-chg.down{color:var(--red)}
 .mini-heatmap{
-  display:grid;grid-template-columns:repeat(7,1fr);gap:2px;
-  margin-top:8px;
+  display:grid;grid-template-columns:repeat(7,1fr);grid-auto-rows:1fr;gap:2px;
+  margin-top:8px;height:104px;
 }
 .hm-cell{
-  aspect-ratio:1;border-radius:2px;
+  border-radius:2px;
   animation:hmPulse ease-in-out infinite;
 }
 html.light .hm-cell{animation:none}
@@ -695,7 +708,7 @@ html.light .hm-cell{animation:none}
 }
 .agent-row{
   display:flex;align-items:center;gap:10px;
-  padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.04);
+  padding:10px 0;border-bottom:1px solid var(--border);
   font-size:11px;
 }
 .agent-row:last-child{border-bottom:none}
@@ -746,7 +759,8 @@ html.light .hm-cell{animation:none}
   box-shadow:0 32px 64px -16px rgba(0,0,0,0.6),0 0 0 1px var(--border);
 }
 .bento-card.wide{grid-column:span 8}
-.bento-card.tall{grid-row:span 6}
+.bento-card.tall{grid-row:span 8;display:flex;flex-direction:column}
+.bento-card.short{grid-row:span 3}
 .bento-card.full{grid-column:span 12;grid-row:span 3}
 .bento-card.small{grid-column:span 3;grid-row:span 3}
 .bc-label{
@@ -764,11 +778,11 @@ html.light .hm-cell{animation:none}
   width:40px;height:40px;border-radius:8px;
   display:flex;align-items:center;justify-content:center;
   margin-bottom:20px;font-size:18px;
-  border:1px solid rgba(255,255,255,0.08);
+  border:1px solid var(--border);
 }
-.glow-blue{box-shadow:0 0 40px rgba(255,255,255,0.15) inset}
-.glow-violet{box-shadow:0 0 40px rgba(140,140,140,0.15) inset}
-.glow-cyan{box-shadow:0 0 40px rgba(255,255,255,0.1) inset}
+.glow-blue{box-shadow:0 0 40px color-mix(in srgb,var(--blue) 12%,transparent) inset}
+.glow-violet{box-shadow:0 0 40px color-mix(in srgb,var(--violet) 12%,transparent) inset}
+.glow-cyan{box-shadow:0 0 40px color-mix(in srgb,var(--cyan) 9%,transparent) inset}
 
 /* glass layer */
 .glass-layer{
@@ -900,8 +914,8 @@ html.light .hm-cell{animation:none}
 .stats-inner{max-width:1280px;margin:0 auto}
 .stats-grid{
   display:grid;grid-template-columns:repeat(4,1fr);gap:1px;
-  background:rgba(255,255,255,0.04);
-  border:1px solid rgba(255,255,255,0.05);
+  background:var(--border);
+  border:1px solid var(--border);
   border-radius:8px;overflow:hidden;
   margin-top:64px;
 }
@@ -921,7 +935,7 @@ html.light .hm-cell{animation:none}
 .stat-cell:hover::before{transform:scaleX(1)}
 .stat-cell:hover .stat-num{
   animation:statPop 0.4s var(--ease-spring);
-  color:var(--blue);text-shadow:0 0 20px rgba(255,255,255,0.5);
+  color:var(--blue);text-shadow:0 0 20px color-mix(in srgb,var(--blue) 45%,transparent);
 }
 @keyframes statPop{
   0%{transform:scale(1)}
@@ -967,8 +981,8 @@ html.light .hm-cell{animation:none}
 }
 @keyframes statGlow{
   0%{text-shadow:0 0 0 transparent;transform:scale(0.8)}
-  50%{text-shadow:0 0 30px rgba(255,255,255,0.6);transform:scale(1.05)}
-  100%{text-shadow:0 0 20px rgba(255,255,255,0.4);transform:scale(1)}
+  50%{text-shadow:0 0 30px color-mix(in srgb,var(--blue) 55%,transparent);transform:scale(1.05)}
+  100%{text-shadow:0 0 20px color-mix(in srgb,var(--blue) 35%,transparent);transform:scale(1)}
 }
 
 /* ── FORCE GRAPH ── */
@@ -976,7 +990,7 @@ html.light .hm-cell{animation:none}
 .graph-inner{max-width:1280px;margin:0 auto}
 #force-canvas{
   width:100%;height:480px;
-  border:1px solid rgba(255,255,255,0.05);
+  border:1px solid var(--border);
   border-radius:12px;
   margin-top:64px;
   display:block;
@@ -1120,13 +1134,15 @@ footer{
   .bento-card{grid-column:span 3}
 }
 @media(max-width:768px){
+  .bento-grid{grid-auto-rows:auto}
+  .bento-card,.bento-card.tall,.bento-card.short,.bento-card.full{grid-row:auto}
   .nav-links{display:none;position:fixed;top:0;left:0;right:0;bottom:0;
-    background:rgba(4,6,11,0.97);backdrop-filter:blur(24px);
+    background:color-mix(in srgb,var(--black) 97%,transparent);backdrop-filter:blur(24px);
     flex-direction:column;align-items:center;justify-content:center;
     gap:28px;z-index:850;margin:0;
   }
   .nav-links.open{display:flex}
-  .nav-links a{font-size:20px;color:rgba(255,255,255,0.7)}
+  .nav-links a{font-size:20px;color:var(--text-1)}
   .nav-hamburger{display:flex}
   .hero-h1{font-size:clamp(26px,7vw,50px)}
   .hero-metrics{flex-wrap:wrap;gap:24px}
@@ -1140,7 +1156,7 @@ footer{
 @media(max-width:480px){
   .stats-grid{grid-template-columns:1fr}
   .bento-grid{grid-template-columns:1fr;grid-auto-rows:auto}
-  .bento-card,.bento-card.wide,.bento-card.tall,.bento-card.full,.bento-card.small{grid-column:span 1;grid-row:auto}
+  .bento-card,.bento-card.wide,.bento-card.tall,.bento-card.short,.bento-card.full,.bento-card.small{grid-column:span 1;grid-row:auto}
   .hero-metrics{flex-direction:column;gap:16px}
 }
 @media(prefers-reduced-motion:reduce){
@@ -1281,7 +1297,7 @@ html body,html nav,html footer,.bento-card,.bb-cell,.stat-cell,.hs-card,.termina
 <nav id="nav">
   <div class="nav-inner">
     <a href="/" class="nav-logo">
-      <svg width="28" height="28" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" style="flex-shrink:0;color:#fff">
+      <svg width="28" height="28" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" style="flex-shrink:0;color:var(--white)">
         <rect x="3" y="3" width="22" height="22" rx="3" stroke="currentColor" stroke-width="2.2" fill="none"/>
         <text x="7.5" y="19.5" font-family="Inter,system-ui,sans-serif" font-weight="800" font-size="10.5" fill="currentColor">HQ</text>
         <rect x="22" y="22" width="9" height="9" rx="2" fill="#3D7BFF"/>
@@ -1391,9 +1407,9 @@ html body,html nav,html footer,.bento-card,.bb-cell,.stat-cell,.hs-card,.termina
       </div>
 
       <!-- Row 2: Tickers + Agents -->
-      <div class="bb-cell span2 tall">
-        <div class="bb-label">Signal Feed <span style="color:rgba(0,255,136,0.8)">● LIVE</span></div>
-        <div id="ticker-feed"></div>
+      <div class="bb-cell span2 tall" style="display:flex;flex-direction:column">
+        <div class="bb-label">Signal Feed <span style="color:var(--green)">● LIVE</span></div>
+        <div id="ticker-feed" style="flex:1;display:flex;flex-direction:column;justify-content:space-evenly"></div>
       </div>
       <div class="bb-cell span2">
         <div class="bb-label">Active Research Agents</div>
@@ -1420,32 +1436,32 @@ html body,html nav,html footer,.bento-card,.bb-cell,.stat-cell,.hs-card,.termina
         <div class="bc-label">Core</div>
         <div class="bc-title" style="font-size:28px">AI Factor<br>Research Engine</div>
         <div class="bc-sub" style="margin-top:12px">Ask in plain English. Get rigorous factor attribution across 8,000+ instruments. Every signal with source, confidence, and alpha estimate.</div>
-        <div style="margin-top:24px;display:flex;flex-direction:column;gap:8px" id="factor-list"></div>
+        <div style="margin-top:24px;display:flex;flex-direction:column;justify-content:space-evenly;flex:1" id="factor-list"></div>
       </div>
       <div class="bento-card glass-layer glow-violet rv2" data-d="1">
         <div class="bc-label">Network</div>
         <div class="bc-title">Researcher Directory</div>
         <div class="bc-sub">Find collaborators by strategy style, market focus, or research domain.</div>
         <div style="margin-top:20px;display:flex;flex-direction:column;gap:6px">
-          <div style="display:flex;align-items:center;gap:10px;padding:8px;background:rgba(255,255,255,0.03);border-radius:6px;border:1px solid rgba(255,255,255,0.05)">
-            <div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#3A3A3A,#5C5C5C);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0">AC</div>
+          <div style="display:flex;align-items:center;gap:10px;padding:8px;background:var(--border);border-radius:6px;border:1px solid var(--border)">
+            <div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#3A3A3A,#5C5C5C);color:#fff;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0">AC</div>
             <div>
-              <div style="font-size:12px;font-weight:600;color:rgba(255,255,255,0.75)">Alex Chen</div>
-              <div style="font-size:10px;color:rgba(255,255,255,0.3)">Momentum · Equities</div>
+              <div style="font-size:12px;font-weight:600;color:var(--text-1)">Alex Chen</div>
+              <div style="font-size:10px;color:var(--text-3)">Momentum · Equities</div>
             </div>
           </div>
-          <div style="display:flex;align-items:center;gap:10px;padding:8px;background:rgba(255,255,255,0.03);border-radius:6px;border:1px solid rgba(255,255,255,0.05)">
-            <div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#2B0ABF,#6B1FD0);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0">PR</div>
+          <div style="display:flex;align-items:center;gap:10px;padding:8px;background:var(--border);border-radius:6px;border:1px solid var(--border)">
+            <div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#2B0ABF,#6B1FD0);color:#fff;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0">PR</div>
             <div>
-              <div style="font-size:12px;font-weight:600;color:rgba(255,255,255,0.75)">Priya R.</div>
-              <div style="font-size:10px;color:rgba(255,255,255,0.3)">NLP · Alt-Data</div>
+              <div style="font-size:12px;font-weight:600;color:var(--text-1)">Priya R.</div>
+              <div style="font-size:10px;color:var(--text-3)">NLP · Alt-Data</div>
             </div>
           </div>
-          <div style="display:flex;align-items:center;gap:10px;padding:8px;background:rgba(255,255,255,0.03);border-radius:6px;border:1px solid rgba(255,255,255,0.05)">
-            <div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#0A2A7A,#0F4CC8);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0">JK</div>
+          <div style="display:flex;align-items:center;gap:10px;padding:8px;background:var(--border);border-radius:6px;border:1px solid var(--border)">
+            <div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#0A2A7A,#0F4CC8);color:#fff;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0">JK</div>
             <div>
-              <div style="font-size:12px;font-weight:600;color:rgba(255,255,255,0.75)">James K.</div>
-              <div style="font-size:10px;color:rgba(255,255,255,0.3)">Macro · Fixed Income</div>
+              <div style="font-size:12px;font-weight:600;color:var(--text-1)">James K.</div>
+              <div style="font-size:10px;color:var(--text-3)">Macro · Fixed Income</div>
             </div>
           </div>
         </div>
@@ -1454,29 +1470,29 @@ html body,html nav,html footer,.bento-card,.bb-cell,.stat-cell,.hs-card,.termina
         <div class="bc-label">Backtest</div>
         <div class="bc-title">Walk-Forward<br>Validation</div>
         <div class="bc-sub">Walk-forward testing with realistic costs. Share tearsheets to the community in one click.</div>
-        <div style="margin-top:20px;background:rgba(0,255,136,0.04);border:1px solid rgba(0,255,136,0.1);border-radius:6px;padding:12px">
-          <div style="font-size:10px;letter-spacing:0.1em;color:rgba(255,255,255,0.3);text-transform:uppercase;margin-bottom:8px">Latest Backtest</div>
-          <div style="font-size:22px;font-weight:700;color:#00FF88;letter-spacing:-0.02em">Sharpe 1.84</div>
-          <div style="font-size:11px;color:rgba(255,255,255,0.3);margin-top:4px">Momentum × Quality · 1Y OOS</div>
+        <div style="margin-top:20px;background:color-mix(in srgb,var(--green) 6%,transparent);border:1px solid color-mix(in srgb,var(--green) 18%,transparent);border-radius:6px;padding:12px">
+          <div style="font-size:10px;letter-spacing:0.1em;color:var(--text-3);text-transform:uppercase;margin-bottom:8px">Latest Backtest</div>
+          <div style="font-size:22px;font-weight:700;color:var(--green);letter-spacing:-0.02em">Sharpe 1.84</div>
+          <div style="font-size:11px;color:var(--text-3);margin-top:4px">Momentum × Quality · 1Y OOS</div>
         </div>
       </div>
-      <div class="bento-card glass-layer glow-cyan rv2">
+      <div class="bento-card short glass-layer glow-cyan rv2">
         <div class="bc-label">Live</div>
         <div class="bc-title">Alpha Signal<br>Feed</div>
         <div class="bc-sub">124 live signals. Updated continuously. Confidence-ranked across every asset class.</div>
         <div style="margin-top:20px;display:flex;gap:6px;flex-wrap:wrap">
-          <span style="font-size:10px;padding:3px 8px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);border-radius:100px;color:var(--blue)">NVDA ↑ 2.8%</span>
-          <span style="font-size:10px;padding:3px 8px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);border-radius:100px;color:var(--blue)">BTC ↑ 3.1%</span>
-          <span style="font-size:10px;padding:3px 8px;background:rgba(255,68,102,0.08);border:1px solid rgba(255,68,102,0.15);border-radius:100px;color:#FF4466">TSLA ↓ 1.6%</span>
-          <span style="font-size:10px;padding:3px 8px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);border-radius:100px;color:var(--blue)">AAPL ↑ 2.4%</span>
+          <span style="font-size:10px;padding:3px 8px;background:var(--border);border:1px solid var(--border-hover);border-radius:100px;color:var(--blue)">NVDA ↑ 2.8%</span>
+          <span style="font-size:10px;padding:3px 8px;background:var(--border);border:1px solid var(--border-hover);border-radius:100px;color:var(--blue)">BTC ↑ 3.1%</span>
+          <span style="font-size:10px;padding:3px 8px;background:color-mix(in srgb,var(--red) 8%,transparent);border:1px solid color-mix(in srgb,var(--red) 18%,transparent);border-radius:100px;color:var(--red)">TSLA ↓ 1.6%</span>
+          <span style="font-size:10px;padding:3px 8px;background:var(--border);border:1px solid var(--border-hover);border-radius:100px;color:var(--blue)">AAPL ↑ 2.4%</span>
         </div>
       </div>
-      <div class="bento-card glass-layer rv2" data-d="1">
+      <div class="bento-card short glass-layer rv2" data-d="1">
         <div class="bc-label">Publish</div>
         <div class="bc-title">Research<br>Archive</div>
         <div class="bc-sub">Publish findings. Build scientific reputation. Co-author with the top minds in the network.</div>
       </div>
-      <div class="bento-card glass-layer rv2" data-d="2">
+      <div class="bento-card short glass-layer rv2" data-d="2">
         <div class="bc-label">Community</div>
         <div class="bc-title">Live<br>Discussion</div>
         <div class="bc-sub">Real-time debate. Market commentary. Strategy discussion. Macro regime calls.</div>
@@ -1601,7 +1617,7 @@ html body,html nav,html footer,.bento-card,.bb-cell,.stat-cell,.hs-card,.termina
       <input type="email" class="signup-input" placeholder="you@example.com" required aria-label="Email address">
       <button type="submit" class="signup-btn magnetic">Get Access</button>
     </form>
-    <div class="signup-note">No credit card required. No waitlist theater. · <a href="https://linkedin.com/company/quanthq" target="_blank" rel="noopener" style="color:rgba(255,255,255,0.5)">Follow on LinkedIn →</a></div>
+    <div class="signup-note">No credit card required. No waitlist theater. · <a href="https://linkedin.com/company/quanthq" target="_blank" rel="noopener" style="color:var(--text-2)">Follow on LinkedIn →</a></div>
   </div>
 </section>
 
@@ -1629,7 +1645,7 @@ html body,html nav,html footer,.bento-card,.bb-cell,.stat-cell,.hs-card,.termina
     </div>
     <div class="footer-bot">
       <p>QuantHQ © 2026 — Where quant minds build intelligence.</p>
-      <p style="color:rgba(255,255,255,0.08);font-family:'Courier New',monospace">v2.4.1 · 124 nodes online</p>
+      <p style="color:var(--text-4);font-family:'Courier New',monospace">v2.4.1 · 124 nodes online</p>
     </div>
   </div>
 </footer>
@@ -1649,6 +1665,7 @@ const reduced = matchMedia('(prefers-reduced-motion:reduce)').matches;
     if (p >= 100) {
       clearInterval(iv);
       loader.classList.add('hide');
+      document.querySelector('.bgfx-grain')?.classList.add('active');
       setTimeout(()=>{loader.style.display='none'},600);
     }
   }, 40);
@@ -1759,7 +1776,7 @@ function updateCharts() {
   const vixV = vixData[vixData.length-1];
   document.getElementById('spx-val').textContent = spxV.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g,',');
   document.getElementById('vix-val').textContent = vixV.toFixed(1);
-  document.getElementById('spx-time').textContent = new Date().toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+  document.getElementById('spx-time').textContent = new Date().toLocaleTimeString('en-US',{hour12:false});
   const spxPct = ((spxV/spxData[0]-1)*100).toFixed(2);
   const vixPct = ((vixV/vixData[0]-1)*100).toFixed(2);
   const spxEl = document.getElementById('spx-chg');
@@ -1774,8 +1791,9 @@ function updateCharts() {
 updateCharts();
 if (!reduced) setInterval(updateCharts, 1800);
 
-// Heatmap
-const hmColors = ['rgba(0,255,136,0.6)','rgba(0,255,136,0.4)','rgba(0,255,136,0.2)','rgba(255,255,255,0.08)','rgba(255,68,102,0.2)','rgba(255,68,102,0.4)','rgba(255,68,102,0.6)'];
+// Heatmap — color-mix over theme vars so cells read in both modes
+const hmColors = [60,40,20].map(p=>`color-mix(in srgb,var(--green) ${p}%,transparent)`)
+  .concat(['var(--border-hover)'], [20,40,60].map(p=>`color-mix(in srgb,var(--red) ${p}%,transparent)`));
 const hmEl = document.getElementById('heatmap');
 const sectors = ['Tech','Fin','Health','Energy','Cons','Util','Mat','RE','Comm','Ind','XLRE','ARKK','IWM','QQQ','SPY','DIA','TLT','GLD'];
 const hmPcts = [2.4, 1.5, 0.6, 0.1, -0.6, -1.5, -2.4];
@@ -1854,14 +1872,15 @@ if (!reduced) {
   }, 2200);
 }
 
-// Agent feed
+// Agent feed — dot color keyed to status
+const agentColors = {running:'var(--green)',training:'var(--violet)',idle:'var(--text-4)'};
 const agents = [
-  {name:'alpha-extractor-v3',status:'running',color:'#FFFFFF'},
-  {name:'regime-classifier',status:'training',color:'#8A8A8A'},
-  {name:'earnings-nlp-agent',status:'idle',color:'rgba(255,255,255,0.2)'},
-  {name:'backtest-engine-5d',status:'running',color:'#FFFFFF'},
-  {name:'signal-ranker',status:'running',color:'#00FFF0'},
-];
+  {name:'alpha-extractor-v3',status:'running'},
+  {name:'regime-classifier',status:'training'},
+  {name:'earnings-nlp-agent',status:'idle'},
+  {name:'backtest-engine-5d',status:'running'},
+  {name:'signal-ranker',status:'running'},
+].map(a=>({...a,color:agentColors[a.status]}));
 document.getElementById('agent-feed').innerHTML = agents.map(a=>`
   <div class="agent-row">
     <div class="agent-dot" style="background:${a.color}"></div>
@@ -1879,27 +1898,29 @@ const factors = [
 ];
 document.getElementById('factor-bars').innerHTML = factors.map(f=>`
   <div style="margin-bottom:8px">
-    <div style="display:flex;justify-content:space-between;font-size:10px;color:rgba(255,255,255,0.3);margin-bottom:3px;letter-spacing:0.05em">
+    <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--text-3);margin-bottom:3px;letter-spacing:0.05em">
       <span>${f.name}</span><span>${f.val.toFixed(2)}</span>
     </div>
-    <div style="height:3px;background:rgba(255,255,255,0.06);border-radius:2px;overflow:hidden">
+    <div style="height:3px;background:var(--border);border-radius:2px;overflow:hidden">
       <div style="height:100%;width:${f.val*100}%;background:linear-gradient(90deg,var(--blue),var(--violet));border-radius:2px;transition:width 1s var(--ease-out)"></div>
     </div>
   </div>`).join('');
 
-// Bento factor list
+// Bento factor list — green for positive loadings, red for negative
 document.getElementById('factor-list').innerHTML = [
-  {n:'momentum_3m',v:'+0.72',c:'rgba(255,255,255,0.7)'},
-  {n:'earnings_revision',v:'+0.91',c:'rgba(255,255,255,0.9)'},
-  {n:'quality_score',v:'+0.68',c:'rgba(140,140,140,0.7)'},
-  {n:'short_interest_δ',v:'-0.43',c:'rgba(255,68,102,0.6)'},
-  {n:'value_spread',v:'+0.55',c:'rgba(255,255,255,0.6)'},
-  {n:'sentiment_nlp',v:'+0.77',c:'rgba(140,140,140,0.8)'},
-  {n:'insider_flow',v:'+0.49',c:'rgba(255,255,255,0.55)'},
-  {n:'vol_carry',v:'-0.31',c:'rgba(255,68,102,0.5)'},
-].map(f=>`<div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.04);font-size:11px">
-  <span style="color:rgba(255,255,255,0.4);font-family:'Courier New',monospace">${f.n}</span>
-  <span style="color:${f.c};font-weight:600;font-family:'Courier New',monospace">${f.v}</span>
+  {n:'momentum_3m',v:'+0.72'},
+  {n:'earnings_revision',v:'+0.91'},
+  {n:'quality_score',v:'+0.68'},
+  {n:'short_interest_δ',v:'-0.43'},
+  {n:'value_spread',v:'+0.55'},
+  {n:'sentiment_nlp',v:'+0.77'},
+  {n:'insider_flow',v:'+0.49'},
+  {n:'vol_carry',v:'-0.31'},
+  {n:'analyst_dispersion',v:'+0.38'},
+  {n:'liquidity_shock',v:'-0.22'},
+].map(f=>`<div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--border);font-size:11px">
+  <span style="color:var(--text-3);font-family:'Courier New',monospace">${f.n}</span>
+  <span style="color:${f.v.startsWith('-')?'var(--red)':'var(--green)'};font-weight:600;font-family:'Courier New',monospace">${f.v}</span>
 </div>`).join('');
 
 /* ── HORIZONTAL SCROLL CARDS ── */
@@ -1921,6 +1942,10 @@ track.innerHTML = double.map(p=>`
     <div class="hs-title">${p.title}</div>
     <div class="hs-desc">${p.desc}</div>
   </div>`).join('');
+
+/* canvases can't use CSS vars — resolve ink per frame from the active theme */
+const isLight = () => document.documentElement.classList.contains('light');
+const canvasInk = () => isLight() ? '15,23,42' : '255,255,255';
 
 /* ── INTERACTIVE GLOBE (canvas port of 21st.dev Interactive Globe) ── */
 const wCanvas = document.getElementById('world-canvas');
@@ -1967,12 +1992,13 @@ function drawGlobe() {
   wCtx.clearRect(0, 0, W, GLOBE_H);
   const R = Math.min(W, GLOBE_H)*0.46, cx = W/2, cy = GLOBE_H/2;
   const t = Date.now()/1000;
+  const ink = canvasInk();
   if (!gDragging) gRotY += 0.0022; // auto-rotate when idle
   // sphere dots, depth-shaded
   for (const d of SPHERE_DOTS) {
     const [sx, sy, z] = gProject(d, R, cx, cy);
     if (z <= 0.02) continue;
-    wCtx.fillStyle = `rgba(255,255,255,${0.08 + z*0.28})`;
+    wCtx.fillStyle = `rgba(${ink},${0.08 + z*0.28})`;
     wCtx.fillRect(sx, sy, 1.6, 1.6);
   }
   // arcs with traveling particles
@@ -1987,13 +2013,13 @@ function drawGlobe() {
         else wCtx.lineTo(sx, sy);
       } else started = false;
     }
-    wCtx.strokeStyle = 'rgba(255,255,255,0.28)';
+    wCtx.strokeStyle = `rgba(${ink},0.28)`;
     wCtx.lineWidth = 1;
     wCtx.stroke();
     const [px, py, pz] = gProject(gArcPoint(A, B, (t*0.12 + k*0.37) % 1), R, cx, cy);
     if (pz > 0) {
       wCtx.beginPath(); wCtx.arc(px, py, 1.8, 0, Math.PI*2);
-      wCtx.fillStyle = 'rgba(123,162,255,0.95)'; wCtx.fill();
+      wCtx.fillStyle = isLight() ? 'rgba(37,99,235,0.95)' : 'rgba(123,162,255,0.95)'; wCtx.fill();
     }
   });
   // city markers with pulse rings + labels
@@ -2002,13 +2028,13 @@ function drawGlobe() {
     if (z <= 0) return;
     const pulse = Math.sin(t*2 + i)*0.5 + 0.5;
     wCtx.beginPath(); wCtx.arc(sx, sy, 2.5, 0, Math.PI*2);
-    wCtx.fillStyle = 'rgba(255,255,255,0.95)'; wCtx.fill();
+    wCtx.fillStyle = `rgba(${ink},0.95)`; wCtx.fill();
     wCtx.beginPath(); wCtx.arc(sx, sy, 4 + pulse*5, 0, Math.PI*2);
-    wCtx.strokeStyle = `rgba(255,255,255,${0.35*(1-pulse)})`;
+    wCtx.strokeStyle = `rgba(${ink},${0.35*(1-pulse)})`;
     wCtx.lineWidth = 1; wCtx.stroke();
     if (z > 0.35) {
       wCtx.font = '9px Inter,sans-serif';
-      wCtx.fillStyle = `rgba(255,255,255,${0.55*z})`;
+      wCtx.fillStyle = `rgba(${ink},${0.65*z})`;
       wCtx.fillText(c.name.toUpperCase(), sx + 8, sy + 3);
     }
   });
@@ -2046,12 +2072,10 @@ if (!reduced) {
 const fc = document.getElementById('force-canvas');
 const fctx = fc.getContext('2d');
 let fW, fH;
-const nodeTypes = [
-  {label:'Research',color:'rgba(255,255,255,0.8)'},
-  {label:'Paper',color:'rgba(140,140,140,0.8)'},
-  {label:'Agent',color:'rgba(255,255,255,0.8)'},
-  {label:'Signal',color:'rgba(255,255,255,0.4)'},
-];
+// node palette per theme: Research=blue, Paper=violet, Agent=cyan, Signal=neutral
+const nodePalette = () => isLight()
+  ? ['rgba(37,99,235,0.85)','rgba(109,40,217,0.85)','rgba(8,145,178,0.85)','rgba(15,23,42,0.45)']
+  : ['rgba(122,158,255,0.9)','rgba(178,150,255,0.9)','rgba(0,255,240,0.75)','rgba(255,255,255,0.45)'];
 let fNodes = [], fEdges = [];
 function initForce() {
   fW = fc.width = fc.offsetWidth; fH = fc.height = 480;
@@ -2114,26 +2138,28 @@ fc.addEventListener('mouseleave', () => { fMouseX=-1; fMouseY=-1; fHoverNode=-1;
 function drawForce() {
   fctx.clearRect(0,0,fW,fH);
   stepForce();
+  const ink = canvasInk();
+  const palette = nodePalette();
 
   // Draw edges with hover highlighting
   fEdges.forEach(([a,b])=>{
     const na=fNodes[a],nb=fNodes[b];
     const isHovered = fHoverNode === a || fHoverNode === b;
-    fctx.strokeStyle = isHovered ? 'rgba(255,255,255,0.35)' : 'rgba(255,255,255,0.04)';
+    fctx.strokeStyle = isHovered ? `rgba(${ink},0.35)` : `rgba(${ink},0.07)`;
     fctx.lineWidth = isHovered ? 1.5 : 0.7;
     fctx.beginPath();fctx.moveTo(na.x,na.y);fctx.lineTo(nb.x,nb.y);fctx.stroke();
   });
 
   // Draw nodes with hover effects + label tooltip
   fNodes.forEach((n,i)=>{
-    const c=nodeTypes[n.type].color;
+    const c=palette[n.type];
     const isHovered = fHoverNode === i;
     const scale = isHovered ? 1.6 : 1;
     const glowRadius = isHovered ? n.r*8 : n.r*4;
 
     // Glow
     const grad=fctx.createRadialGradient(n.x,n.y,n.r,n.x,n.y,glowRadius);
-    grad.addColorStop(0,c.replace('0.8','0.25').replace('0.4','0.15'));
+    grad.addColorStop(0,c.replace(/[\d.]+\)$/,'0.20)'));
     grad.addColorStop(1,'transparent');
     fctx.beginPath();fctx.arc(n.x,n.y,glowRadius,0,Math.PI*2);
     fctx.fillStyle=grad;fctx.fill();
@@ -2144,7 +2170,7 @@ function drawForce() {
 
     // Highlight ring + label on hover
     if (isHovered) {
-      fctx.strokeStyle = 'rgba(255,255,255,0.6)';
+      fctx.strokeStyle = `rgba(${ink},0.6)`;
       fctx.lineWidth = 1.5;
       fctx.beginPath();fctx.arc(n.x,n.y,n.r*scale+2,0,Math.PI*2);
       fctx.stroke();
@@ -2160,20 +2186,20 @@ function drawForce() {
       const byClamped = Math.max(4, by);
 
       // Tooltip background
-      fctx.fillStyle = 'rgba(9,13,21,0.92)';
+      fctx.fillStyle = isLight() ? 'rgba(255,255,255,0.95)' : 'rgba(9,13,21,0.92)';
       fctx.beginPath();
       fctx.roundRect(bxClamped, byClamped, tw + padding*2, 24, 4);
       fctx.fill();
 
       // Tooltip border
-      fctx.strokeStyle = 'rgba(255,255,255,0.3)';
+      fctx.strokeStyle = `rgba(${ink},0.3)`;
       fctx.lineWidth = 1;
       fctx.beginPath();
       fctx.roundRect(bxClamped, byClamped, tw + padding*2, 24, 4);
       fctx.stroke();
 
       // Tooltip text
-      fctx.fillStyle = nodeTypes[n.type].color;
+      fctx.fillStyle = c;
       fctx.fillText(label, bxClamped + padding, byClamped + 16);
     }
   });
@@ -2224,9 +2250,9 @@ function typeTermLine() {
   if (ti >= termLines.length) { ti = 0; tl.innerHTML = ''; }
   const line = termLines[ti++];
   const el = document.createElement('div');
-  const colors = {cmd:'#fff',out:'rgba(255,255,255,0.6)',ok:'#00FF88'};
-  const prefixes = {cmd:'<span style="color:var(--blue)">$ </span>',out:'  ',ok:'  '};
-  el.innerHTML = prefixes[line.type] + `<span style="color:${colors[line.type]}">${line.text}</span>`;
+  const classes = {cmd:'term-cmd',out:'term-out',ok:'term-ok'};
+  const prefixes = {cmd:'<span class="term-prompt">$ </span>',out:'  ',ok:'  '};
+  el.innerHTML = prefixes[line.type] + `<span class="${classes[line.type]}">${line.text}</span>`;
   tl.appendChild(el);
   tl.parentElement.scrollTop = tl.parentElement.scrollHeight;
   setTimeout(typeTermLine, 600+Math.random()*800);
@@ -2244,7 +2270,8 @@ if (signupForm) {
     if (!email) return;
     // Show success state
     btn.textContent = '✓ You\'re in!';
-    btn.style.background = 'linear-gradient(135deg,#00FF88,#FFFFFF)';
+    btn.style.background = 'var(--green)';
+    btn.style.color = '#04060B';
     input.disabled = true;
     btn.disabled = true;
     // Show note update
@@ -2294,7 +2321,7 @@ function sparkHover(lineId, data, fmt) {
   const svg = line.ownerSVGElement;
   const vline = document.createElementNS('http://www.w3.org/2000/svg', 'line');
   vline.setAttribute('y1', 0); vline.setAttribute('y2', 48);
-  vline.setAttribute('stroke', 'rgba(255,255,255,0.4)');
+  vline.style.stroke = 'var(--text-2)';
   vline.setAttribute('stroke-width', '0.75');
   vline.style.opacity = 0;
   svg.appendChild(vline);
@@ -2358,6 +2385,8 @@ if (hudClock) {
 document.getElementById('theme-toggle')?.addEventListener('click', () => {
   const light = document.documentElement.classList.toggle('light');
   localStorage.theme = light ? 'light' : 'dark';
+  document.getElementById('favicon').href = light ? FAVICON_LIGHT : FAVICON_DARK;
+  if (reduced) drawGlobe(); // static canvases need one repaint in the new palette
 });
 
 /* ── PARALLAX ON SCROLL (merged into consolidated handler) ── */
