@@ -1,3 +1,25 @@
+---
+import DottedMap from 'dotted-map';
+import CommandPalette from '../components/react/CommandPalette';
+import MarketModal from '../components/react/MarketModal';
+import AgentFeed from '../components/react/AgentFeed';
+import NumberTicker from '../components/react/NumberTicker';
+import WorldMap from '../components/react/WorldMap';
+import SynapseBackground from '../components/react/SynapseBackground';
+import RadarEffect from '../components/react/RadarEffect';
+import AnimatedBeam from '../components/react/AnimatedBeam';
+import BorderBeam from '../components/react/BorderBeam';
+
+// Build-time: render the dotted world silhouette once per theme so `dotted-map`
+// (a large world dataset) stays out of the client bundle.
+const dottedMap = new DottedMap({ height: 100, grid: 'diagonal' });
+const mapURI = (color: string) =>
+  `data:image/svg+xml;utf8,${encodeURIComponent(
+    dottedMap.getSVG({ radius: 0.22, color, shape: 'circle', backgroundColor: 'transparent' })
+  )}`;
+const darkMap = mapURI('rgba(122,158,255,0.4)');
+const lightMap = mapURI('rgba(15,23,42,0.35)');
+---
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -262,7 +284,6 @@ html.light .bb-cell{background:rgba(255,255,255,0.9)}
 html.light .bb-cell:hover{background:rgba(255,255,255,1)}
 html.light .bento-card{background:rgba(255,255,255,0.8);border-color:var(--border)}
 html.light .bento-card:hover{border-color:var(--border-hover);box-shadow:0 32px 64px -16px rgba(0,0,0,0.08)}
-html.light .hs-card{background:rgba(255,255,255,0.7);border-color:var(--border)}
 html.light .terminal-body{background:rgba(245,245,247,0.98)}
 html.light .terminal-body::after{background:repeating-linear-gradient(0deg,rgba(15,23,42,0.02) 0 1px,transparent 1px 3px)}
 html.light .terminal-window{box-shadow:0 32px 64px -24px rgba(15,23,42,0.18)}
@@ -720,19 +741,7 @@ html.light .hm-cell{animation:none}
   font-size:11px;
 }
 .agent-row:last-child{border-bottom:none}
-.agent-dot{
-  width:6px;height:6px;border-radius:50%;flex-shrink:0;
-  animation:agentPulse 2s ease-in-out infinite;
-}
-@keyframes agentPulse{
-  0%,100%{opacity:1;transform:scale(1)}
-  50%{opacity:0.5;transform:scale(0.7)}
-}
 .agent-name{color:var(--text-2);flex:1}
-.agent-status{
-  font-family:'Courier New',monospace;
-  color:var(--text-3);font-size:10px;
-}
 
 /* ── BENTO GRID ── */
 .bento-section{padding:0 32px 160px}
@@ -806,65 +815,33 @@ html.light .hm-cell{animation:none}
 }
 .glass-layer:hover::after{left:150%}
 
-/* ── RESEARCH PAPERS ── */
-/* ── HORIZONTAL SCROLL ── */
-.hscroll-section{
-  padding:160px 0;
-  overflow:hidden;
-  position:relative;
-}
-.hscroll-label{
-  padding:0 32px;max-width:1280px;margin:0 auto 64px;
-}
-.hscroll-track-wrap{overflow:hidden}
-.hscroll-track{
-  display:flex;gap:20px;
-  padding:0 32px 0 max(32px,calc((100vw - 1216px)/2));
-  width:max-content;
-  animation:scrollTrack 40s linear infinite;
-}
-.hscroll-track:hover{animation-play-state:paused}
-@keyframes scrollTrack{
-  from{transform:translateX(0)}
-  to{transform:translateX(-50%)}
-}
-.hs-card{
-  flex-shrink:0;width:320px;
-  background:var(--carbon);
-  border:1px solid var(--border);
-  border-radius:10px;padding:28px;
-  transition:border-color 0.3s,transform 0.3s;
-}
-.hs-card:hover{
-  border-color:var(--border-hover);
-  transform:translateY(-4px);
-}
+/* ── ACTIVE PROJECTS (bento) ── */
+.projects-section{padding:160px 32px}
+.projects-inner{max-width:1280px;margin:0 auto}
 .hs-num{
   font-size:10px;letter-spacing:0.2em;
   color:var(--text-3);margin-bottom:16px;
   font-family:'Courier New',monospace;
-}
-.hs-title{
-  font-size:17px;font-weight:600;
-  letter-spacing:-0.01em;margin-bottom:8px;
-  color:var(--text-1);
-}
-.hs-desc{
-  font-size:12px;color:var(--text-2);line-height:1.6;
 }
 
 /* ── WORLD MAP ── */
 .world-section{padding:0 32px 160px}
 .world-inner{max-width:1280px;margin:0 auto}
 .world-map-wrap{
-  position:relative;max-width:860px;margin:64px auto 0;
+  position:relative;max-width:920px;margin:64px auto 0;
   border:1px solid var(--border);
   border-radius:12px;overflow:hidden;
   background:var(--carbon);
-  padding:40px;
+  padding:32px;
 }
-#world-canvas{width:100%;display:block;cursor:grab;touch-action:pan-y}
-#world-canvas:active{cursor:grabbing}
+.worldmap{position:relative;width:100%;aspect-ratio:2/1}
+.worldmap-dots{
+  position:absolute;inset:0;width:100%;height:100%;
+  object-fit:contain;pointer-events:none;user-select:none;
+  -webkit-mask-image:linear-gradient(to bottom,transparent,#000 12%,#000 88%,transparent);
+  mask-image:linear-gradient(to bottom,transparent,#000 12%,#000 88%,transparent);
+}
+.worldmap-svg{position:absolute;inset:0;width:100%;height:100%}
 
 /* ── TERMINAL SECTION ── */
 .terminal-section{padding:0 32px 160px}
@@ -987,15 +964,15 @@ html.light .hm-cell{animation:none}
   0%,100%{opacity:1;box-shadow:0 0 8px rgba(0,255,136,0.6)}
   50%{opacity:0.3;box-shadow:0 0 2px rgba(0,255,136,0.2)}
 }
-@keyframes statGlow{
-  0%{text-shadow:0 0 0 transparent;transform:scale(0.8)}
-  50%{text-shadow:0 0 30px color-mix(in srgb,var(--blue) 55%,transparent);transform:scale(1.05)}
-  100%{text-shadow:0 0 20px color-mix(in srgb,var(--blue) 35%,transparent);transform:scale(1)}
-}
 
 /* ── FORCE GRAPH ── */
-.graph-section{padding:0 32px 160px}
-.graph-inner{max-width:1280px;margin:0 auto}
+.graph-section{padding:0 32px 160px;position:relative}
+.graph-inner{max-width:1280px;margin:0 auto;position:relative}
+.synapse-bg{position:absolute;inset:0;pointer-events:none;z-index:0}
+.graph-inner>*{position:relative;z-index:1}
+
+/* ── PIPELINE BEAM ── */
+.pipeline-beam{margin-top:48px;padding:0 16px}
 #force-canvas{
   width:100%;height:480px;
   border:1px solid var(--border);
@@ -1123,6 +1100,16 @@ footer{
 /* ── PARALLAX WRAPPER ── */
 .parallax-layer{transition:transform 0.1s linear;will-change:transform}
 
+/* ── NEW COMPONENT ANIMATIONS ── */
+@keyframes radarPulse{
+  0%{transform:scale(1);opacity:0.3}
+  100%{transform:scale(1.8);opacity:0}
+}
+@keyframes bbSpin{
+  to{--bb-angle:360deg}
+}
+@property --bb-angle{syntax:'<angle>';initial-value:0deg;inherits:false}
+
 /* ── REVEAL ANIMATIONS ── */
 .rv2{
   opacity:0;transform:translateY(32px);
@@ -1176,36 +1163,15 @@ footer{
 
 /* ── SMOOTH THEME TRANSITION ── */
 html{transition:background 0.5s,color 0.5s}
-html body,html nav,html footer,.bento-card,.bb-cell,.stat-cell,.hs-card,.terminal-window{
+html body,html nav,html footer,.bento-card,.bb-cell,.stat-cell,.terminal-window{
   transition:background 0.5s,color 0.5s,border-color 0.5s,box-shadow 0.5s;
 }
 
 /* ── 3D TILT ON CARDS ── */
-.bento-card,.hs-card,.card{
+.bento-card{
   transform-style:preserve-3d;
   will-change:transform;
 }
-
-/* ── ANIMATED GRADIENT BORDER ── */
-@property --angle{syntax:'<angle>';initial-value:0deg;inherits:false}
-.hs-card{
-  position:relative;
-  background:var(--carbon);
-  border-radius:12px;
-}
-.hs-card::before{
-  content:'';position:absolute;inset:-1px;border-radius:13px;
-  background:conic-gradient(from var(--angle),var(--blue),var(--violet),var(--cyan),var(--blue));
-  z-index:-1;opacity:0;
-  transition:opacity 0.5s;
-  animation:borderSpin 4s linear infinite paused;
-}
-.hs-card:hover::before{opacity:1;animation-play-state:running}
-.hs-card::after{
-  content:'';position:absolute;inset:0;border-radius:12px;
-  background:var(--carbon);z-index:-1;
-}
-@keyframes borderSpin{to{--angle:360deg}}
 
 /* ── SECTION SCROLL DOTS ── */
 #section-dots{
@@ -1287,6 +1253,181 @@ html body,html nav,html footer,.bento-card,.bb-cell,.stat-cell,.hs-card,.termina
   from{translate:0 var(--drift,24px)}
   to{translate:0 calc(-1 * var(--drift,24px))}
 }
+
+/* ── HERO DOT PATTERN (magicui dot-pattern, as CSS) ── */
+.hero-dots{
+  position:absolute;inset:0;z-index:1;pointer-events:none;
+  background-image:radial-gradient(rgba(122,158,255,0.35) 1px,transparent 1px);
+  background-size:24px 24px;
+  -webkit-mask-image:radial-gradient(ellipse 70% 55% at 50% 42%,#000 0%,transparent 75%);
+  mask-image:radial-gradient(ellipse 70% 55% at 50% 42%,#000 0%,transparent 75%);
+  opacity:0.5;
+}
+html.light .hero-dots{background-image:radial-gradient(rgba(37,99,235,0.3) 1px,transparent 1px);opacity:0.4}
+
+/* ── HERO SUBLINE ── */
+.hero-sub{
+  margin:28px auto 0;max-width:560px;
+  font-size:16px;line-height:1.7;color:var(--text-2);
+  opacity:0;animation:heroFadeUp 0.8s var(--ease-out) 1.15s both;
+}
+
+/* ── NAV SEARCH (⌘K) ── */
+.nav-search{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:7px 12px;border-radius:8px;cursor:pointer;
+  background:var(--border);border:1px solid var(--border-hover);
+  color:var(--text-3);font-size:12px;
+  transition:all 0.2s;flex-shrink:0;
+}
+.nav-search:hover{color:var(--text-1);border-color:var(--blue)}
+.nav-search kbd{
+  font-family:inherit;font-size:10px;font-weight:600;
+  padding:2px 5px;border-radius:4px;
+  background:var(--border);border:1px solid var(--border-hover);
+  color:var(--text-2);
+}
+@media(max-width:760px){.nav-search span{display:none}}
+
+/* ── COMMAND PALETTE ── */
+.cp-backdrop{
+  position:fixed;inset:0;z-index:9600;
+  background:rgba(0,0,0,0.55);
+  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+  padding:15vh 20px 20px;
+}
+html.light .cp-backdrop{background:rgba(15,23,42,0.25)}
+.cp-panel{
+  max-width:560px;margin:0 auto;
+  background:var(--carbon);
+  border:1px solid var(--border-hover);
+  border-radius:12px;overflow:hidden;
+  box-shadow:0 40px 96px -24px rgba(0,0,0,0.7),0 0 0 1px var(--border);
+}
+.cp-input{
+  width:100%;padding:18px 20px;
+  background:transparent;border:none;outline:none;
+  border-bottom:1px solid var(--border);
+  color:var(--white);font-size:15px;
+  font-family:'Inter',system-ui,sans-serif;
+}
+.cp-input::placeholder{color:var(--text-3)}
+.cp-list{max-height:320px;overflow-y:auto;padding:8px}
+.cp-group{
+  font-size:9px;letter-spacing:0.2em;text-transform:uppercase;
+  color:var(--text-4);font-weight:600;padding:10px 12px 6px;
+}
+.cp-item{
+  display:flex;align-items:center;justify-content:space-between;
+  width:100%;padding:10px 12px;border-radius:8px;
+  font-size:14px;color:var(--text-2);cursor:pointer;text-align:left;
+  transition:background 0.1s,color 0.1s;
+}
+.cp-item.active{background:var(--border);color:var(--text-1)}
+.cp-empty{padding:24px 12px;font-size:13px;color:var(--text-3);text-align:center}
+.cp-kbd{
+  font-family:'Courier New',monospace;font-size:10px;
+  padding:2px 6px;border-radius:4px;
+  background:var(--border);border:1px solid var(--border-hover);
+  color:var(--text-3);
+}
+.cp-foot{
+  display:flex;gap:16px;padding:10px 20px;
+  border-top:1px solid var(--border);
+  font-size:11px;color:var(--text-3);
+}
+.cp-foot span{display:inline-flex;align-items:center;gap:6px}
+
+/* ── MARKET MODAL ── */
+.mm-panel{
+  max-width:620px;margin:0 auto;
+  background:var(--carbon);
+  border:1px solid var(--border-hover);
+  border-radius:12px;padding:24px;
+  box-shadow:0 40px 96px -24px rgba(0,0,0,0.7),0 0 0 1px var(--border);
+}
+.mm-head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px}
+.mm-sym{font-size:24px;font-weight:800;letter-spacing:-0.02em}
+.mm-sub{font-size:12px;color:var(--text-3);margin-top:2px}
+.mm-close{
+  padding:6px 10px;border-radius:6px;cursor:pointer;
+  color:var(--text-3);font-size:13px;
+  border:1px solid var(--border);transition:all 0.2s;
+}
+.mm-close:hover{color:var(--text-1);border-color:var(--border-hover)}
+.mm-chart{width:100%;height:200px;display:block;border:1px solid var(--border);border-radius:8px}
+.mm-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;margin-top:16px;background:var(--border);border:1px solid var(--border);border-radius:8px;overflow:hidden}
+.mm-stats>div{background:var(--carbon);padding:12px;display:flex;flex-direction:column;gap:4px}
+.mm-k{font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:var(--text-3);font-weight:600}
+.mm-v{font-size:16px;font-weight:700;font-variant-numeric:tabular-nums}
+.mm-note{margin-top:12px;font-size:10px;color:var(--text-4);letter-spacing:0.04em}
+.bb-cell.clickable{cursor:pointer;transition:background 0.2s}
+.bb-cell.clickable:hover{background:color-mix(in srgb,var(--blue) 4%,var(--carbon))}
+
+/* ── HUD STATUS BADGE ── */
+.hud-badge{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:3px 9px;border-radius:100px;
+  border:1px solid;
+  font-family:'Courier New',monospace;font-size:9px;
+  letter-spacing:0.12em;text-transform:uppercase;font-weight:700;
+}
+.hud-badge-dot{width:5px;height:5px;border-radius:50%;display:inline-block}
+
+/* ── SHINY BUTTON (magicui shiny-button, as CSS) ── */
+.signup-btn{position:relative;overflow:hidden}
+.signup-btn::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(105deg,transparent 30%,rgba(255,255,255,0.45) 50%,transparent 70%);
+  transform:translateX(-100%);
+  animation:btnShine 2.8s ease-in-out infinite;
+}
+@keyframes btnShine{
+  0%,55%{transform:translateX(-100%)}
+  100%{transform:translateX(100%)}
+}
+
+/* ── SIGNAL CHIP MARQUEE ── */
+.chip-marquee{overflow:hidden;margin-top:20px;
+  -webkit-mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);
+  mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);
+}
+.chip-track{display:flex;gap:6px;width:max-content;animation:tapeScroll 18s linear infinite}
+.chip-marquee:hover .chip-track{animation-play-state:paused}
+.sig-chip{
+  font-size:10px;padding:3px 8px;white-space:nowrap;
+  background:var(--border);border:1px solid var(--border-hover);
+  border-radius:100px;color:var(--blue);
+}
+.sig-chip.down{background:color-mix(in srgb,var(--red) 8%,transparent);border-color:color-mix(in srgb,var(--red) 18%,transparent);color:var(--red)}
+
+/* ── TICKER TIMESTAMPS ── */
+.ticker-ts{font-family:'Courier New',monospace;font-size:9px;color:var(--text-4);width:56px;flex-shrink:0}
+
+/* ── DIRECTORY FILTERS ── */
+.dir-filters{display:flex;gap:6px;margin-top:16px;flex-wrap:wrap}
+.dir-chip{
+  font-size:10px;padding:4px 10px;border-radius:100px;cursor:pointer;
+  background:transparent;border:1px solid var(--border-hover);
+  color:var(--text-3);letter-spacing:0.04em;
+  transition:all 0.15s;
+}
+.dir-chip:hover{color:var(--text-1)}
+.dir-chip.active{background:var(--border);color:var(--blue);border-color:color-mix(in srgb,var(--blue) 40%,transparent)}
+.dir-row.hidden{display:none}
+
+/* ── FOUNDER NOTE ── */
+.founder-note{
+  max-width:480px;margin:0 auto 40px;
+  padding:16px 20px;text-align:left;
+  border-left:2px solid var(--blue);
+  background:var(--border);border-radius:0 8px 8px 0;
+  font-size:13px;line-height:1.7;color:var(--text-2);
+}
+.founder-note .fn-sig{
+  display:block;margin-top:10px;font-size:12px;
+  color:var(--text-3);font-style:normal;font-weight:600;
+}
 </style>
 </head>
 <body>
@@ -1343,6 +1484,11 @@ html body,html nav,html footer,.bento-card,.bb-cell,.stat-cell,.hs-card,.termina
     <button class="nav-hamburger" id="nav-hamburger" aria-label="Toggle menu">
       <span></span><span></span><span></span>
     </button>
+    <button class="nav-search" id="nav-search" aria-label="Open command palette" title="Search — ⌘K">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+      <span>Search</span>
+      <kbd>⌘K</kbd>
+    </button>
     <button class="theme-toggle" id="theme-toggle" aria-label="Toggle light mode">
       <svg class="tt-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
       <svg class="tt-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
@@ -1360,7 +1506,8 @@ html body,html nav,html footer,.bento-card,.bb-cell,.stat-cell,.hs-card,.termina
 </div>
 
 <!-- HERO -->
-<section class="hero">
+<section class="hero" id="hero">
+  <div class="hero-dots" aria-hidden="true"></div>
   <div class="hero-glow hero-glow-tl"></div>
   <div class="hero-glow hero-glow-br"></div>
   <div class="hero-floor" aria-hidden="true"></div>
@@ -1378,21 +1525,22 @@ html body,html nav,html footer,.bento-card,.bb-cell,.stat-cell,.hs-card,.termina
     <h1 class="hero-h1" id="hero-h1">
       <span id="tw-text"></span><span class="tw-cursor"></span>
     </h1>
+    <p class="hero-sub">QuantHQ is an open research network for quants — build factors, run walk-forward backtests, and publish findings alongside researchers and AI agents.</p>
     <div class="hero-ctas">
       <a href="#join" class="btn-primary magnetic">Join Us →</a>
       <a href="/research/" class="btn-ghost magnetic">View Research</a>
     </div>
     <div class="hero-metrics">
       <div class="hero-metric">
-        <div class="n" data-count="124">0</div>
+        <div class="n"><NumberTicker client:load value={124} /></div>
         <div class="l">Research Nodes</div>
       </div>
       <div class="hero-metric">
-        <div class="n" data-count="582">0</div>
+        <div class="n"><NumberTicker client:load value={582} /></div>
         <div class="l">Published Findings</div>
       </div>
       <div class="hero-metric">
-        <div class="n" data-count="43">0</div>
+        <div class="n"><NumberTicker client:load value={43} /></div>
         <div class="l">Experiments Live</div>
       </div>
     </div>
@@ -1409,7 +1557,7 @@ html body,html nav,html footer,.bento-card,.bb-cell,.stat-cell,.hs-card,.termina
     </div>
     <div class="bloomberg-grid rv2" data-d="1">
       <!-- Row 1: Metrics -->
-      <div class="bb-cell">
+      <div class="bb-cell clickable" id="spx-cell" role="button" tabindex="0" aria-label="Open SPX detail chart">
         <div class="bb-label">SPX <span id="spx-time"></span></div>
         <div class="bb-val" id="spx-val">5,847</div>
         <div class="bb-change up" id="spx-chg">+0.42%</div>
@@ -1419,7 +1567,7 @@ html body,html nav,html footer,.bento-card,.bb-cell,.stat-cell,.hs-card,.termina
           </svg>
         </div>
       </div>
-      <div class="bb-cell">
+      <div class="bb-cell clickable" id="vix-cell" role="button" tabindex="0" aria-label="Open VIX detail chart">
         <div class="bb-label">VIX</div>
         <div class="bb-val" id="vix-val">16.3</div>
         <div class="bb-change down" id="vix-chg">-2.1%</div>
@@ -1436,12 +1584,16 @@ html body,html nav,html footer,.bento-card,.bb-cell,.stat-cell,.hs-card,.termina
 
       <!-- Row 2: Tickers + Agents -->
       <div class="bb-cell span2 tall" style="display:flex;flex-direction:column">
-        <div class="bb-label">Signal Feed <span style="color:var(--green)">● LIVE</span></div>
-        <div id="ticker-feed" style="flex:1;display:flex;flex-direction:column;justify-content:space-evenly"></div>
+        <BorderBeam>
+          <div style="padding:0">
+            <div class="bb-label">Signal Feed <span style="color:var(--green)">● LIVE</span></div>
+            <div id="ticker-feed" style="flex:1;display:flex;flex-direction:column;justify-content:space-evenly"></div>
+          </div>
+        </BorderBeam>
       </div>
       <div class="bb-cell span2">
         <div class="bb-label">Active Research Agents</div>
-        <div id="agent-feed"></div>
+        <div id="agent-feed"><RadarEffect client:visible /></div>
       </div>
       <div class="bb-cell span2">
         <div class="bb-label">Factor Attribution — Today</div>
@@ -1470,26 +1622,32 @@ html body,html nav,html footer,.bento-card,.bb-cell,.stat-cell,.hs-card,.termina
         <div class="bc-label">Network</div>
         <div class="bc-title">Researcher Directory</div>
         <div class="bc-sub">Find collaborators by strategy style, market focus, or research domain.</div>
-        <div style="margin-top:20px;display:flex;flex-direction:column;gap:6px">
-          <div style="display:flex;align-items:center;gap:10px;padding:8px;background:var(--border);border-radius:6px;border:1px solid var(--border)">
+        <div class="dir-filters" id="dir-filters" role="group" aria-label="Filter researchers">
+          <button class="dir-chip active" data-tag="all">All</button>
+          <button class="dir-chip" data-tag="equities">Equities</button>
+          <button class="dir-chip" data-tag="alt-data">Alt-Data</button>
+          <button class="dir-chip" data-tag="macro">Macro</button>
+        </div>
+        <div style="margin-top:12px;display:flex;flex-direction:column;gap:6px" id="dir-list">
+          <div class="dir-row" data-tags="equities" style="display:flex;align-items:center;gap:10px;padding:8px;background:var(--border);border-radius:6px;border:1px solid var(--border)">
             <div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#3A3A3A,#5C5C5C);color:#fff;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0">AC</div>
             <div>
               <div style="font-size:12px;font-weight:600;color:var(--text-1)">Alex Chen</div>
-              <div style="font-size:10px;color:var(--text-3)">Momentum · Equities</div>
+              <div style="font-size:10px;color:var(--text-3)">Momentum · Equities · ex-prop desk, now full-time factor research</div>
             </div>
           </div>
-          <div style="display:flex;align-items:center;gap:10px;padding:8px;background:var(--border);border-radius:6px;border:1px solid var(--border)">
+          <div class="dir-row" data-tags="alt-data" style="display:flex;align-items:center;gap:10px;padding:8px;background:var(--border);border-radius:6px;border:1px solid var(--border)">
             <div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#2B0ABF,#6B1FD0);color:#fff;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0">PR</div>
             <div>
               <div style="font-size:12px;font-weight:600;color:var(--text-1)">Priya R.</div>
-              <div style="font-size:10px;color:var(--text-3)">NLP · Alt-Data</div>
+              <div style="font-size:10px;color:var(--text-3)">NLP · Alt-Data · builds earnings-call sentiment factors</div>
             </div>
           </div>
-          <div style="display:flex;align-items:center;gap:10px;padding:8px;background:var(--border);border-radius:6px;border:1px solid var(--border)">
+          <div class="dir-row" data-tags="macro" style="display:flex;align-items:center;gap:10px;padding:8px;background:var(--border);border-radius:6px;border:1px solid var(--border)">
             <div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#0A2A7A,#0F4CC8);color:#fff;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0">JK</div>
             <div>
               <div style="font-size:12px;font-weight:600;color:var(--text-1)">James K.</div>
-              <div style="font-size:10px;color:var(--text-3)">Macro · Fixed Income</div>
+              <div style="font-size:10px;color:var(--text-3)">Macro · Fixed Income · regime models and curve trades</div>
             </div>
           </div>
         </div>
@@ -1508,11 +1666,8 @@ html body,html nav,html footer,.bento-card,.bb-cell,.stat-cell,.hs-card,.termina
         <div class="bc-label">Live</div>
         <div class="bc-title">Alpha Signal<br>Feed</div>
         <div class="bc-sub">124 live signals. Updated continuously. Confidence-ranked across every asset class.</div>
-        <div style="margin-top:20px;display:flex;gap:6px;flex-wrap:wrap">
-          <span style="font-size:10px;padding:3px 8px;background:var(--border);border:1px solid var(--border-hover);border-radius:100px;color:var(--blue)">NVDA ↑ 2.8%</span>
-          <span style="font-size:10px;padding:3px 8px;background:var(--border);border:1px solid var(--border-hover);border-radius:100px;color:var(--blue)">BTC ↑ 3.1%</span>
-          <span style="font-size:10px;padding:3px 8px;background:color-mix(in srgb,var(--red) 8%,transparent);border:1px solid color-mix(in srgb,var(--red) 18%,transparent);border-radius:100px;color:var(--red)">TSLA ↓ 1.6%</span>
-          <span style="font-size:10px;padding:3px 8px;background:var(--border);border:1px solid var(--border-hover);border-radius:100px;color:var(--blue)">AAPL ↑ 2.4%</span>
+        <div class="chip-marquee" aria-hidden="true">
+          <div class="chip-track" id="chip-track"></div>
         </div>
       </div>
       <div class="bento-card short glass-layer rv2" data-d="1">
@@ -1529,16 +1684,57 @@ html body,html nav,html footer,.bento-card,.bb-cell,.stat-cell,.hs-card,.termina
   </div>
 </section>
 
-<!-- RESEARCH PAPERS -->
-<!-- HORIZONTAL SCROLL — PROJECTS -->
-<section class="hscroll-section">
-  <div class="hscroll-label rv2">
-    <div class="section-label">Active Projects</div>
-    <div class="section-h2">What we're<br>building.</div>
-    <div class="section-sub fade-in-up">Open-source tools, research frameworks, and production infrastructure.</div>
-  </div>
-  <div class="hscroll-track-wrap">
-    <div class="hscroll-track" id="htrack"></div>
+<!-- ACTIVE PROJECTS — BENTO -->
+<section class="projects-section" id="projects">
+  <div class="projects-inner">
+    <div class="rv2">
+      <div class="section-label">Active Projects</div>
+      <div class="section-h2">What we're<br>building.</div>
+      <div class="section-sub fade-in-up">Open-source tools, research frameworks, and production infrastructure.</div>
+    </div>
+    <div class="bento-grid">
+      <div class="bento-card small glass-layer rv2">
+        <div class="hs-num">01</div>
+        <div class="bc-title" style="font-size:17px">Alpha Extraction Pipeline</div>
+        <div class="bc-sub" style="font-size:12px">End-to-end factor research system: ingestion → attribution → signal → ranking.</div>
+        <div class="pipeline-beam"><AnimatedBeam client:visible /></div>
+      </div>
+      <div class="bento-card small glass-layer rv2" data-d="1">
+        <div class="hs-num">02</div>
+        <div class="bc-title" style="font-size:17px">LLM Earnings NLP Factor</div>
+        <div class="bc-sub" style="font-size:12px">GPT-4 class semantic delta across consecutive earnings calls. Live OOS testing.</div>
+      </div>
+      <div class="bento-card small glass-layer rv2" data-d="2">
+        <div class="hs-num">03</div>
+        <div class="bc-title" style="font-size:17px">Regime Classification HMM</div>
+        <div class="bc-sub" style="font-size:12px">Hidden Markov model conditioned factor rotation. Yield curve + credit spread inputs.</div>
+      </div>
+      <div class="bento-card small glass-layer rv2" data-d="3">
+        <div class="hs-num">04</div>
+        <div class="bc-title" style="font-size:17px">Cross-Sectional Signal Scanner</div>
+        <div class="bc-sub" style="font-size:12px">Ranks 8,000+ instruments by factor confluence score. Refreshes every 4 hours.</div>
+      </div>
+      <div class="bento-card small glass-layer rv2">
+        <div class="hs-num">05</div>
+        <div class="bc-title" style="font-size:17px">Community Backtest Engine</div>
+        <div class="bc-sub" style="font-size:12px">Walk-forward with realistic slippage. Shareable tearsheets. Benchmark comparison.</div>
+      </div>
+      <div class="bento-card small glass-layer rv2" data-d="1">
+        <div class="hs-num">06</div>
+        <div class="bc-title" style="font-size:17px">AI Research Assistant</div>
+        <div class="bc-sub" style="font-size:12px">Asks and answers quant research questions with full source attribution.</div>
+      </div>
+      <div class="bento-card small glass-layer rv2" data-d="2">
+        <div class="hs-num">07</div>
+        <div class="bc-title" style="font-size:17px">Volatility Surface Modeler</div>
+        <div class="bc-sub" style="font-size:12px">Local vol calibration from live options data. Arbitrage-free interpolation.</div>
+      </div>
+      <div class="bento-card small glass-layer rv2" data-d="3">
+        <div class="hs-num">08</div>
+        <div class="bc-title" style="font-size:17px">Macro Regime Tracker</div>
+        <div class="bc-sub" style="font-size:12px">Real-time regime classification across 12 macro factors. Factor rotation signals.</div>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -1550,13 +1746,14 @@ html body,html nav,html footer,.bento-card,.bb-cell,.stat-cell,.hs-card,.termina
       <div class="section-h2">Everywhere<br>intelligence lives.</div>
     </div>
     <div class="world-map-wrap rv2" data-d="1">
-      <canvas id="world-canvas" height="520" aria-label="Interactive globe showing QuantHQ global research network nodes" role="img"></canvas>
+      <WorldMap client:visible darkMap={darkMap} lightMap={lightMap} />
     </div>
   </div>
 </section>
 
 <!-- FORCE GRAPH -->
 <section class="graph-section">
+  <div class="synapse-bg"><SynapseBackground client:visible /></div>
   <div class="graph-inner">
     <div class="rv2">
       <div class="section-label">Knowledge Network</div>
@@ -1603,25 +1800,25 @@ html body,html nav,html footer,.bento-card,.bb-cell,.stat-cell,.hs-card,.termina
     <div class="stats-grid rv2" data-d="1">
       <div class="stat-cell">
         <div class="stat-live"><div class="stat-live-dot"></div>Live</div>
-        <div class="stat-num"><span data-count="124">0</span></div>
+        <div class="stat-num"><NumberTicker client:visible value={124} /></div>
         <div class="stat-label">Research Nodes Online</div>
         <div class="stat-sub">Active researchers contributing to the network right now</div>
       </div>
       <div class="stat-cell">
         <div class="stat-live"><div class="stat-live-dot"></div>Live</div>
-        <div class="stat-num"><span data-count="582">0</span></div>
+        <div class="stat-num"><NumberTicker client:visible value={582} /></div>
         <div class="stat-label">Published Findings</div>
         <div class="stat-sub">Peer-reviewed papers, tearsheets, and factor reports</div>
       </div>
       <div class="stat-cell">
         <div class="stat-live"><div class="stat-live-dot"></div>Live</div>
-        <div class="stat-num"><span data-count="43">0</span></div>
+        <div class="stat-num"><NumberTicker client:visible value={43} /></div>
         <div class="stat-label">Experiments Running</div>
         <div class="stat-sub">Live backtests and model training pipelines active</div>
       </div>
       <div class="stat-cell">
         <div class="stat-live"><div class="stat-live-dot"></div>Live</div>
-        <div class="stat-num"><span data-count="8000">0</span><span class="stat-unit">+</span></div>
+        <div class="stat-num"><NumberTicker client:visible value={8000} /><span class="stat-unit">+</span></div>
         <div class="stat-label">Instruments Covered</div>
         <div class="stat-sub">Equities, crypto, FX, rates, and commodity factors</div>
       </div>
@@ -1641,6 +1838,10 @@ html body,html nav,html footer,.bento-card,.bb-cell,.stat-cell,.hs-card,.termina
     <div class="section-label" style="justify-content:center">Free Early Access</div>
     <div class="fcta-h2">Enter the<br><span class="grad-text">institution.</span></div>
     <div class="fcta-sub fade-in-up">Shape the community. Build your network. Get Alpha Toolkit access from day one.</div>
+    <div class="founder-note fade-in-up">
+      “We started QuantHQ because rigorous quant research shouldn't require a fund's infrastructure. Everything here — the factor engine, the backtester, the network — is what we wished existed when we started.”
+      <span class="fn-sig">— Shubh, Founder · QuantHQ</span>
+    </div>
     <form class="signup-form" id="signup-form" onsubmit="return false">
       <input type="email" class="signup-input" placeholder="you@example.com" required aria-label="Email address">
       <button type="submit" class="signup-btn magnetic">Get Access</button>
@@ -1693,7 +1894,7 @@ const reduced = matchMedia('(prefers-reduced-motion:reduce)').matches;
     if (p >= 100) {
       clearInterval(iv);
       loader.classList.add('hide');
-      document.querySelector('.bgfx-grain')?.classList.add('active');
+      document.querySelector('.grain')?.classList.add('active');
       setTimeout(()=>{loader.style.display='none'},600);
     }
   }, 40);
@@ -1763,19 +1964,7 @@ const rio = new IntersectionObserver(es => es.forEach(e => {
 document.querySelectorAll('.rv2').forEach(el => rio.observe(el));
 if (!reduced) setTimeout(() => scrambleIn(document.querySelector('.hero-eyebrow')), 500);
 
-/* ── STAT COUNTERS — show actual numbers, animate on scroll ── */
-document.querySelectorAll('[data-count]').forEach(el => {
-  el.textContent = (+el.dataset.count).toLocaleString();
-});
-function animCount(el) {
-  el.style.animation = 'statGlow 0.6s ease-out';
-}
-const cio = new IntersectionObserver(es => es.forEach(e => {
-  if (!e.isIntersecting) return;
-  animCount(e.target);
-  cio.unobserve(e.target);
-}), {threshold:0.5});
-document.querySelectorAll('[data-count]').forEach(el => cio.observe(el));
+/* ── STAT COUNTERS — React NumberTicker islands ── */
 
 /* ── BG PARTICLE CANVAS removed ── */
 
@@ -1831,6 +2020,18 @@ function updateCharts() {
 }
 updateCharts();
 if (!reduced) setInterval(updateCharts, 1800);
+
+// expose series for the React MarketModal + make SPX/VIX cells clickable
+window.__quantData = { spx: spxData, vix: vixData };
+[['spx-cell','SPX'],['vix-cell','VIX']].forEach(([id, sym]) => {
+  const cell = document.getElementById(id);
+  if (!cell) return;
+  const open = () => dispatchEvent(new CustomEvent('quanthq:market', {detail: sym}));
+  cell.addEventListener('click', open);
+  cell.addEventListener('keydown', e => {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(); }
+  });
+});
 
 // Draw-in: sparklines trace themselves when the dashboard first scrolls into view
 if (!reduced) {
@@ -1919,12 +2120,15 @@ const tickers = [
   {sym:'VIX',price:'16.3',chg:'-2.1%',dir:'down'},
 ];
 const tf = document.getElementById('ticker-feed');
-tf.innerHTML = tickers.map(t=>`
+const nowTs = () => new Date().toTimeString().slice(0,8);
+const tickerRowHTML = t => `
   <div class="ticker-row" data-sym="${t.sym}">
     <span class="ticker-sym">${t.sym}</span>
+    <span class="ticker-ts">${nowTs()}</span>
     <span class="ticker-price">${t.price}</span>
     <span class="ticker-chg ${t.dir}">${t.chg}</span>
-  </div>`).join('');
+  </div>`;
+tf.innerHTML = tickers.map(tickerRowHTML).join('');
 // Build ticker rows once, then update only changed values
 const tickerRows = {};
 tickers.forEach(t => {
@@ -1944,36 +2148,18 @@ if (!reduced) {
       row.textContent = t.chg;
       row.className = 'ticker-chg ' + t.dir;
       const tr = row.closest('.ticker-row');
+      tr.querySelector('.ticker-ts').textContent = nowTs();
       tr.classList.remove('flash-up','flash-down');
       void tr.offsetWidth;
       tr.classList.add(t.dir === 'up' ? 'flash-up' : 'flash-down');
     } else {
       // fallback: rebuild
-      tf.innerHTML = tickers.map(t=>`
-        <div class="ticker-row" data-sym="${t.sym}">
-          <span class="ticker-sym">${t.sym}</span>
-          <span class="ticker-price">${t.price}</span>
-          <span class="ticker-chg ${t.dir}">${t.chg}</span>
-        </div>`).join('');
+      tf.innerHTML = tickers.map(tickerRowHTML).join('');
     }
   }, 2200);
 }
 
-// Agent feed — dot color keyed to status
-const agentColors = {running:'var(--green)',training:'var(--violet)',idle:'var(--text-4)'};
-const agents = [
-  {name:'alpha-extractor-v3',status:'running'},
-  {name:'regime-classifier',status:'training'},
-  {name:'earnings-nlp-agent',status:'idle'},
-  {name:'backtest-engine-5d',status:'running'},
-  {name:'signal-ranker',status:'running'},
-].map(a=>({...a,color:agentColors[a.status]}));
-document.getElementById('agent-feed').innerHTML = agents.map(a=>`
-  <div class="agent-row">
-    <div class="agent-dot" style="background:${a.color}"></div>
-    <span class="agent-name">${a.name}</span>
-    <span class="agent-status">[${a.status}]</span>
-  </div>`).join('');
+// Agent feed is a React island (AgentFeed.tsx) — animated HUD status badges
 
 // Factor bars
 const factors = [
@@ -2010,150 +2196,13 @@ document.getElementById('factor-list').innerHTML = [
   <span style="color:${f.v.startsWith('-')?'var(--red)':'var(--green)'};font-weight:600;font-family:'Courier New',monospace">${f.v}</span>
 </div>`).join('');
 
-/* ── HORIZONTAL SCROLL CARDS ── */
-const hsProjects = [
-  {num:'01', title:'Alpha Extraction Pipeline', desc:'End-to-end factor research system: ingestion → attribution → signal → ranking.'},
-  {num:'02', title:'LLM Earnings NLP Factor', desc:'GPT-4 class semantic delta across consecutive earnings calls. Live OOS testing.'},
-  {num:'03', title:'Regime Classification HMM', desc:'Hidden Markov model conditioned factor rotation. Yield curve + credit spread inputs.'},
-  {num:'04', title:'Cross-Sectional Signal Scanner', desc:'Ranks 8,000+ instruments by factor confluence score. Refreshes every 4 hours.'},
-  {num:'05', title:'Community Backtest Engine', desc:'Walk-forward with realistic slippage. Shareable tearsheets. Benchmark comparison.'},
-  {num:'06', title:'AI Research Assistant', desc:'Asks and answers quant research questions with full source attribution.'},
-  {num:'07', title:'Volatility Surface Modeler', desc:'Local vol calibration from live options data. Arbitrage-free interpolation.'},
-  {num:'08', title:'Macro Regime Tracker', desc:'Real-time regime classification across 12 macro factors. Factor rotation signals.'},
-];
-const track = document.getElementById('htrack');
-const double = [...hsProjects, ...hsProjects];
-track.innerHTML = double.map(p=>`
-  <div class="hs-card">
-    <div class="hs-num">${p.num}</div>
-    <div class="hs-title">${p.title}</div>
-    <div class="hs-desc">${p.desc}</div>
-  </div>`).join('');
+/* Active Projects are static bento cards in the markup — no JS needed */
 
 /* canvases can't use CSS vars — resolve ink per frame from the active theme */
 const isLight = () => document.documentElement.classList.contains('light');
 const canvasInk = () => isLight() ? '15,23,42' : '255,255,255';
 
-/* ── INTERACTIVE GLOBE (canvas port of 21st.dev Interactive Globe) ── */
-const wCanvas = document.getElementById('world-canvas');
-const wCtx = wCanvas.getContext('2d');
-const GLOBE_H = 520;
-const CITIES = [
-  {name:'New York',lat:40.7,lon:-74.0},{name:'San Francisco',lat:37.8,lon:-122.4},
-  {name:'Chicago',lat:41.9,lon:-87.6},{name:'São Paulo',lat:-23.5,lon:-46.6},
-  {name:'London',lat:51.5,lon:-0.1},{name:'Zurich',lat:47.4,lon:8.5},
-  {name:'Dubai',lat:25.2,lon:55.3},{name:'Mumbai',lat:19.1,lon:72.9},
-  {name:'Singapore',lat:1.35,lon:103.8},{name:'Hong Kong',lat:22.3,lon:114.2},
-  {name:'Tokyo',lat:35.7,lon:139.7},{name:'Sydney',lat:-33.9,lon:151.2},
-];
-const ARCS = [[0,4],[4,5],[4,6],[6,7],[7,8],[8,9],[9,10],[8,11],[0,3],[1,0],[2,0],[5,10]];
-function ll2xyz(lat, lon) {
-  const la = lat*Math.PI/180, lo = lon*Math.PI/180;
-  return [Math.cos(la)*Math.cos(lo), Math.sin(la), Math.cos(la)*Math.sin(lo)];
-}
-const CITY_PTS = CITIES.map(c => ll2xyz(c.lat, c.lon));
-// Fibonacci-distributed sphere dots
-const SPHERE_DOTS = [];
-for (let i = 0; i < 900; i++) {
-  const ph = Math.acos(1 - 2*(i+0.5)/900), th = Math.PI*(1+Math.sqrt(5))*i;
-  SPHERE_DOTS.push([Math.sin(ph)*Math.cos(th), Math.cos(ph), Math.sin(ph)*Math.sin(th)]);
-}
-let gRotY = -1.2, gRotX = -0.25, gDragging = false, gLastX = 0, gLastY = 0;
-function gProject(p, R, cx, cy) {
-  const cosY = Math.cos(gRotY), sinY = Math.sin(gRotY);
-  const x1 = p[0]*cosY - p[2]*sinY, z1 = p[0]*sinY + p[2]*cosY;
-  const cosX = Math.cos(gRotX), sinX = Math.sin(gRotX);
-  const y2 = p[1]*cosX - z1*sinX, z2 = p[1]*sinX + z1*cosX;
-  return [cx + x1*R, cy - y2*R, z2];
-}
-function gArcPoint(a, b, t) {
-  const lift = 1 + 0.28*Math.sin(Math.PI*t);
-  const x = a[0]+(b[0]-a[0])*t, y = a[1]+(b[1]-a[1])*t, z = a[2]+(b[2]-a[2])*t;
-  const l = Math.hypot(x, y, z) || 1;
-  return [x/l*lift, y/l*lift, z/l*lift];
-}
-function drawGlobe() {
-  const W = wCanvas.offsetWidth;
-  if (wCanvas.width !== W) wCanvas.width = W;
-  if (wCanvas.height !== GLOBE_H) wCanvas.height = GLOBE_H;
-  wCtx.clearRect(0, 0, W, GLOBE_H);
-  const R = Math.min(W, GLOBE_H)*0.46, cx = W/2, cy = GLOBE_H/2;
-  const t = Date.now()/1000;
-  const ink = canvasInk();
-  if (!gDragging) gRotY += 0.0022; // auto-rotate when idle
-  // sphere dots, depth-shaded
-  for (const d of SPHERE_DOTS) {
-    const [sx, sy, z] = gProject(d, R, cx, cy);
-    if (z <= 0.02) continue;
-    wCtx.fillStyle = `rgba(${ink},${0.08 + z*0.28})`;
-    wCtx.fillRect(sx, sy, 1.6, 1.6);
-  }
-  // arcs with traveling particles
-  ARCS.forEach((arc, k) => {
-    const A = CITY_PTS[arc[0]], B = CITY_PTS[arc[1]];
-    wCtx.beginPath();
-    let started = false;
-    for (let s = 0; s <= 32; s++) {
-      const [sx, sy, z] = gProject(gArcPoint(A, B, s/32), R, cx, cy);
-      if (z > 0) {
-        if (!started) { wCtx.moveTo(sx, sy); started = true; }
-        else wCtx.lineTo(sx, sy);
-      } else started = false;
-    }
-    wCtx.strokeStyle = `rgba(${ink},0.28)`;
-    wCtx.lineWidth = 1;
-    wCtx.stroke();
-    const [px, py, pz] = gProject(gArcPoint(A, B, (t*0.12 + k*0.37) % 1), R, cx, cy);
-    if (pz > 0) {
-      wCtx.beginPath(); wCtx.arc(px, py, 1.8, 0, Math.PI*2);
-      wCtx.fillStyle = isLight() ? 'rgba(37,99,235,0.95)' : 'rgba(123,162,255,0.95)'; wCtx.fill();
-    }
-  });
-  // city markers with pulse rings + labels
-  CITIES.forEach((c, i) => {
-    const [sx, sy, z] = gProject(CITY_PTS[i], R, cx, cy);
-    if (z <= 0) return;
-    const pulse = Math.sin(t*2 + i)*0.5 + 0.5;
-    wCtx.beginPath(); wCtx.arc(sx, sy, 2.5, 0, Math.PI*2);
-    wCtx.fillStyle = `rgba(${ink},0.95)`; wCtx.fill();
-    wCtx.beginPath(); wCtx.arc(sx, sy, 4 + pulse*5, 0, Math.PI*2);
-    wCtx.strokeStyle = `rgba(${ink},${0.35*(1-pulse)})`;
-    wCtx.lineWidth = 1; wCtx.stroke();
-    if (z > 0.35) {
-      wCtx.font = '9px Inter,sans-serif';
-      wCtx.fillStyle = `rgba(${ink},${0.65*z})`;
-      wCtx.fillText(c.name.toUpperCase(), sx + 8, sy + 3);
-    }
-  });
-}
-wCanvas.addEventListener('pointerdown', e => {
-  gDragging = true; gLastX = e.clientX; gLastY = e.clientY;
-  wCanvas.setPointerCapture(e.pointerId);
-});
-wCanvas.addEventListener('pointermove', e => {
-  if (!gDragging) return;
-  gRotY += (e.clientX - gLastX)*0.005;
-  gRotX = Math.max(-0.9, Math.min(0.9, gRotX - (e.clientY - gLastY)*0.003));
-  gLastX = e.clientX; gLastY = e.clientY;
-});
-wCanvas.addEventListener('pointerup', () => { gDragging = false; });
-wCanvas.addEventListener('pointercancel', () => { gDragging = false; });
-if (!reduced) {
-  let wActive = false, wAnimId;
-  function wLoop() {
-    if (!wActive) return;
-    drawGlobe();
-    wAnimId = requestAnimationFrame(wLoop);
-  }
-  const wObserver = new IntersectionObserver(entries => {
-    const vis = entries[0].isIntersecting;
-    if (vis && !wActive) { wActive = true; wLoop(); }
-    else if (!vis) { wActive = false; cancelAnimationFrame(wAnimId); }
-  }, {threshold: 0.05});
-  wObserver.observe(wCanvas);
-} else {
-  drawGlobe();
-}
+/* Global Network map is a React island (WorldMap.tsx) — animated arcs over a dotted map */
 
 /* ── FORCE-DIRECTED GRAPH ── */
 const fc = document.getElementById('force-canvas');
@@ -2332,7 +2381,8 @@ if (!reduced) {
   }, {threshold: 0.05});
   fObserver.observe(fc);
 
-  addEventListener('resize', ()=>{ initForce(); }, {passive:true});
+  let resizeTimer;
+  addEventListener('resize', ()=>{ clearTimeout(resizeTimer); resizeTimer = setTimeout(initForce, 250); }, {passive:true});
 }
 
 /* ── TERMINAL ── */
@@ -2415,19 +2465,29 @@ termBody.addEventListener('keydown', e => {
     const cmd = termInput.textContent.trim().toLowerCase();
     termInput.textContent = '';
     if (!cmd) return;
-    const echo = document.createElement('div');
-    echo.innerHTML = '<span class="term-prompt">$ </span><span class="term-cmd"></span>';
-    echo.querySelector('.term-cmd').textContent = cmd;
-    tl.appendChild(echo);
-    if (cmd === 'clear') { tl.innerHTML = ''; return; }
-    (TERM_CMDS[cmd] || [`command not found: ${cmd} — try 'help'`]).forEach(text => {
-      const d = document.createElement('div');
-      d.className = text.startsWith('✓') ? 'term-ok' : 'term-out';
-      d.textContent = '  ' + text;
-      tl.appendChild(d);
-    });
+    runTermCmd(cmd);
   } else return;
   e.preventDefault();
+});
+function runTermCmd(cmd) {
+  const echo = document.createElement('div');
+  echo.innerHTML = '<span class="term-prompt">$ </span><span class="term-cmd"></span>';
+  echo.querySelector('.term-cmd').textContent = cmd;
+  tl.appendChild(echo);
+  if (cmd === 'clear') { tl.innerHTML = ''; return; }
+  (TERM_CMDS[cmd] || [`command not found: ${cmd} — try 'help'`]).forEach(text => {
+    const d = document.createElement('div');
+    d.className = text.startsWith('✓') ? 'term-ok' : 'term-out';
+    d.textContent = '  ' + text;
+    tl.appendChild(d);
+  });
+  tl.parentElement.scrollTop = tl.parentElement.scrollHeight;
+}
+// command palette "Run backtest" routes here
+addEventListener('quanthq:term', e => {
+  termUserMode = true;
+  termHint.textContent = '';
+  runTermCmd(e.detail);
 });
 
 /* ── EMAIL FORM ── */
@@ -2540,7 +2600,7 @@ if (tapeTrack) {
 
 /* ── HUD CLOCK ── */
 const hudClock = document.getElementById('hud-clock');
-if (hudClock) {
+if (hudClock && !reduced) {
   const tickClock = () => {
     const d = new Date();
     hudClock.textContent = 'UTC ' + d.toISOString().slice(11,19) + ' · SPX ' +
@@ -2552,12 +2612,41 @@ if (hudClock) {
 
 /* ── HERO METRIC FLICKER removed ── */
 
+/* ── NAV SEARCH → COMMAND PALETTE ── */
+document.getElementById('nav-search')?.addEventListener('click', () => {
+  dispatchEvent(new CustomEvent('quanthq:palette'));
+});
+
+/* ── RESEARCHER DIRECTORY FILTERS ── */
+const dirFilters = document.getElementById('dir-filters');
+if (dirFilters) {
+  dirFilters.addEventListener('click', e => {
+    const chip = e.target.closest('.dir-chip');
+    if (!chip) return;
+    dirFilters.querySelectorAll('.dir-chip').forEach(c => c.classList.toggle('active', c === chip));
+    const tag = chip.dataset.tag;
+    document.querySelectorAll('#dir-list .dir-row').forEach(row => {
+      row.classList.toggle('hidden', tag !== 'all' && !row.dataset.tags.includes(tag));
+    });
+  });
+}
+
+/* ── ALPHA SIGNAL CHIP MARQUEE ── */
+const chipTrack = document.getElementById('chip-track');
+if (chipTrack) {
+  const signals = [
+    {t:'NVDA ↑ 2.8%'},{t:'BTC ↑ 3.1%'},{t:'TSLA ↓ 1.6%',down:true},{t:'AAPL ↑ 2.4%'},
+    {t:'META ↑ 1.9%'},{t:'ETH ↑ 2.2%'},{t:'VIX ↓ 2.1%',down:true},{t:'MSFT ↑ 0.4%'},
+  ];
+  chipTrack.innerHTML = [...signals, ...signals]
+    .map(s => `<span class="sig-chip${s.down?' down':''}">${s.t}</span>`).join('');
+}
+
 /* ── THEME TOGGLE ── */
 document.getElementById('theme-toggle')?.addEventListener('click', () => {
   const light = document.documentElement.classList.toggle('light');
   localStorage.theme = light ? 'light' : 'dark';
   document.getElementById('favicon').href = light ? FAVICON_LIGHT : FAVICON_DARK;
-  if (reduced) drawGlobe(); // static canvases need one repaint in the new palette
 });
 
 /* ── PARALLAX ON SCROLL (merged into consolidated handler) ── */
@@ -2588,31 +2677,9 @@ if (!reduced) {
   });
 }
 
-/* ── COUNT-UP ANIMATION ── */
-function countUp(el, target) {
-  const dur = 1800;
-  const start = performance.now();
-  const fmt = n => n.toLocaleString();
-  function step(now) {
-    const t = Math.min((now - start) / dur, 1);
-    const ease = 1 - Math.pow(1 - t, 3);
-    el.textContent = fmt(Math.round(ease * target));
-    if (t < 1) requestAnimationFrame(step);
-  }
-  requestAnimationFrame(step);
-}
-const countObserver = new IntersectionObserver(es => es.forEach(e => {
-  if (!e.isIntersecting) return;
-  const el = e.target;
-  const target = +el.dataset.count;
-  if (target) countUp(el, target);
-  countObserver.unobserve(el);
-}), {threshold:0.5});
-document.querySelectorAll('[data-count]').forEach(el => countObserver.observe(el));
-
 /* ── 3D TILT ON CARDS ── */
 if (!reduced) {
-  document.querySelectorAll('.bento-card, .hs-card').forEach(card => {
+  document.querySelectorAll('.bento-card').forEach(card => {
     card.addEventListener('mousemove', e => {
       const r = card.getBoundingClientRect();
       const x = (e.clientX - r.left) / r.width;
@@ -2704,5 +2771,9 @@ const dotsVisibilityObserver = new IntersectionObserver(es => {
 const heroSection = document.getElementById('hero') || document.querySelector('.hero');
 if (heroSection) dotsVisibilityObserver.observe(heroSection);
 </script>
+
+<!-- REACT ISLANDS — global overlays -->
+<CommandPalette client:idle />
+<MarketModal client:idle />
 </body>
 </html>

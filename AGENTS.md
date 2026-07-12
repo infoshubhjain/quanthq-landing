@@ -4,7 +4,7 @@
 - Astro 5.10 (SSG) — static site generation
 - Tailwind CSS 4.1 via Vite plugin
 - MDX via @astrojs/mdx for blog posts and research papers
-- No React/Vue/Svelte — pure Astro components with vanilla `<script>` tags
+- React islands (@astrojs/react + framer-motion) for interactive homepage widgets in `src/components/react/` (command palette, market modal, agent feed, number ticker); everything else is pure Astro with vanilla `<script>` tags
 - Deployed to GitHub Pages at https://quanthq.in
 
 ## Directory Structure
@@ -15,11 +15,12 @@ site/
 ├── public/logo.jpeg
 └── src/
     ├── components/AboutTabs.astro
-    ├── content/blog/ (2 MDX posts)
-    ├── content/research/ (3 MDX papers)
+    ├── components/react/ (React islands: CommandPalette, MarketModal, AgentFeed, NumberTicker, WorldMap)
+    ├── content/blog/ (MDX posts)
+    ├── content/research/ (MDX papers)
     ├── content.config.ts
     ├── layouts/Base.astro (shared layout)
-    ├── pages/index.astro (homepage, standalone 2508 lines)
+    ├── pages/index.astro (homepage, standalone ~2700 lines)
     ├── pages/about.astro
     ├── pages/community.astro
     ├── pages/contact.astro
@@ -28,10 +29,17 @@ site/
 ```
 
 ## Commands
-- `npm run dev` — starts dev server (run from `site/` directory)
+All commands run from `site/` directory.
+- `npm run dev` — starts dev server (localhost:4321)
 - `npm run build` — builds for production (output to `site/dist/`)
 - `npm run preview` — preview production build
 - No test suite exists. No lint/typecheck commands configured.
+
+## Opencode Commands
+- `/audit` — full site audit: build, screenshot pages, check for breaks
+- `/deploy` — build + commit + push + verify deployment
+- `/optimize` — scan dead code, bloat, stale ignore rules
+- `/review` — code review of recent changes
 
 ## Conventions
 - Components are `.astro` files in `src/components/`
@@ -46,7 +54,7 @@ site/
 ## Key Files
 - `src/styles/global.css` — shared styles, theme variables, background FX
 - `src/layouts/Base.astro` — nav, footer, ticker tape, background FX for inner pages
-- `src/pages/index.astro` — homepage (standalone, 2508 lines, own CSS + JS)
+- `src/pages/index.astro` — homepage (standalone, ~2700 lines, own CSS + JS)
 - `FURTHER_WORK.md` — known tech debt and backlog
 - `CNAME` — custom domain (quanthq.in)
 
@@ -55,25 +63,10 @@ site/
 - Homepage nav has different links (Research, Blog, About, Intelligence, Network, Terminal) vs inner pages (Research, Blogs, Community, Contact)
 - Keep index.astro standalone — it intentionally has its own layout
 - Ticker data is hardcoded (simulated, not real API)
-- All canvas code (globe, force graph) is decorative only
+- React is for homepage island widgets only — don't convert whole pages to React; new interactivity defaults to vanilla JS unless it needs real state
+- Custom events wire vanilla ↔ React: `quanthq:palette` (open palette), `quanthq:market` (SPX/VIX modal, series on `window.__quantData`), `quanthq:term` (run terminal command)
+- Global Network map is the WorldMap React island (Aceternity dotted-map + animated arcs); dotted silhouette is generated at build time in index.astro frontmatter so `dotted-map` never ships to the client
+- Remaining canvas code (force graph only) is decorative
 - `prefers-reduced-motion` must be respected — disable animations when set
 - CI copies `CNAME` into `dist/` after build — don't remove that step
 - If you have any clarifying questions, ask them all upfront before starting work
-
-## Known Tech Debt (from FURTHER_WORK.md)
-- index.astro duplicates ~1275 lines of CSS from global.css with different variable names
-- Duplicate ticker data in Base.astro and index.astro JS
-- ~276 lines of decorative canvas code (globe + force graph)
-- Word-by-word heading reveal could be simplified
-- Terminal typing animation could be static with CSS
-
-## Auto-Optimize Rules
-You are an optimizing agent. At the start of every session and before every commit, proactively:
-
-1. **Scan for dead code** — unused imports, unreachable branches, commented-out blocks, unused CSS classes/functions
-2. **Maintain .opencodeignore** — if you create generated files (dist/, .astro/, logs), add them. If stale entries exist, remove them
-3. **Flag bloat** — files over 500 lines, duplicate patterns, unused dependencies
-4. **Token efficiency** — if a file adds context but no value, suggest adding it to .opencodeignore
-5. **Quick wins** — hardcoded values → CSS vars, repeated code → extraction, missing a11y
-
-Report findings immediately. Fix only after user confirms, unless it's a trivial safe fix (unused import, stale ignore entry).
