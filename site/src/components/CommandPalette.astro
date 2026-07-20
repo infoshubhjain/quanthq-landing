@@ -57,6 +57,25 @@ const commands = [
   </div>
 </div>
 
+<style is:global>
+/* custom cursor — styles the JS-created elements, so must be global (unscoped) */
+.cursor-dot,.cursor-ring{
+  position:fixed;top:0;left:0;pointer-events:none;z-index:10000;
+  border-radius:50%;will-change:transform;
+}
+.cursor-dot{width:7px;height:7px;background:#fff;mix-blend-mode:difference}
+.cursor-ring{
+  width:34px;height:34px;border:1px solid var(--text-3);
+  transition:width .25s var(--ease-out,ease),height .25s var(--ease-out,ease),border-color .25s,opacity .2s,background .25s;
+}
+.cursor-ring.hover{width:54px;height:54px;border-color:var(--gold)}
+.cursor-ring.drag{width:60px;height:60px;border-color:var(--accent,#3D7BFF);background:color-mix(in srgb,var(--accent,#3D7BFF) 10%,transparent)}
+.cursor-dot.hide,.cursor-ring.hide{opacity:0}
+html:not(.cursor-custom) .cursor-dot,html:not(.cursor-custom) .cursor-ring{display:none}
+html.cursor-custom,html.cursor-custom a,html.cursor-custom button,html.cursor-custom .magnetic,html.cursor-custom [role="button"]{cursor:none}
+html.cursor-custom input,html.cursor-custom textarea,html.cursor-custom [contenteditable]{cursor:text}
+</style>
+
 <style>
 .cmdk-trigger{
   position:fixed;right:22px;bottom:40px;z-index:700;
@@ -219,6 +238,46 @@ const commands = [
     });
   }
 
-  initCmdK();
-  document.addEventListener('astro:page-load', initCmdK);
+  // ── SITE-WIDE CUSTOM CURSOR ── blend-mode dot + spring-lagged ring
+  let cdot, cring, cursorBound = false, cmx = 0, cmy = 0, crx = 0, cry = 0, cseen = false;
+  function initCursor() {
+    if (matchMedia('(prefers-reduced-motion:reduce)').matches) return;
+    if (!matchMedia('(hover:hover) and (pointer:fine)').matches) return;
+    // ClientRouter swaps <body>, so recreate the elements if they were removed
+    if (!document.querySelector('.cursor-dot')) {
+      cdot = document.createElement('div'); cdot.className = 'cursor-dot';
+      cring = document.createElement('div'); cring.className = 'cursor-ring';
+      document.body.append(cdot, cring);
+    }
+    document.documentElement.classList.add('cursor-custom');
+    if (cursorBound) return;               // window listeners + rAF only once
+    cursorBound = true;
+    cmx = innerWidth / 2; cmy = innerHeight / 2; crx = cmx; cry = cmy;
+    addEventListener('pointermove', e => {
+      cmx = e.clientX; cmy = e.clientY;
+      if (!cseen) { cseen = true; crx = cmx; cry = cmy; }
+      if (cdot) cdot.style.transform = `translate(${cmx}px,${cmy}px) translate(-50%,-50%)`;
+    }, { passive: true });
+    (function loop(){
+      crx += (cmx - crx) * 0.2; cry += (cmy - cry) * 0.2;
+      if (cring) cring.style.transform = `translate(${crx}px,${cry}px) translate(-50%,-50%)`;
+      requestAnimationFrame(loop);
+    })();
+    const INTERACT = 'a,button,.magnetic,[role="button"],.sd-dot,.theme-toggle,.tag-btn,.cat-btn,.cmdk-item,.cmdk-trigger';
+    const DRAG = '#world-canvas,#force-canvas';
+    const FIELD = 'input,textarea,[contenteditable]';
+    addEventListener('pointerover', e => {
+      const t = e.target; if (!cring) return;
+      cring.classList.toggle('drag', !!t.closest(DRAG));
+      cring.classList.toggle('hover', !t.closest(DRAG) && !!t.closest(INTERACT));
+      const field = !!t.closest(FIELD);
+      cdot.classList.toggle('hide', field); cring.classList.toggle('hide', field);
+    });
+    document.addEventListener('mouseleave', () => { cdot?.classList.add('hide'); cring?.classList.add('hide'); });
+    document.addEventListener('mouseenter', () => { cdot?.classList.remove('hide'); cring?.classList.remove('hide'); });
+  }
+
+  function boot() { initCmdK(); initCursor(); }
+  boot();
+  document.addEventListener('astro:page-load', boot);
 </script>
