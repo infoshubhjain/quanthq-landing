@@ -186,6 +186,16 @@ html.light .vignette-fx { background: radial-gradient(ellipse 130% 100% at 50% 4
   content: ''; width: 24px; height: 1px;
   background: linear-gradient(90deg, var(--accent), transparent);
 }
+.display-title {
+  font-family: var(--font-display);
+  font-weight: 400;
+  letter-spacing: -0.02em;
+}
+.display-figure {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum' 1;
+}
 .gradient-text {
   font-family: var(--font-display);
   background: linear-gradient(110deg, var(--accent), var(--grad-hi), var(--accent));

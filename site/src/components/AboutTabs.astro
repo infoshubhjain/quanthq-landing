@@ -49,13 +49,13 @@ const badgeCls = (b) => {
 <div id="about-tabs" data-tabs={JSON.stringify(tabs)} data-active="mission">
   <div class="flex flex-wrap gap-2 mb-12" id="tab-buttons">
     {tabs.map(t => (
-      <button data-tab={t.id} class:list={['px-5 py-2 rounded-full text-[13px] font-medium border transition-colors cursor-pointer', t.id === 'mission' ? 'border-[var(--accent)] text-[var(--accent)] bg-accent-8' : 'border-[var(--border)] text-[var(--text-2)] hover:text-[var(--text-1)] hover:border-[var(--border-hover)]']}>
+      <button data-tab={t.id} class:list={['px-5 py-2 rounded-full text-[13px] font-medium border transition-colors cursor-pointer', t.id === 'mission' ? 'border-[var(--accent)] text-[var(--accent)] font-semibold' : 'border-[var(--border)] text-[var(--text-2)] hover:text-[var(--text-1)] hover:border-[var(--border-hover)]']}>
         {t.label}
       </button>
     ))}
   </div>
   <div id="tab-content" style="opacity:1;transform:translateY(0);transition:opacity 0.3s ease,transform 0.3s ease">
-    <h2 class="text-[clamp(32px,5vw,64px)] font-extrabold tracking-[-0.03em] leading-[1.05] max-w-3xl" id="tc-headline"></h2>
+    <h2 class="text-[clamp(36px,5.6vw,76px)] display-title leading-[1.02] max-w-3xl" id="tc-headline"></h2>
     <p class="mt-5 text-[var(--text-2)] max-w-xl leading-relaxed" id="tc-body"></p>
     <div id="tc-extra"></div>
   </div>
@@ -85,7 +85,7 @@ document.addEventListener('astro:page-load', function(){
     let html = '';
     if (t.stats) {
       html += '<div class="mt-12 grid grid-cols-2 md:grid-cols-4 gap-px bg-[var(--border)] border border-[var(--border)] rounded-lg overflow-hidden">';
-      for (const [n,l] of t.stats) html += `<div class="bg-[var(--card-bg)] p-8"><div class="text-4xl font-extrabold tracking-tight">${n}</div><div class="mt-2 text-[11px] uppercase tracking-[0.1em] text-[var(--text-3)] font-medium">${l}</div></div>`;
+      for (const [n,l] of t.stats) html += `<div class="bg-[var(--card-bg)] p-8"><div class="display-figure text-4xl font-bold tracking-tight text-[var(--text)]">${n}</div><div class="mt-2 text-[11px] uppercase tracking-[0.1em] text-[var(--text-3)] font-medium">${l}</div></div>`;
       html += '</div>';
     }
     if (t.timeline) {
@@ -124,7 +124,7 @@ document.addEventListener('astro:page-load', function(){
       history.replaceState(null, '', '#' + id);
       btns.forEach(b => {
         const isAct = b.dataset.tab === id;
-        b.className = `px-5 py-2 rounded-full text-[13px] font-medium border transition-colors cursor-pointer ${isAct ? 'border-[var(--accent)] text-[var(--accent)] bg-accent-8' : 'border-[var(--border)] text-[var(--text-2)] hover:text-[var(--text-1)] hover:border-[var(--border-hover)]'}`;
+        b.className = `px-5 py-2 rounded-full text-[13px] font-medium border transition-colors cursor-pointer ${isAct ? 'border-[var(--accent)] text-[var(--accent)] font-semibold' : 'border-[var(--border)] text-[var(--text-2)] hover:text-[var(--text-1)] hover:border-[var(--border-hover)]'}`;
       });
       requestAnimationFrame(() => {
         content.style.opacity = '1';
@@ -139,7 +139,7 @@ document.addEventListener('astro:page-load', function(){
     if (data[h]) switchTab(h);
   });
   const init = location.hash.replace('#','');
-  if (data[init]) { active = init; render(init); btns.forEach(b => { const isAct = b.dataset.tab===init; b.className = `px-5 py-2 rounded-full text-[13px] font-medium border transition-colors cursor-pointer ${isAct ? 'border-[var(--accent)] text-[var(--accent)] bg-accent-8' : 'border-[var(--border)] text-[var(--text-2)] hover:text-[var(--text-1)] hover:border-[var(--border-hover)]'}`; }); }
+  if (data[init]) { active = init; render(init); btns.forEach(b => { const isAct = b.dataset.tab===init; b.className = `px-5 py-2 rounded-full text-[13px] font-medium border transition-colors cursor-pointer ${isAct ? 'border-[var(--accent)] text-[var(--accent)] font-semibold' : 'border-[var(--border)] text-[var(--text-2)] hover:text-[var(--text-1)] hover:border-[var(--border-hover)]'}`; }); }
   else render('mission');
 });
 </script>
