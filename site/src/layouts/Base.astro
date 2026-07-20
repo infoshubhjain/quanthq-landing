@@ -20,7 +20,6 @@ const nav = [
   { href: '/community/', label: 'Community' },
   { href: '/contact/', label: 'Contact' },
 ];
-const aboutTabs = ['Mission', 'Research', 'Build', 'Community', 'Education', 'Future'];
 ---
 <!doctype html>
 <html lang="en">
@@ -70,16 +69,7 @@ const aboutTabs = ['Mission', 'Research', 'Build', 'Community', 'Education', 'Fu
         QuantHQ
       </a>
       <div class="hidden md:flex items-center gap-7 ml-auto text-[13px] font-medium">
-        <div class="nav-dropdown" id="about-dropdown">
-          <button class="text-[var(--text-2)] hover:text-[var(--text-1)] transition-colors" id="about-btn">About ▾</button>
-          <div class="nav-dropdown-menu">
-            <div class="bg-[var(--card-bg)] border border-[var(--border)] rounded-lg py-2 w-40 shadow-2xl">
-              {aboutTabs.map((t) => (
-                <a href={`/about/#${t.toLowerCase()}`} class="block px-4 py-1.5 text-[var(--text-2)] hover:text-[var(--text)] hover:bg-[var(--surface-2)]">{t}</a>
-              ))}
-            </div>
-          </div>
-        </div>
+        <a href="/about/" class="text-[var(--text-2)] hover:text-[var(--text-1)] transition-colors">About</a>
         {nav.map((n) => (
           <a href={n.href} class="text-[var(--text-2)] hover:text-[var(--text-1)] transition-colors">{n.label}</a>
         ))}
@@ -157,12 +147,6 @@ const aboutTabs = ['Mission', 'Research', 'Build', 'Community', 'Education', 'Fu
         document.getElementById('mnav')?.classList.add('hidden');
       }));
 
-      // About dropdown — click-based (no hover tunnel)
-      document.getElementById('about-btn')?.addEventListener('click', (e) => {
-        e.stopPropagation();
-        document.getElementById('about-dropdown')?.classList.toggle('open');
-      });
-
       const io = new IntersectionObserver((es) => es.forEach((e) => {
         if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
       }), { threshold: 0.12 });
@@ -183,7 +167,6 @@ const aboutTabs = ['Mission', 'Research', 'Build', 'Community', 'Education', 'Fu
     document.addEventListener('astro:after-swap', () => {
       if (localStorage.theme === 'light') document.documentElement.classList.add('light');
     });
-    document.addEventListener('click', () => document.getElementById('about-dropdown')?.classList.remove('open'));
   </script>
 </body>
 </html>

@@ -1,72 +1,92 @@
 ---
-// Continuous, static About page. Section ids match the nav "About" dropdown
-// links (/about/#mission …) so those still anchor-scroll here.
+// Continuous, static About page. Section ids match the nav / anchor links.
 const sections = [
   {
     id: 'mission', n: '01', label: 'Mission',
     headline: 'Building practical AI systems through open research.',
-    body: 'QuantHQ exists to make rigorous quantitative research open, collaborative, and reproducible — a digital institution where quants, engineers, and AI scientists build in public.',
+    lead: 'QuantHQ is a digital research institution — a place to make rigorous quantitative research open, collaborative, and reproducible, with a global community of quants, engineers, and scientists building in public.',
     type: 'stats',
     stats: [['18', 'Research Papers'], ['4', 'Open-Source Projects'], ['200+', 'Community Members'], ['3', 'Universities']],
   },
   {
     id: 'research', n: '02', label: 'Research',
     headline: 'A timeline of what we study.',
-    body: 'Our research agenda tracks the frontier — from language-model evaluation and financial AI today to multimodal market models and autonomous research agents next.',
+    lead: 'Our agenda tracks the frontier — language-model evaluation and financial AI today, multimodal market models and autonomous research agents next.',
     type: 'timeline',
-    timeline: [['2026', ['LLM Evaluation', 'Financial AI', 'Agent Systems']], ['2027', ['Multimodal Market Models', 'Autonomous Research Agents']]],
+    timeline: [
+      ['2026', 'Now', ['LLM Evaluation', 'Financial AI', 'Agent Systems']],
+      ['2027', 'Next', ['Multimodal Market Models', 'Autonomous Research Agents']],
+    ],
   },
   {
     id: 'build', n: '03', label: 'Build',
     headline: 'Research that ships.',
-    body: 'Everything we learn becomes something you can run. Open frameworks, production infrastructure, and models — released, not shelved.',
+    lead: 'Everything we learn becomes something you can run — open frameworks, production infrastructure, and models, released rather than shelved.',
     type: 'cards',
-    cards: [['Agent Framework', 'Open Source'], ['Trading Infrastructure', 'Private'], ['Vision Models', 'Research'], ['Cybersecurity', 'Coming Soon']],
+    cards: [
+      ['Agent Framework', 'Open Source', 'Multi-agent orchestration for research pipelines.'],
+      ['Trading Infrastructure', 'Private', 'Low-latency execution and portfolio tooling.'],
+      ['Vision Models', 'Research', 'Chart and document understanding for markets.'],
+      ['Cybersecurity', 'Coming Soon', 'Adversarial robustness for financial models.'],
+    ],
   },
   {
     id: 'community', n: '04', label: 'Community',
     headline: 'Intelligence is a team sport.',
-    body: 'Where the network lives — real-time debate, quarterly hackathons, weekly reading groups, and open collaboration across the globe.',
-    type: 'cards',
-    cards: [['Discord', 'Live'], ['Hackathons', 'Quarterly'], ['Reading Groups', 'Weekly'], ['Open Source', 'Global'], ['Collaborations', 'Ongoing']],
+    lead: 'Where the network lives — debate, competition, and open collaboration across the globe.',
+    type: 'list',
+    list: [
+      ['Discord', '2,400+ members', 'Real-time debate and market commentary.'],
+      ['Hackathons', 'Quarterly', 'Real datasets, real prizes, real deadlines.'],
+      ['Reading Groups', 'Weekly', 'Paper walkthroughs across factors and ML.'],
+      ['Open Source', 'Global', 'Contribute to the framework and tooling.'],
+    ],
   },
   {
     id: 'education', n: '05', label: 'Education',
     headline: 'Learn by doing research.',
-    body: 'Workshops, courses, mentorship, and summer research programs for the next generation of quants.',
+    lead: 'Workshops, courses, mentorship, and funded summer research for the next generation of quants.',
     type: 'cards',
-    cards: [['Workshops', 'Hands-on'], ['Courses', 'Structured'], ['Mentorship', '1:1'], ['Summer Research', 'Open']],
+    cards: [
+      ['Workshops', 'Hands-on', 'Build a factor model in an afternoon.'],
+      ['Courses', 'Structured', 'From market microstructure to deep RL.'],
+      ['Mentorship', '1:1', 'Paired with a working researcher.'],
+      ['Summer Research', 'Open', 'A funded season inside the institution.'],
+    ],
   },
   {
     id: 'future', n: '06', label: 'Future',
     headline: 'Where QuantHQ is headed.',
-    body: 'A research lab, open models, student fellowships, and a flagship conference — the institution, taking shape.',
+    lead: 'The institution, taking shape — a lab, open models, fellowships, and a flagship gathering.',
     type: 'roadmap',
-    roadmap: ['Research Lab', 'Open-Source Models', 'Student Fellowships', 'Annual Conference'],
+    roadmap: [
+      ['Research Lab', 'Dedicated full-time research'],
+      ['Open-Source Models', 'Weights, not just papers'],
+      ['Student Fellowships', 'Funded early-career researchers'],
+      ['Annual Conference', 'The community, in one room'],
+    ],
   },
 ];
 const badgeCls = (b) => {
   if (['Open Source', 'Live', '1:1', 'Open'].includes(b)) return 'green';
   if (['Private', 'Global', 'Ongoing'].includes(b)) return 'muted';
-  if (['Coming Soon', 'Weekly', 'Structured', 'Hands-on'].includes(b)) return 'violet';
+  if (['Coming Soon', 'Weekly', 'Structured', 'Hands-on', 'Quarterly'].includes(b)) return 'violet';
   return 'accent';
 };
 ---
 <div class="about-flow">
   {sections.map((s) => (
     <section id={s.id} class="ab-block rv">
-      <div class="ab-head">
-        <div class="ab-eyebrow"><span class="ab-num">{s.n}</span><span class="ab-rule"></span>{s.label}</div>
-        <h2 class="ab-title display-title">{s.headline}</h2>
-      </div>
-      <div class="ab-content">
-        <p class="ab-body">{s.body}</p>
+      <div class="ab-kicker"><span class="ab-num">{s.n}</span><span class="ab-kline"></span><span class="ab-label">{s.label}</span></div>
+      <h2 class="ab-title display-title">{s.headline}</h2>
+      <p class="ab-lead">{s.lead}</p>
 
+      <div class="ab-content">
         {s.type === 'stats' && (
           <div class="ab-stats">
             {s.stats.map(([n, l]) => (
               <div class="ab-stat">
-                <div class="ab-stat-n display-figure">{n}</div>
+                <div class="ab-stat-n">{n}</div>
                 <div class="ab-stat-l">{l}</div>
               </div>
             ))}
@@ -75,12 +95,10 @@ const badgeCls = (b) => {
 
         {s.type === 'timeline' && (
           <div class="ab-timeline">
-            {s.timeline.map(([year, items]) => (
-              <div class="ab-tl-row">
-                <div class="ab-tl-year display-figure">{year}</div>
-                <ul class="ab-tl-items">
-                  {items.map((i) => <li>{i}</li>)}
-                </ul>
+            {s.timeline.map(([year, tag, items]) => (
+              <div class="ab-tl">
+                <div class="ab-tl-head"><span class="ab-tl-year">{year}</span><span class="ab-tl-tag">{tag}</span></div>
+                <ul>{items.map((i) => <li>{i}</li>)}</ul>
               </div>
             ))}
           </div>
@@ -88,10 +106,27 @@ const badgeCls = (b) => {
 
         {s.type === 'cards' && (
           <div class="ab-cards">
-            {s.cards.map(([title, badge]) => (
+            {s.cards.map(([title, badge, desc]) => (
               <div class="ab-card">
-                <span class="ab-card-title">{title}</span>
-                <span class={`ab-badge ${badgeCls(badge)}`}>{badge}</span>
+                <div class="ab-card-top">
+                  <span class="ab-card-title">{title}</span>
+                  <span class={`ab-badge ${badgeCls(badge)}`}>{badge}</span>
+                </div>
+                <p class="ab-card-desc">{desc}</p>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {s.type === 'list' && (
+          <div class="ab-list">
+            {s.list.map(([title, meta, desc]) => (
+              <div class="ab-row">
+                <div class="ab-row-main">
+                  <span class="ab-row-title">{title}</span>
+                  <span class="ab-row-desc">{desc}</span>
+                </div>
+                <span class="ab-row-meta">{meta}</span>
               </div>
             ))}
           </div>
@@ -99,8 +134,13 @@ const badgeCls = (b) => {
 
         {s.type === 'roadmap' && (
           <ol class="ab-roadmap">
-            {s.roadmap.map((step) => (
-              <li class="ab-step"><span class="ab-step-dot"></span><span class="ab-step-label">{step}</span></li>
+            <span class="ab-road-line" aria-hidden="true"></span>
+            {s.roadmap.map(([title, sub]) => (
+              <li class="ab-step">
+                <span class="ab-step-dot"></span>
+                <span class="ab-step-title">{title}</span>
+                <span class="ab-step-sub">{sub}</span>
+              </li>
             ))}
           </ol>
         )}
@@ -110,72 +150,71 @@ const badgeCls = (b) => {
 </div>
 
 <style>
-  .about-flow { max-width: var(--shell); margin: 0 auto; }
-  .ab-block {
-    display: grid;
-    grid-template-columns: minmax(0, 38%) minmax(0, 1fr);
-    gap: 40px 72px;
-    padding: 76px 0;
-    border-top: 1px solid var(--border);
-    scroll-margin-top: 104px;
-  }
-  .ab-block:first-child { border-top: none; padding-top: 20px; }
-  .ab-eyebrow {
-    display: flex; align-items: center; gap: 12px;
-    font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.2em;
-    text-transform: uppercase; color: var(--text-3); margin-bottom: 22px;
-  }
-  .ab-num { color: var(--gold); }
-  .ab-rule { width: 24px; height: 1px; background: linear-gradient(90deg, var(--gold), transparent); }
-  .ab-title { font-size: clamp(28px, 3.4vw, 46px); line-height: 1.04; color: var(--text); }
-  .ab-body { font-size: 16px; line-height: 1.7; color: var(--text-2); max-width: 54ch; margin-bottom: 34px; }
+  .about-flow { max-width: 1120px; margin: 0 auto; }
+  .ab-block { padding: 92px 0; border-top: 1px solid var(--border); scroll-margin-top: 104px; }
+  .ab-block:first-child { border-top: none; padding-top: 8px; }
+
+  .ab-kicker { display: flex; align-items: center; gap: 14px; margin-bottom: 26px; }
+  .ab-num { font-family: var(--font-mono); font-size: 13px; font-weight: 500; color: var(--gold); letter-spacing: 0.1em; }
+  .ab-kline { width: 28px; height: 1px; background: linear-gradient(90deg, var(--gold), transparent); }
+  .ab-label { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.25em; text-transform: uppercase; color: var(--text-3); }
+  .ab-title { font-size: clamp(34px, 5vw, 66px); line-height: 1.02; letter-spacing: -0.02em; max-width: 15ch; color: var(--text); }
+  .ab-lead { margin-top: 22px; font-size: 18px; line-height: 1.65; color: var(--text-2); max-width: 60ch; }
+  .ab-content { margin-top: 46px; }
 
   /* stats */
-  .ab-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
-  .ab-stat { background: var(--card-bg); padding: 28px; transition: background 0.25s; }
+  .ab-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; }
+  .ab-stat { background: var(--card-bg); padding: 30px 28px; transition: background 0.25s; }
   .ab-stat:hover { background: color-mix(in srgb, var(--text) 3%, var(--card-bg)); }
-  .ab-stat-n { font-size: clamp(30px, 3.6vw, 46px); font-weight: 700; letter-spacing: -0.02em; color: var(--text); line-height: 1; }
-  .ab-stat-l { margin-top: 10px; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-3); }
+  .ab-stat-n { font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: clamp(32px, 4.4vw, 54px); font-weight: 700; letter-spacing: -0.02em; color: var(--text); line-height: 1; }
+  .ab-stat-l { margin-top: 12px; font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-3); }
 
   /* timeline */
-  .ab-timeline { border-left: 1px solid var(--border); padding-left: 30px; display: flex; flex-direction: column; gap: 34px; }
-  .ab-tl-row { position: relative; }
-  .ab-tl-row::before {
-    content: ''; position: absolute; left: -35px; top: 5px; width: 9px; height: 9px; border-radius: 50%;
-    background: var(--gold); box-shadow: 0 0 0 4px color-mix(in srgb, var(--gold) 16%, transparent);
-  }
-  .ab-tl-year { font-size: 22px; font-weight: 700; color: var(--text); }
-  .ab-tl-items { margin-top: 12px; display: flex; flex-direction: column; gap: 9px; }
-  .ab-tl-items li { font-family: var(--font-mono); font-size: 13px; color: var(--text-2); }
-  .ab-tl-items li::before { content: '├─ '; color: var(--text-4); }
-  .ab-tl-items li:last-child::before { content: '└─ '; }
+  .ab-timeline { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .ab-tl { background: var(--card-bg); border: 1px solid var(--border); border-radius: 14px; padding: 28px; }
+  .ab-tl-head { display: flex; align-items: baseline; gap: 12px; margin-bottom: 20px; }
+  .ab-tl-year { font-family: var(--font-mono); font-size: 28px; font-weight: 700; color: var(--text); letter-spacing: -0.01em; }
+  .ab-tl-tag { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gold); border: 1px solid color-mix(in srgb, var(--gold) 35%, transparent); border-radius: 999px; padding: 3px 10px; }
+  .ab-tl ul { display: flex; flex-direction: column; gap: 11px; }
+  .ab-tl li { font-family: var(--font-mono); font-size: 13px; color: var(--text-2); }
+  .ab-tl li::before { content: '▸ '; color: var(--gold); }
 
   /* cards */
-  .ab-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-  .ab-card {
-    display: flex; align-items: center; justify-content: space-between; gap: 12px;
-    padding: 18px 20px; background: var(--card-bg); border: 1px solid var(--border); border-radius: 10px;
-    transition: border-color 0.25s, transform 0.25s;
-  }
-  .ab-card:hover { border-color: var(--border-hover); transform: translateY(-2px); }
-  .ab-card-title { font-size: 14px; font-weight: 600; color: var(--text-1); }
+  .ab-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .ab-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 14px; padding: 24px; transition: border-color 0.25s, transform 0.25s; }
+  .ab-card:hover { border-color: var(--border-hover); transform: translateY(-3px); }
+  .ab-card-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
+  .ab-card-title { font-size: 16px; font-weight: 600; color: var(--text-1); }
+  .ab-card-desc { font-size: 13.5px; line-height: 1.6; color: var(--text-3); }
   .ab-badge { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; flex-shrink: 0; }
   .ab-badge.green { color: var(--green); }
   .ab-badge.violet { color: var(--accent2); }
   .ab-badge.accent { color: var(--accent); }
   .ab-badge.muted { color: var(--text-3); }
 
-  /* roadmap */
-  .ab-roadmap { list-style: none; }
-  .ab-step { display: flex; align-items: center; gap: 16px; padding: 15px 0; position: relative; }
-  .ab-step:not(:last-child)::after { content: ''; position: absolute; left: 5px; top: 30px; bottom: -7px; width: 1px; background: var(--border); }
-  .ab-step-dot { width: 11px; height: 11px; border-radius: 50%; border: 2px solid var(--gold); flex-shrink: 0; }
-  .ab-step-label { font-size: 15px; font-weight: 500; color: var(--text-1); }
+  /* list */
+  .ab-list { border-top: 1px solid var(--border); }
+  .ab-row { display: grid; grid-template-columns: 1fr auto; gap: 6px 24px; align-items: baseline; padding: 22px 2px; border-bottom: 1px solid var(--border); }
+  .ab-row-main { display: flex; flex-direction: column; gap: 6px; }
+  .ab-row-title { font-size: 17px; font-weight: 600; color: var(--text-1); }
+  .ab-row-desc { font-size: 14px; color: var(--text-3); }
+  .ab-row-meta { font-family: var(--font-mono); font-size: 12px; color: var(--text-3); white-space: nowrap; }
 
-  @media (max-width: 860px) {
-    .ab-block { grid-template-columns: 1fr; gap: 26px; padding: 56px 0; }
-  }
-  @media (max-width: 480px) {
-    .ab-stats, .ab-cards { grid-template-columns: 1fr; }
+  /* roadmap */
+  .ab-roadmap { display: grid; grid-template-columns: repeat(4, 1fr); gap: 22px; position: relative; list-style: none; }
+  .ab-road-line { position: absolute; top: 6px; left: 6px; right: 6px; height: 1px; background: var(--border); }
+  .ab-step { position: relative; padding-top: 30px; }
+  .ab-step-dot { position: absolute; top: 0; left: 0; width: 13px; height: 13px; border-radius: 50%; border: 2px solid var(--gold); background: var(--bg); }
+  .ab-step-title { display: block; font-size: 15px; font-weight: 600; color: var(--text-1); }
+  .ab-step-sub { display: block; margin-top: 7px; font-size: 12.5px; color: var(--text-3); line-height: 1.5; }
+
+  @media (max-width: 720px) {
+    .ab-block { padding: 60px 0; }
+    .ab-stats, .ab-timeline, .ab-cards { grid-template-columns: 1fr; }
+    .ab-roadmap { grid-template-columns: 1fr; gap: 0; }
+    .ab-road-line { display: none; }
+    .ab-step { padding: 18px 0 18px 26px; }
+    .ab-step-dot { top: 22px; }
+    .ab-step:not(:last-child)::after { content: ''; position: absolute; left: 6px; top: 32px; bottom: -4px; width: 1px; background: var(--border); }
   }
 </style>

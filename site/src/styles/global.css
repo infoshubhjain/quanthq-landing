@@ -292,18 +292,7 @@ html.light .vignette-fx { background: radial-gradient(ellipse 130% 100% at 50% 4
 .tape-chg.down { color: var(--red); }
 @media (max-width: 767px) { .tape { display: none; } }
 
-/* nav dropdown */
-.nav-dropdown { position: relative; }
-.nav-dropdown-menu {
-  position: absolute; top: calc(100% + 12px); left: 50%; transform: translateX(-50%);
-  opacity: 0; visibility: hidden; pointer-events: none;
-  transition: opacity .2s, visibility .2s, transform .2s;
-  transform: translateX(-50%) translateY(4px);
-}
-.nav-dropdown.open .nav-dropdown-menu {
-  opacity: 1; visibility: visible; pointer-events: auto;
-  transform: translateX(-50%) translateY(0);
-}
+
 
 /* content visibility for perf */
 main > section + section { content-visibility: auto; contain-intrinsic-size: auto 600px; }
