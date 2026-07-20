@@ -87,6 +87,7 @@ html.cursor-custom input,html.cursor-custom textarea,html.cursor-custom [content
   transition:color .2s,border-color .2s,transform .2s var(--ease-out,ease);
 }
 .cmdk-trigger:hover{color:var(--text-1);border-color:var(--border-hover);transform:translateY(-2px)}
+.cmdk-trigger--hide{opacity:0;pointer-events:none;transform:translateY(10px)}
 .cmdk-trigger kbd{
   font-family:var(--font-mono,monospace);font-size:10px;letter-spacing:.05em;
   color:var(--text-2);background:var(--surface-2);border:1px solid var(--border);
@@ -223,6 +224,12 @@ html.cursor-custom input,html.cursor-custom textarea,html.cursor-custom [content
     });
     overlay.addEventListener('click', e => { if (e.target === overlay) close(); });
     trigger?.addEventListener('click', open);
+
+    // hide the floating trigger over the footer so it never overlaps footer text
+    const footer = document.querySelector('footer');
+    if (footer && trigger) {
+      new IntersectionObserver(es => trigger.classList.toggle('cmdk-trigger--hide', es[0].isIntersecting), { threshold: 0 }).observe(footer);
+    }
 
     // expose a toggle for the one persistent global shortcut handler
     window.__cmdkToggle = () => (isOpen() ? close() : open());
