@@ -1,5 +1,6 @@
 ---
 import { getCollection } from 'astro:content';
+import CommandPalette from '../components/CommandPalette.astro';
 const research = (await getCollection('research'))
   .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
   .slice(0, 3);
@@ -94,6 +95,7 @@ body{
   color:var(--white);
   overflow-x:hidden;
   -webkit-font-smoothing:antialiased;
+  counter-reset:sec;
 }
 a{text-decoration:none;color:inherit}
 button{border:none;background:none;color:inherit;font:inherit}
@@ -366,7 +368,10 @@ html.light .grain{opacity:0.02}
   color:transparent;
   -webkit-text-stroke:1px var(--text-4);
   animation:tapeScroll 30s linear infinite;
+  will-change:transform;
 }
+/* JS takes over when it can measure velocity; class removes the CSS fallback */
+.mega-track.js-driven{animation:none}
 .mega-track b{
   font-weight:800;color:transparent;
   -webkit-text-stroke:1px var(--blue);
@@ -598,6 +603,7 @@ html.light .hero-floor{opacity:0.25}
   position:relative;overflow:hidden;
 }
 .section-label{
+  counter-increment:sec;
   font-size:10px;letter-spacing:0.3em;text-transform:uppercase;
   color:var(--text-3);font-weight:500;
   display:flex;align-items:center;gap:12px;margin-bottom:24px;
@@ -605,6 +611,13 @@ html.light .hero-floor{opacity:0.25}
 .section-label::before{
   content:'';width:24px;height:1px;
   background:linear-gradient(90deg,var(--blue),transparent);
+}
+/* editorial chapter numeral — rendered first via flex order */
+.section-label::after{
+  content:counter(sec,decimal-leading-zero);
+  order:-1;
+  font-family:var(--font-mono);font-weight:500;
+  font-size:11px;letter-spacing:0.1em;color:var(--text-4);
 }
 .section-h2{
   font-family:var(--font-display);
@@ -1256,6 +1269,45 @@ html body,html nav,html footer,.bento-card,.bb-cell,.stat-cell,.hs-card,.termina
 }
 @keyframes borderSpin{to{--angle:360deg}}
 
+/* ── CUSTOM CURSOR ── */
+.cursor-dot,.cursor-ring{
+  position:fixed;top:0;left:0;pointer-events:none;z-index:10000;
+  border-radius:50%;will-change:transform;
+}
+.cursor-dot{width:7px;height:7px;background:#fff;mix-blend-mode:difference}
+.cursor-ring{
+  width:34px;height:34px;border:1px solid var(--text-3);
+  transition:width .25s var(--ease-out),height .25s var(--ease-out),border-color .25s,opacity .2s,background .25s;
+}
+.cursor-ring.hover{width:54px;height:54px;border-color:var(--gold)}
+.cursor-ring.drag{width:60px;height:60px;border-color:var(--blue);background:color-mix(in srgb,var(--blue) 10%,transparent)}
+.cursor-dot.hide,.cursor-ring.hide{opacity:0}
+html:not(.cursor-custom) .cursor-dot,html:not(.cursor-custom) .cursor-ring{display:none}
+html.cursor-custom,html.cursor-custom a,html.cursor-custom button,html.cursor-custom .magnetic,html.cursor-custom [role="button"]{cursor:none}
+html.cursor-custom input,html.cursor-custom textarea,html.cursor-custom [contenteditable]{cursor:text}
+
+/* ── TERMINAL STATUS BAR (persistent chrome) ── */
+.statusline{
+  position:fixed;bottom:0;left:0;right:0;z-index:600;
+  height:26px;display:flex;align-items:center;justify-content:space-between;
+  gap:16px;padding:0 16px;
+  font-family:var(--font-mono);font-size:10px;letter-spacing:0.08em;
+  color:var(--text-3);
+  background:color-mix(in srgb,var(--black) 80%,transparent);
+  backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
+  border-top:1px solid var(--border);
+  opacity:0;transform:translateY(100%);
+  transition:opacity 0.5s var(--ease-out),transform 0.5s var(--ease-out);
+  pointer-events:none;
+}
+.statusline.show{opacity:1;transform:translateY(0)}
+.sl-live{display:inline-flex;align-items:center;gap:7px;color:var(--text-2);white-space:nowrap}
+.sl-dot{width:5px;height:5px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green);animation:livePulse 1.5s ease-in-out infinite;flex-shrink:0}
+.sl-mid{color:var(--text-2);text-transform:uppercase;letter-spacing:0.14em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sl-right{color:var(--text-3);white-space:nowrap}
+.sl-right b{color:var(--text-2);font-weight:500}
+@media(max-width:767px){.statusline{display:none}}
+
 /* ── SECTION SCROLL DOTS ── */
 #section-dots{
   position:fixed;right:24px;top:50%;transform:translateY(-50%);
@@ -1346,6 +1398,13 @@ html body,html nav,html footer,.bento-card,.bb-cell,.stat-cell,.hs-card,.termina
 
 <!-- SCROLL PROGRESS -->
 <div id="scroll-prog"></div>
+
+<!-- TERMINAL STATUS BAR -->
+<div class="statusline" id="statusline" aria-hidden="true">
+  <span class="sl-live"><span class="sl-dot"></span>SYS ONLINE · 124 NODES · LAT 8μs</span>
+  <span class="sl-mid" id="sl-section">HOME</span>
+  <span class="sl-right" id="sl-clock">UTC --:--:-- · SPX <b>—</b></span>
+</div>
 
 <!-- SECTION DOTS -->
 <div id="section-dots">
@@ -1700,7 +1759,7 @@ html body,html nav,html footer,.bento-card,.bb-cell,.stat-cell,.hs-card,.termina
 <!-- FINAL CTA -->
 <!-- MEGA MARQUEE -->
 <div class="mega-marquee" aria-hidden="true">
-  <div class="mega-track">RESEARCH&nbsp;<b>·</b>&nbsp;BUILD&nbsp;<b>·</b>&nbsp;PUBLISH&nbsp;<b>·</b>&nbsp;REPEAT&nbsp;<b>·</b>&nbsp;RESEARCH&nbsp;<b>·</b>&nbsp;BUILD&nbsp;<b>·</b>&nbsp;PUBLISH&nbsp;<b>·</b>&nbsp;REPEAT&nbsp;<b>·</b>&nbsp;</div>
+  <div class="mega-track" id="mega-track">RESEARCH&nbsp;<b>·</b>&nbsp;BUILD&nbsp;<b>·</b>&nbsp;PUBLISH&nbsp;<b>·</b>&nbsp;REPEAT&nbsp;<b>·</b>&nbsp;RESEARCH&nbsp;<b>·</b>&nbsp;BUILD&nbsp;<b>·</b>&nbsp;PUBLISH&nbsp;<b>·</b>&nbsp;REPEAT&nbsp;<b>·</b>&nbsp;</div>
 </div>
 
 <section class="fcta-section" id="join">
@@ -1745,6 +1804,8 @@ html body,html nav,html footer,.bento-card,.bb-cell,.stat-cell,.hs-card,.termina
     </div>
   </div>
 </footer>
+
+<CommandPalette />
 
 <script>
 const reduced = matchMedia('(prefers-reduced-motion:reduce)').matches;
@@ -1831,12 +1892,18 @@ const rio = new IntersectionObserver(es => es.forEach(e => {
 document.querySelectorAll('.rv2').forEach(el => rio.observe(el));
 if (!reduced) setTimeout(() => scrambleIn(document.querySelector('.hero-eyebrow')), 500);
 
-/* ── STAT COUNTERS — show actual numbers, animate on scroll ── */
-document.querySelectorAll('[data-count]').forEach(el => {
-  el.textContent = (+el.dataset.count).toLocaleString();
-});
+/* ── STAT COUNTERS — odometer roll from 0 to target when scrolled into view ── */
+const fmtN = n => Math.round(n).toLocaleString('en-US');
+document.querySelectorAll('[data-count]').forEach(el => { el.textContent = fmtN(+el.dataset.count); });
 function animCount(el) {
-  el.style.animation = 'statGlow 0.6s ease-out';
+  if (reduced) return;
+  const target = +el.dataset.count, t0 = performance.now(), dur = 1100;
+  (function tick(now){
+    const p = Math.min(1, (now - t0) / dur);
+    el.textContent = fmtN(target * (1 - Math.pow(1 - p, 3))); // easeOutCubic
+    if (p < 1) requestAnimationFrame(tick);
+    else { el.textContent = fmtN(target); el.style.animation = 'statGlow 0.6s ease-out'; }
+  })(t0);
 }
 const cio = new IntersectionObserver(es => es.forEach(e => {
   if (!e.isIntersecting) return;
@@ -1844,6 +1911,27 @@ const cio = new IntersectionObserver(es => es.forEach(e => {
   cio.unobserve(e.target);
 }), {threshold:0.5});
 document.querySelectorAll('[data-count]').forEach(el => cio.observe(el));
+
+/* ── VELOCITY MARQUEE — base drift + scroll energy + skew ── */
+(function(){
+  const track = document.getElementById('mega-track');
+  if (!track || reduced) return;
+  track.classList.add('js-driven');
+  const half = track.scrollWidth / 2;         // content is duplicated -> one loop
+  let pos = 0, last = scrollY, vel = 0, visible = true;
+  addEventListener('scroll', () => { vel += Math.abs(scrollY - last) * 0.9; last = scrollY; }, {passive:true});
+  new IntersectionObserver(es => { visible = es[0].isIntersecting; }, {threshold:0}).observe(track.parentElement);
+  (function frame(){
+    if (visible) {
+      pos -= 1.1 + vel;                        // base speed + scroll velocity
+      if (pos <= -half) pos += half;           // seamless wrap
+      const skew = Math.max(-6, Math.min(6, -vel * 0.4));
+      track.style.transform = `translateX(${pos}px) skewX(${skew}deg)`;
+    }
+    vel *= 0.88;
+    requestAnimationFrame(frame);
+  })();
+})();
 
 /* ── BG PARTICLE CANVAS removed ── */
 
@@ -2610,16 +2698,30 @@ if (tapeTrack) {
   }, 2600);
 }
 
-/* ── HUD CLOCK ── */
+/* ── HUD + STATUS-BAR CLOCK ── */
 const hudClock = document.getElementById('hud-clock');
-if (hudClock) {
+const slClock = document.getElementById('sl-clock');
+{
   const tickClock = () => {
     const d = new Date();
-    hudClock.textContent = 'UTC ' + d.toISOString().slice(11,19) + ' · SPX ' +
-      spxData[spxData.length-1].toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g,',');
+    const t = d.toISOString().slice(11,19);
+    const spx = spxData[spxData.length-1].toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g,',');
+    if (hudClock) hudClock.textContent = 'UTC ' + t + ' · SPX ' + spx;
+    if (slClock) slClock.innerHTML = 'UTC ' + t + ' · SPX <b>' + spx + '</b>';
   };
   tickClock();
   setInterval(tickClock, 1000);
+}
+
+/* ── STATUS BAR: reveal after the hero, track the active section ── */
+const statusline = document.getElementById('statusline');
+const slSection = document.getElementById('sl-section');
+if (statusline) {
+  const slObserver = new IntersectionObserver(es => es.forEach(e => {
+    statusline.classList.toggle('show', !e.isIntersecting);
+  }), {threshold:0});
+  const hs = document.getElementById('hero');
+  if (hs) slObserver.observe(hs);
 }
 
 /* ── HERO METRIC FLICKER removed ── */
@@ -2775,6 +2877,40 @@ if (reduced) {
   }
 })();
 
+/* ── CUSTOM CURSOR — blend-mode dot + spring-lagged ring ── */
+(function cursor(){
+  if (reduced || !matchMedia('(hover:hover) and (pointer:fine)').matches) return;
+  const dot = document.createElement('div'); dot.className = 'cursor-dot';
+  const ring = document.createElement('div'); ring.className = 'cursor-ring';
+  document.body.append(dot, ring);
+  document.documentElement.classList.add('cursor-custom');
+  let mx = innerWidth/2, my = innerHeight/2, rx = mx, ry = my, seen = false;
+  addEventListener('pointermove', e => {
+    mx = e.clientX; my = e.clientY;
+    if (!seen) { seen = true; rx = mx; ry = my; }
+    dot.style.transform = `translate(${mx}px,${my}px) translate(-50%,-50%)`;
+  }, { passive: true });
+  (function loop(){
+    rx += (mx - rx) * 0.2; ry += (my - ry) * 0.2;
+    ring.style.transform = `translate(${rx}px,${ry}px) translate(-50%,-50%)`;
+    requestAnimationFrame(loop);
+  })();
+  const INTERACT = 'a,button,.magnetic,[role="button"],.sd-dot,.theme-toggle,.tag-btn,.cat-btn';
+  const DRAG = '#world-canvas,#force-canvas';
+  const FIELD = 'input,textarea,[contenteditable]';
+  addEventListener('pointerover', e => {
+    const t = e.target;
+    ring.classList.toggle('drag', !!t.closest(DRAG));
+    ring.classList.toggle('hover', !t.closest(DRAG) && !!t.closest(INTERACT));
+    const field = !!t.closest(FIELD);
+    dot.classList.toggle('hide', field); ring.classList.toggle('hide', field);
+  });
+  addEventListener('pointerdown', () => ring.style.scale = '0.8');
+  addEventListener('pointerup', () => ring.style.scale = '');
+  document.addEventListener('mouseleave', () => { dot.classList.add('hide'); ring.classList.add('hide'); });
+  document.addEventListener('mouseenter', () => { dot.classList.remove('hide'); ring.classList.remove('hide'); });
+})();
+
 /* ── FADE-IN-UP OBSERVER ── */
 const fadeObserver = new IntersectionObserver(es => es.forEach(e => {
   if (e.isIntersecting) { e.target.classList.add('in'); fadeObserver.unobserve(e.target); }
@@ -2789,7 +2925,10 @@ const sectionObserver = new IntersectionObserver(es => {
   es.forEach(e => {
     if (e.isIntersecting) {
       const idx = sections.indexOf(e.target.id);
-      if (idx >= 0) dots.forEach((d,i) => d.classList.toggle('active', i === idx));
+      if (idx >= 0) {
+        dots.forEach((d,i) => d.classList.toggle('active', i === idx));
+        if (slSection) slSection.textContent = dots[idx]?.dataset.label || '';
+      }
     }
   });
 }, {threshold:0.3});
