@@ -2696,15 +2696,16 @@ const slClock = document.getElementById('sl-clock');
   setInterval(tickClock, 1000);
 }
 
-/* ── STATUS BAR: reveal after the hero, track the active section ── */
+/* ── STATUS BAR: show between the hero and the footer (yields to both) ── */
 const statusline = document.getElementById('statusline');
 const slSection = document.getElementById('sl-section');
 if (statusline) {
-  const slObserver = new IntersectionObserver(es => es.forEach(e => {
-    statusline.classList.toggle('show', !e.isIntersecting);
-  }), {threshold:0});
+  let heroVis = true, footVis = false;
+  const apply = () => statusline.classList.toggle('show', !heroVis && !footVis);
   const hs = document.getElementById('hero');
-  if (hs) slObserver.observe(hs);
+  const ft = document.querySelector('footer');
+  if (hs) new IntersectionObserver(es => { heroVis = es[0].isIntersecting; apply(); }, {threshold:0}).observe(hs);
+  if (ft) new IntersectionObserver(es => { footVis = es[0].isIntersecting; apply(); }, {threshold:0}).observe(ft);
 }
 
 /* ── HERO METRIC FLICKER removed ── */
