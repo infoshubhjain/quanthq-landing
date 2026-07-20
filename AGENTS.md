@@ -1,79 +1,52 @@
 # Project: QuantHQ Landing Site
 
 ## Stack
-- Astro 5.10 (SSG) — static site generation
-- Tailwind CSS 4.1 via Vite plugin
-- MDX via @astrojs/mdx for blog posts and research papers
-- No React/Vue/Svelte — pure Astro components with vanilla `<script>` tags
+- Astro 5.10 (SSG), Tailwind CSS 4.1 (Vite plugin), MDX for content
+- No React/Vue/Svelte — pure Astro components + vanilla `<script>` tags
 - Deployed to GitHub Pages at https://quanthq.in
 
-## Directory Structure
-```
-site/
-├── astro.config.mjs
-├── package.json
-├── public/logo.jpeg
-└── src/
-    ├── components/AboutTabs.astro
-    ├── content/blog/ (2 MDX posts)
-    ├── content/research/ (3 MDX papers)
-    ├── content.config.ts
-    ├── layouts/Base.astro (shared layout)
-    ├── pages/index.astro (homepage, standalone 2508 lines)
-    ├── pages/about.astro
-    ├── pages/community.astro
-    ├── pages/contact.astro
-    ├── pages/blog/index.astro + [...slug].astro
-    └── pages/research/index.astro + [...slug].astro
-```
-
 ## Commands
-- `npm run dev` — starts dev server (run from `site/` directory)
-- `npm run build` — builds for production (output to `site/dist/`)
+All npm commands run from `site/`, not the repo root.
+- `npm run dev` — dev server at http://localhost:4321
+- `npm run build` — production build → `site/dist/`
 - `npm run preview` — preview production build
-- No test suite exists. No lint/typecheck commands configured.
+- No tests, no lint, no typecheck. **`npm run build` is the only correctness gate** — run it before calling any change done.
 
-## Conventions
-- Components are `.astro` files in `src/components/`
-- Shared layout is `src/layouts/Base.astro` (imports `global.css`)
-- Homepage (`index.astro`) is standalone — does NOT use Base.astro layout
-- CSS variables defined in `src/styles/global.css` and duplicated in index.astro
-- Theme: dark by default, light mode via `html.light` class + localStorage
-- Animations: CSS keyframes + vanilla JS (IntersectionObserver, canvas)
-- Font: Inter from Google Fonts
-- Content schemas in `src/content.config.ts` (research + blog collections)
+## Architecture
+- `site/src/pages/index.astro` (~2700 lines) — homepage is **standalone**: own layout, CSS, JS, nav, footer. Does NOT use Base.astro.
+- `site/src/layouts/Base.astro` — shared layout for every other page (about, community, contact, blog/*, research/*)
+- `site/src/styles/global.css` — shared theme variables and styles (imported by Base.astro)
+- `site/src/content.config.ts` — Astro 5 `glob()` loader API (not legacy collection style). Two collections: `research`, `blog`
+- `site/src/components/AboutTabs.astro` — only reusable component
+- Content: `site/src/content/blog/*.mdx` (2 posts), `site/src/content/research/*.mdx` (3 papers)
+- Dynamic routes use `[...slug].astro` pattern
 
-## Key Files
-- `src/styles/global.css` — shared styles, theme variables, background FX
-- `src/layouts/Base.astro` — nav, footer, ticker tape, background FX for inner pages
-- `src/pages/index.astro` — homepage (standalone, 2508 lines, own CSS + JS)
-- `FURTHER_WORK.md` — known tech debt and backlog
-- `CNAME` — custom domain (quanthq.in)
+## CSS Variables
+Use canonical names from `global.css`, not homepage aliases:
+- `--bg` (not `--black`), `--card-bg` (not `--carbon`), `--accent` (not `--blue`), `--accent2` (not `--violet`)
+- `--text`, `--text-1` through `--text-4`, `--border`, `--border-hover`
+- `--green`, `--red`, `--cyan`
+
+Homepage aliases exist in `global.css :root` for backwards compat only.
 
 ## Rules
-- Never modify CNAME or .github/workflows/deploy.yml
-- Homepage nav has different links (Research, Blog, About, Intelligence, Network, Terminal) vs inner pages (Research, Blogs, Community, Contact)
-- Keep index.astro standalone — it intentionally has its own layout
-- Ticker data is hardcoded (simulated, not real API)
-- All canvas code (globe, force graph) is decorative only
+- **Never modify** `CNAME` or `.github/workflows/deploy.yml`
+- Keep `index.astro` standalone — it intentionally has its own layout, CSS, and JS
+- Homepage nav differs from inner pages: (Research, Blog, About, Intelligence, Network, Terminal) vs (Research, Blogs, Community, Contact)
+- Ticker data is hardcoded/simulated — not a real API
+- Canvas code (globe, force graph) is decorative only
 - `prefers-reduced-motion` must be respected — disable animations when set
 - CI copies `CNAME` into `dist/` after build — don't remove that step
-- If you have any clarifying questions, ask them all upfront before starting work
+- Ask clarifying questions upfront before starting work
 
-## Known Tech Debt (from FURTHER_WORK.md)
-- index.astro duplicates ~1275 lines of CSS from global.css with different variable names
-- Duplicate ticker data in Base.astro and index.astro JS
+## Content Schema Gotchas
+- Blog `category` is an enum: `AI | Research | Engineering | Quantitative Finance | Opinion | Tutorials`
+- Research `status` is an enum: `preprint | published | technical-report`
+- Research uses `authors: string[]`, blog uses `author: string` (singular)
+- `date` fields use `z.coerce.date()` — string dates in frontmatter are fine
+
+## Known Tech Debt
+See `FURTHER_WORK.md` for details. Key items:
+- `index.astro` duplicates ~1275 lines of CSS from `global.css` with different variable names
+- Duplicate ticker data in `Base.astro` and `index.astro`
 - ~276 lines of decorative canvas code (globe + force graph)
-- Word-by-word heading reveal could be simplified
-- Terminal typing animation could be static with CSS
-
-## Auto-Optimize Rules
-You are an optimizing agent. At the start of every session and before every commit, proactively:
-
-1. **Scan for dead code** — unused imports, unreachable branches, commented-out blocks, unused CSS classes/functions
-2. **Maintain .opencodeignore** — if you create generated files (dist/, .astro/, logs), add them. If stale entries exist, remove them
-3. **Flag bloat** — files over 500 lines, duplicate patterns, unused dependencies
-4. **Token efficiency** — if a file adds context but no value, suggest adding it to .opencodeignore
-5. **Quick wins** — hardcoded values → CSS vars, repeated code → extraction, missing a11y
-
-Report findings immediately. Fix only after user confirms, unless it's a trivial safe fix (unused import, stale ignore entry).

@@ -15,7 +15,7 @@ const bibtex = `@article{quanthq${paper.data.date.getFullYear()}${paper.id.split
 }`;
 ---
 <Base title={`${paper.data.title} — QuantHQ Research`} description={paper.data.abstract.slice(0, 155)}>
-  <article class="px-6 pt-20 pb-10">
+  <article class="px-8 pt-20 pb-10">
     <div class="max-w-3xl mx-auto">
       <a href="/research/" class="text-[12px] text-[var(--text-3)] hover:text-[var(--text-1)] transition-colors">← All research</a>
       <div class="mt-8 flex flex-wrap gap-2">
@@ -38,7 +38,7 @@ const bibtex = `@article{quanthq${paper.data.date.getFullYear()}${paper.id.split
       </div>
 
       <div class="mt-10 card p-7">
-        <div class="text-[10px] uppercase tracking-[0.2em] text-[var(--text-4)] font-semibold mb-3">Abstract</div>
+        <div class="text-[10px] uppercase tracking-[0.2em] text-[var(--text-3)] font-semibold mb-3">Abstract</div>
         <p class="text-[var(--text-1)] leading-relaxed text-[15px]">{paper.data.abstract}</p>
       </div>
 

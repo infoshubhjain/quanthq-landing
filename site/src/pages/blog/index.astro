@@ -12,8 +12,8 @@ const searchIndex = posts.map(p => ({
 }));
 ---
 <Base title="Blog — QuantHQ">
-  <section class="px-6 pt-20 pb-8">
-    <div class="max-w-6xl mx-auto">
+  <section class="px-8 pt-20 pb-8">
+    <div class="max-w-[var(--shell)] mx-auto">
       <div class="section-label mb-6">Writing</div>
       <h1 class="text-[clamp(40px,6vw,80px)] font-extrabold tracking-[-0.04em] leading-none">Blogs</h1>
       <p class="mt-5 text-[var(--text-2)] max-w-md">Approachable writing on AI, engineering, and quantitative finance.</p>
@@ -28,8 +28,11 @@ const searchIndex = posts.map(p => ({
     </div>
   </section>
 
-  <section class="px-6">
-    <div class="max-w-6xl mx-auto grid md:grid-cols-2 gap-4" id="blog-list">
+  <section class="px-8">
+    <div class="max-w-[var(--shell)] mx-auto">
+      <p id="blog-empty" class="hidden text-[var(--text-2)] text-sm py-8">No posts match that search.</p>
+    </div>
+    <div class="max-w-[var(--shell)] mx-auto grid md:grid-cols-2 gap-4" id="blog-list">
       {posts.map((p) => (
         <a href={`/blog/${p.id}/`} class="card p-8 block blog-item group overflow-hidden" data-id={p.id} data-cat={p.data.category}>
           <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[var(--accent2)] to-[var(--accent)] opacity-0 group-hover:opacity-100 transition-opacity"></div>
@@ -52,16 +55,24 @@ const searchIndex = posts.map(p => ({
     const items = [...document.querySelectorAll('.blog-item')];
     const btns = [...document.querySelectorAll('.cat-btn')];
     let cat = '';
-    let fuse = null;
+    // 2 posts — see research/index.astro: local substring match, no CDN dependency
+    const haystack = new Map(searchIndex.map((p) => [p.id,
+      [p.title, p.description, p.author, p.category].join(' ').toLowerCase()]));
 
     function apply() {
-      const q = input.value.trim();
-      const matched = (q && fuse) ? new Set(fuse.search(q).map(r => r.item.id)) : null;
+      const q = input.value.trim().toLowerCase();
+      const matched = q
+        ? new Set([...haystack].filter(([, t]) => t.includes(q)).map(([id]) => id))
+        : null;
+      let shown = 0;
       items.forEach((el) => {
         const catOk = !cat || el.dataset.cat === cat;
         const qOk = !matched || matched.has(el.dataset.id);
-        el.style.display = catOk && qOk ? '' : 'none';
+        const on = catOk && qOk;
+        if (on) shown++;
+        el.style.display = on ? '' : 'none';
       });
+      document.getElementById('blog-empty').classList.toggle('hidden', shown > 0);
     }
 
     input?.addEventListener('input', apply);
@@ -75,10 +86,6 @@ const searchIndex = posts.map(p => ({
       b.style.color = 'var(--accent2)';
       apply();
     }));
-
-    import('https://cdn.jsdelivr.net/npm/fuse.js@7/dist/fuse.mjs').then(({ default: Fuse }) => {
-      fuse = new Fuse(searchIndex, { keys: ['title', 'description', 'author', 'category'], threshold: 0.35 });
-    });
     })();
   </script>
 </Base>

@@ -14,8 +14,8 @@ const searchIndex = papers.map((p) => ({
 }));
 ---
 <Base title="Research — QuantHQ">
-  <section class="px-6 pt-20 pb-8">
-    <div class="max-w-6xl mx-auto">
+  <section class="px-8 pt-20 pb-8">
+    <div class="max-w-[var(--shell)] mx-auto">
       <div class="section-label mb-6">Scientific Archive</div>
       <h1 class="text-[clamp(40px,6vw,80px)] font-extrabold tracking-[-0.04em] leading-none">Research</h1>
       <p class="mt-5 text-[var(--text-2)] max-w-md">Peer-reviewed work. Preprints. Technical reports.</p>
@@ -36,9 +36,9 @@ const searchIndex = papers.map((p) => ({
   </section>
 
   {featured && (
-    <section class="px-6 pb-8">
-      <div class="max-w-6xl mx-auto">
-        <a href={`/research/${featured.id}/`} class="card p-8 block group rv relative overflow-hidden">
+    <section class="px-8 pb-8" id="featured-section">
+      <div class="max-w-[var(--shell)] mx-auto">
+        <a href={`/research/${featured.id}/`} class="card p-8 block paper-item group rv relative overflow-hidden" data-id={featured.id} data-tags={featured.data.tags.join(',')}>
           <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[var(--accent)] to-[var(--accent2)]"></div>
           <div class="flex flex-wrap items-center gap-2 mb-4">
             <span class="text-[9px] uppercase tracking-[0.2em] px-2.5 py-1 rounded-full bg-accent-10 border border-accent-20 text-[var(--accent)] font-semibold">Featured</span>
@@ -59,8 +59,11 @@ const searchIndex = papers.map((p) => ({
     </section>
   )}
 
-  <section class="px-6">
-    <div class="max-w-6xl mx-auto flex flex-col gap-4" id="paper-list">
+  <section class="px-8">
+    <div class="max-w-[var(--shell)] mx-auto">
+      <p id="paper-empty" class="hidden text-[var(--text-2)] text-sm py-8">No papers match that search.</p>
+    </div>
+    <div class="max-w-[var(--shell)] mx-auto flex flex-col gap-4" id="paper-list">
       {rest.map((p) => (
         <a href={`/research/${p.id}/`} class="card p-8 block paper-item group" data-id={p.id} data-tags={p.data.tags.join(',')}>
           <div class="flex flex-wrap items-center gap-2 mb-4">
@@ -86,17 +89,28 @@ const searchIndex = papers.map((p) => ({
     const items = [...document.querySelectorAll('.paper-item')];
     const tagBtns = [...document.querySelectorAll('.tag-btn')];
     let activeTag = '';
-    let fuse = null;
+    // 3 papers — a substring match over the same fields beats shipping a fuzzy-search
+    // library over the network, which failed open (showed everything) when blocked.
+    const haystack = new Map(searchIndex.map((p) => [p.id,
+      [p.title, p.abstract, p.authors, (p.tags || []).join(' ')].join(' ').toLowerCase()]));
 
     function apply() {
       const input = document.getElementById('paper-search');
-      const q = input.value.trim();
-      const matched = (q && fuse) ? new Set(fuse.search(q).map((r) => r.item.id)) : null;
+      const q = input.value.trim().toLowerCase();
+      const matched = q
+        ? new Set([...haystack].filter(([, t]) => t.includes(q)).map(([id]) => id))
+        : null;
+      let shown = 0;
       items.forEach((el) => {
         const tagOk = !activeTag || el.dataset.tags.split(',').includes(activeTag);
         const qOk = !matched || matched.has(el.dataset.id);
-        el.style.display = tagOk && qOk ? '' : 'none';
+        const on = tagOk && qOk;
+        if (on) shown++;
+        // the featured card lives in its own section — hide the section so its
+        // padding doesn't leave a phantom gap when it is filtered out
+        (el.closest('#featured-section') || el).style.display = on ? '' : 'none';
       });
+      document.getElementById('paper-empty').classList.toggle('hidden', shown > 0);
     }
 
     document.getElementById('paper-search')?.addEventListener('input', apply);
@@ -107,10 +121,6 @@ const searchIndex = papers.map((p) => ({
       b.style.color = 'var(--accent)';
       apply();
     }));
-
-    import('https://cdn.jsdelivr.net/npm/fuse.js@7/dist/fuse.mjs').then(({ default: Fuse }) => {
-      fuse = new Fuse(searchIndex, { keys: ['title', 'abstract', 'authors', 'tags'], threshold: 0.35 });
-    });
     })();
   </script>
 </Base>

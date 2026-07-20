@@ -15,11 +15,14 @@ if(localStorage.theme==='light'){document.documentElement.classList.add('light')
 <meta property="og:description" content="A living research ecosystem for quant researchers, engineers, mathematicians, and AI scientists building the future of quantitative finance.">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
+<meta property="og:url" content="https://quanthq.in/">
+<meta property="og:image" content="https://quanthq.in/logo.jpeg">
+<meta name="twitter:image" content="https://quanthq.in/logo.jpeg">
 <meta name="twitter:title" content="QuantHQ — AI Research Institution">
 <meta name="twitter:description" content="A living research ecosystem for quant researchers, engineers, and AI scientists.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style is:global>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 :root{
@@ -31,12 +34,20 @@ if(localStorage.theme==='light'){document.documentElement.classList.add('light')
   --white:#FFFFFF;
   --green:#00FF88;
   --red:#FF4466;
-  --text-1:rgba(255,255,255,0.85);
-  --text-2:rgba(255,255,255,0.55);
-  --text-3:rgba(255,255,255,0.35);
-  --text-4:rgba(255,255,255,0.20);
+  --text-1:rgba(255,255,255,0.88);
+  --text-2:rgba(255,255,255,0.70);
+  --text-3:rgba(255,255,255,0.55);
+  /* --text-4 is decorative only (dots, rules, text-stroke) — fails AA as text */
+  --text-4:rgba(255,255,255,0.38);
   --border:rgba(255,255,255,0.06);
   --border-hover:rgba(255,255,255,0.12);
+  /* raised fill for chips/bars that sit on top of a card — NOT --border */
+  --surface-2:rgba(255,255,255,0.05);
+  --grad-hi:#9BB8FF;
+  --shell:1280px;
+  --gutter:32px;
+  --section-gap:160px;
+  --panel:880px;
   --ease-spring:cubic-bezier(0.34,1.56,0.64,1);
   --ease-out:cubic-bezier(0.22,1,0.36,1);
 }
@@ -49,12 +60,15 @@ html.light{
   --white:#0F172A;
   --green:#16A34A;
   --red:#DC2626;
-  --text-1:rgba(15,23,42,0.92);
-  --text-2:rgba(15,23,42,0.68);
-  --text-3:rgba(15,23,42,0.52);
-  --text-4:rgba(15,23,42,0.34);
+  --text-1:rgba(15,23,42,0.94);
+  --text-2:rgba(15,23,42,0.76);
+  --text-3:rgba(15,23,42,0.62);
+  --text-4:rgba(15,23,42,0.44);
   --border:rgba(15,23,42,0.10);
   --border-hover:rgba(15,23,42,0.20);
+  --surface-2:rgba(15,23,42,0.04);
+  /* the dark highlight stop is far too pale on a light bg — 1.8:1 */
+  --grad-hi:#3B82F6;
 }
 html{scroll-behavior:smooth;background:var(--black)}
 body{
@@ -145,21 +159,13 @@ html.light nav.scrolled{
   border-bottom-color:rgba(0,0,0,0.06);
 }
 .nav-inner{
-  max-width:1280px;margin:0 auto;padding:0 32px;
+  max-width:var(--shell);margin:0 auto;padding:0 var(--gutter);
   width:100%;display:flex;align-items:center;gap:48px;
 }
 .nav-logo{
   display:flex;align-items:center;gap:10px;
   font-size:15px;font-weight:700;letter-spacing:-0.01em;
   flex-shrink:0;
-}
-.nav-logo-mark{
-  width:28px;height:28px;
-  background:linear-gradient(135deg,var(--blue),var(--violet));
-  border-radius:6px;
-  display:flex;align-items:center;justify-content:center;
-  font-size:10px;font-weight:800;color:#000;
-  letter-spacing:-0.02em;
 }
 .nav-links{display:flex;gap:32px;margin-left:auto}
 .nav-links a{
@@ -172,7 +178,7 @@ html.light nav.scrolled{
   font-size:12px;font-weight:600;letter-spacing:0.06em;
   text-transform:uppercase;
   padding:8px 18px;
-  background:var(--border);
+  background:var(--surface-2);
   backdrop-filter:blur(12px);
   -webkit-backdrop-filter:blur(12px);
   border:1px solid var(--border-hover);
@@ -264,7 +270,7 @@ html.light .bento-card{background:rgba(255,255,255,0.8);border-color:var(--borde
 html.light .bento-card:hover{border-color:var(--border-hover);box-shadow:0 32px 64px -16px rgba(0,0,0,0.08)}
 html.light .hs-card{background:rgba(255,255,255,0.7);border-color:var(--border)}
 html.light .terminal-body{background:rgba(245,245,247,0.98)}
-html.light .terminal-body::after{background:repeating-linear-gradient(0deg,rgba(15,23,42,0.02) 0 1px,transparent 1px 3px)}
+html.light .terminal-window::after{background:repeating-linear-gradient(0deg,rgba(15,23,42,0.02) 0 1px,transparent 1px 3px)}
 html.light .terminal-window{box-shadow:0 32px 64px -24px rgba(15,23,42,0.18)}
 html.light .btn-primary,html.light .signup-btn{
   background:rgba(37,99,235,0.88);
@@ -285,7 +291,7 @@ html.light ::-webkit-scrollbar-thumb{border-color:var(--black)}
 .theme-toggle{
   width:34px;height:34px;border-radius:50%;
   display:inline-flex;align-items:center;justify-content:center;
-  background:var(--border);
+  background:var(--surface-2);
   backdrop-filter:blur(12px);
   -webkit-backdrop-filter:blur(12px);
   border:1px solid var(--border-hover);
@@ -311,6 +317,9 @@ html.light .theme-toggle .tt-sun{display:none}
 }
 /* ── SECTION BASE ── */
 section{position:relative;z-index:10}
+/* clear the fixed nav (64) + ticker tape (28) on anchor / section-dot jumps */
+section[id]{scroll-margin-top:112px}
+@media(max-width:767px){section[id]{scroll-margin-top:84px}}
 
 /* ── FILM GRAIN ── */
 .grain{
@@ -329,7 +338,7 @@ html.light .grain{opacity:0.02}
 
 /* ── MEGA MARQUEE ── */
 .mega-marquee{
-  overflow:hidden;padding:56px 0;
+  overflow:hidden;padding:56px 0;margin-bottom:var(--section-gap);
   border-top:1px solid var(--border);
   border-bottom:1px solid var(--border);
 }
@@ -435,18 +444,18 @@ html.light .hero-floor{opacity:0.25}
   0%,100%{transform:translateX(-50%) translateY(0)}
   50%{transform:translateX(-50%) translateY(6px)}
 }
-@media(max-width:760px){.hud{display:none}.tape{display:none}}
+@media(max-width:767px){.hud{display:none}.tape{display:none}}
 
 /* ── HERO ── */
 .hero{
   min-height:100vh;
   display:flex;align-items:center;
-  padding:120px 32px 80px;
+  padding:120px var(--gutter) var(--section-gap);
   position:relative;
   overflow:hidden;
 }
 .hero-inner{
-  max-width:1280px;margin:0 auto;width:100%;
+  max-width:var(--shell);margin:0 auto;width:100%;
   position:relative;z-index:5;
   text-align:center;
 }
@@ -465,37 +474,21 @@ html.light .hero-floor{opacity:0.25}
   font-weight:800;
   line-height:0.92;
   letter-spacing:-0.04em;
-  overflow:hidden;
-  min-height:4.5em;
-}
-.hero-line{
-  display:block;overflow:hidden;
-  opacity:0;animation:heroLine 1s var(--ease-out) both;
-}
-.hero-line:nth-child(1){animation-delay:0.4s}
-.hero-line:nth-child(2){animation-delay:0.55s;color:var(--text-3)}
-.hero-line:nth-child(3){animation-delay:0.7s}
-.hero-line:nth-child(4){
-  animation:heroLine 1s var(--ease-out) 0.85s both,textShimmer 5s ease-in-out 2s infinite;
-  background:linear-gradient(110deg,var(--blue),var(--violet),#9BB8FF,var(--blue));
-  background-size:250% auto;
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
-  background-clip:text;
+  /* reserve the final 4-line height so the CTAs don't jump while it types.
+     4 lines at line-height .92 lay out as 3.68em, but the glyph boxes measure
+     ~3.96em, so 4em is the real reserved height. (was 4.5em = 40px of void) */
+  min-height:4em;
 }
 @keyframes textShimmer{
   0%{background-position:0% center}
   100%{background-position:250% center}
 }
 .grad-text{
-  background:linear-gradient(110deg,var(--blue),var(--violet),#9BB8FF,var(--blue));
+  background:linear-gradient(110deg,var(--blue),var(--violet),var(--grad-hi),var(--blue));
   background-size:250% auto;
   -webkit-background-clip:text;-webkit-text-fill-color:transparent;
   background-clip:text;
   animation:textShimmer 5s ease-in-out infinite;
-}
-@keyframes heroLine{
-  from{opacity:0;transform:translateY(100%)}
-  to{opacity:1;transform:translateY(0)}
 }
 @keyframes heroFadeUp{
   from{opacity:0;transform:translateY(16px)}
@@ -515,11 +508,11 @@ html.light .hero-floor{opacity:0.25}
 /* liquid glass — ported from 21st.dev LiquidButton (refractive bezel + specular highlight) */
 .btn-primary{
   display:inline-flex;align-items:center;gap:8px;
-  padding:20px 44px;
+  padding:0 44px;height:60px;
   background:rgba(61,123,255,0.22);
   backdrop-filter:blur(16px) saturate(1.5);
   -webkit-backdrop-filter:blur(16px) saturate(1.5);
-  color:#fff;font-size:18px;font-weight:700;
+  color:#fff;font-size:16px;font-weight:700;
   letter-spacing:0.04em;text-transform:uppercase;
   border:1px solid rgba(122,158,255,0.5);
   border-radius:999px;
@@ -549,13 +542,13 @@ html.light .hero-floor{opacity:0.25}
 .btn-primary:active{transform:scale(0.96)}
 .btn-ghost{
   display:inline-flex;align-items:center;gap:8px;
-  padding:19px 32px;
-  background:var(--border);
+  padding:0 32px;height:60px;
+  background:var(--surface-2);
   backdrop-filter:blur(12px);
   -webkit-backdrop-filter:blur(12px);
   border:1px solid var(--border-hover);
   color:var(--text-2);
-  font-size:15px;font-weight:500;
+  font-size:15px;font-weight:600;
   letter-spacing:0.02em;
   border-radius:999px;
   transition:all 0.2s;
@@ -582,7 +575,7 @@ html.light .hero-floor{opacity:0.25}
 /* ── SCROLL NARRATIVE ── */
 /* ── DASHBOARD SECTION ── */
 .dashboard-section{
-  padding:160px 32px;
+  padding:0 var(--gutter) var(--section-gap);
   position:relative;overflow:hidden;
 }
 .section-label{
@@ -603,6 +596,10 @@ html.light .hero-floor{opacity:0.25}
   font-size:16px;color:var(--text-2);
   line-height:1.7;max-width:480px;
 }
+/* centred variant — replaces the per-section inline text-align/margin patches */
+.section-head.center{text-align:center}
+.section-head.center .section-label{justify-content:center}
+.section-head.center .section-sub{margin-left:auto;margin-right:auto}
 /* word-by-word heading reveal */
 .wrd{
   display:inline-block;
@@ -616,7 +613,7 @@ html.light .hero-floor{opacity:0.25}
 .spark-tip{
   position:absolute;top:-26px;transform:translateX(-50%);
   padding:2px 8px;border-radius:4px;
-  background:var(--border);
+  background:var(--surface-2);
   backdrop-filter:blur(8px);
   border:1px solid var(--border-hover);
   font-family:'Courier New',monospace;font-size:10px;color:var(--white);
@@ -630,7 +627,7 @@ html.light .hero-floor{opacity:0.25}
   font-size:10px;color:var(--text-2);
   min-height:14px;letter-spacing:0.05em;
 }
-.ds-inner{max-width:1280px;margin:0 auto}
+.ds-inner{max-width:var(--shell);margin:0 auto}
 .ds-header{margin-bottom:64px}
 .bloomberg-grid{
   display:grid;
@@ -650,8 +647,6 @@ html.light .hero-floor{opacity:0.25}
 }
 .bb-cell:hover{background:var(--carbon)}
 .bb-cell.span2{grid-column:span 2}
-.bb-cell.span3{grid-column:span 3}
-.bb-cell.span4{grid-column:span 4}
 .bb-cell.tall{grid-row:span 2}
 .bb-label{
   font-size:9px;letter-spacing:0.15em;text-transform:uppercase;
@@ -735,12 +730,12 @@ html.light .hm-cell{animation:none}
 }
 
 /* ── BENTO GRID ── */
-.bento-section{padding:0 32px 160px}
-.bento-inner{max-width:1280px;margin:0 auto}
+.bento-section{padding:0 var(--gutter) var(--section-gap)}
+.bento-inner{max-width:var(--shell);margin:0 auto}
 .bento-grid{
   display:grid;
   grid-template-columns:repeat(12,1fr);
-  grid-auto-rows:80px;
+  grid-auto-rows:auto;
   gap:12px;
   margin-top:64px;
 }
@@ -769,8 +764,6 @@ html.light .hm-cell{animation:none}
 .bento-card.wide{grid-column:span 8}
 .bento-card.tall{grid-row:span 8;display:flex;flex-direction:column}
 .bento-card.short{grid-row:span 3}
-.bento-card.full{grid-column:span 12;grid-row:span 3}
-.bento-card.small{grid-column:span 3;grid-row:span 3}
 .bc-label{
   font-size:9px;letter-spacing:0.2em;text-transform:uppercase;
   color:var(--text-3);font-weight:600;margin-bottom:16px;
@@ -809,17 +802,17 @@ html.light .hm-cell{animation:none}
 /* ── RESEARCH PAPERS ── */
 /* ── HORIZONTAL SCROLL ── */
 .hscroll-section{
-  padding:160px 0;
+  padding:0 0 var(--section-gap);
   overflow:hidden;
   position:relative;
 }
 .hscroll-label{
-  padding:0 32px;max-width:1280px;margin:0 auto 64px;
+  padding:0 var(--gutter);max-width:var(--shell);margin:0 auto 64px;
 }
 .hscroll-track-wrap{overflow:hidden}
 .hscroll-track{
   display:flex;gap:20px;
-  padding:0 32px 0 max(32px,calc((100vw - 1216px)/2));
+  padding:0 var(--gutter) 0 max(var(--gutter),calc((100vw - var(--shell))/2 + var(--gutter)));
   width:max-content;
   animation:scrollTrack 40s linear infinite;
 }
@@ -854,29 +847,37 @@ html.light .hm-cell{animation:none}
 }
 
 /* ── WORLD MAP ── */
-.world-section{padding:0 32px 160px}
-.world-inner{max-width:1280px;margin:0 auto}
+.world-section{padding:0 var(--gutter) var(--section-gap)}
+.world-inner{max-width:var(--shell);margin:0 auto}
 .world-map-wrap{
-  position:relative;max-width:860px;margin:64px auto 0;
+  position:relative;max-width:var(--panel);margin:64px auto 0;
   border:1px solid var(--border);
   border-radius:12px;overflow:hidden;
   background:var(--carbon);
   padding:40px;
 }
-#world-canvas{width:100%;display:block;cursor:grab;touch-action:pan-y}
+#world-canvas{width:100%;height:600px;display:block;cursor:grab;touch-action:pan-y}
 #world-canvas:active{cursor:grabbing}
 
 /* ── TERMINAL SECTION ── */
-.terminal-section{padding:0 32px 160px}
-.terminal-inner{max-width:1280px;margin:0 auto}
+.terminal-section{padding:0 var(--gutter) var(--section-gap)}
+.terminal-inner{max-width:var(--shell);margin:0 auto}
 .terminal-window{
   border:1px solid var(--border);
   border-radius:10px;overflow:hidden;
-  max-width:880px;margin:64px auto 0;
+  max-width:var(--panel);margin:64px auto 0;
   box-shadow:0 64px 128px -32px rgba(0,0,0,0.8);
+  position:relative;
+}
+/* CRT scanlines live on the window, not the body — the body scrolls, and an
+   overlay inside it would scroll away with the content */
+.terminal-window::after{
+  content:'';position:absolute;inset:0;pointer-events:none;z-index:2;
+  background:repeating-linear-gradient(0deg,rgba(255,255,255,0.028) 0 1px,transparent 1px 3px);
+  animation:crtFlicker 4s linear infinite;
 }
 .terminal-bar{
-  background:var(--border);
+  background:var(--surface-2);
   padding:12px 20px;
   display:flex;align-items:center;gap:8px;
   border-bottom:1px solid var(--border);
@@ -892,14 +893,14 @@ html.light .hm-cell{animation:none}
   padding:32px;
   font-family:'Courier New',monospace;
   font-size:14px;line-height:2;
-  min-height:320px;
+  /* fixed height: the feed loops forever, and with min-height it grew past the
+     box and shunted the whole page down, then snapped back on every reset */
+  height:340px;
+  overflow-y:auto;
+  scrollbar-width:none;
   position:relative;
 }
-.terminal-body::after{
-  content:'';position:absolute;inset:0;pointer-events:none;
-  background:repeating-linear-gradient(0deg,rgba(255,255,255,0.028) 0 1px,transparent 1px 3px);
-  animation:crtFlicker 4s linear infinite;
-}
+.terminal-body::-webkit-scrollbar{display:none}
 @keyframes crtFlicker{
   0%,91%,94%,100%{opacity:1}
   92%{opacity:0.55}
@@ -918,8 +919,8 @@ html.light .hm-cell{animation:none}
 @keyframes termBlink{0%,100%{opacity:1}50%{opacity:0}}
 
 /* ── STATS SECTION ── */
-.stats-section{padding:0 32px 160px}
-.stats-inner{max-width:1280px;margin:0 auto}
+.stats-section{padding:0 var(--gutter) var(--section-gap)}
+.stats-inner{max-width:var(--shell);margin:0 auto}
 .stats-grid{
   display:grid;grid-template-columns:repeat(4,1fr);gap:1px;
   background:var(--border);
@@ -967,14 +968,14 @@ html.light .hm-cell{animation:none}
 }
 .stat-cell:hover .stat-label{color:var(--text-2)}
 .stat-sub{
-  font-size:12px;color:var(--text-4);margin-top:6px;line-height:1.5;
+  font-size:12px;color:var(--text-3);margin-top:6px;line-height:1.5;
   transition:color 0.3s;
 }
 .stat-cell:hover .stat-sub{color:var(--text-3)}
 .stat-live{
   position:absolute;top:16px;right:16px;
   font-size:8px;letter-spacing:0.15em;text-transform:uppercase;
-  color:var(--text-4);
+  color:var(--text-3);
   display:flex;align-items:center;gap:4px;
 }
 .stat-live-dot{
@@ -994,13 +995,13 @@ html.light .hm-cell{animation:none}
 }
 
 /* ── FORCE GRAPH ── */
-.graph-section{padding:0 32px 160px}
-.graph-inner{max-width:1280px;margin:0 auto}
+.graph-section{padding:0 var(--gutter) var(--section-gap)}
+.graph-inner{max-width:var(--shell);margin:0 auto}
 #force-canvas{
-  width:100%;height:480px;
+  width:100%;max-width:var(--panel);height:420px;
   border:1px solid var(--border);
   border-radius:12px;
-  margin-top:64px;
+  margin:64px auto 0;
   display:block;
   cursor:grab;touch-action:pan-y;
 }
@@ -1008,7 +1009,7 @@ html.light .hm-cell{animation:none}
 
 /* ── FINAL CTA ── */
 .fcta-section{
-  padding:160px 32px;
+  padding:0 var(--gutter) var(--section-gap);
   text-align:center;
   position:relative;overflow:hidden;
 }
@@ -1027,7 +1028,6 @@ html.light .hm-cell{animation:none}
   font-size:16px;color:var(--text-2);
   line-height:1.7;margin-bottom:40px;
 }
-.fcta-btns{display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
 
 /* ── EMAIL FORM ── */
 .signup-form{
@@ -1086,9 +1086,9 @@ html.light .hm-cell{animation:none}
 /* ── FOOTER ── */
 footer{
   border-top:1px solid var(--border);
-  padding:64px 32px 40px;
+  padding:64px var(--gutter) 40px;
 }
-.footer-inner{max-width:1280px;margin:0 auto}
+.footer-inner{max-width:var(--shell);margin:0 auto}
 .footer-top{
   display:flex;justify-content:space-between;align-items:flex-start;
   flex-wrap:wrap;gap:48px;padding-bottom:48px;
@@ -1104,7 +1104,7 @@ footer{
 }
 .footer-links h4{
   font-size:9px;letter-spacing:0.2em;text-transform:uppercase;
-  color:var(--text-4);font-weight:600;margin-bottom:20px;
+  color:var(--text-3);font-weight:600;margin-bottom:20px;
 }
 .footer-links a{
   display:block;font-size:13px;font-weight:500;
@@ -1118,10 +1118,7 @@ footer{
   flex-wrap:wrap;gap:8px;
   border-top:1px solid var(--border);
 }
-.footer-bot p{font-size:12px;color:var(--text-4)}
-
-/* ── PARALLAX WRAPPER ── */
-.parallax-layer{transition:transform 0.1s linear;will-change:transform}
+.footer-bot p{font-size:12px;color:var(--text-3)}
 
 /* ── REVEAL ANIMATIONS ── */
 .rv2{
@@ -1135,17 +1132,17 @@ footer{
 
 /* ── RESPONSIVE ── */
 @media(max-width:1024px){
+  :root{--section-gap:112px;--gutter:24px}
   .bloomberg-grid{grid-template-columns:1fr 1fr}
-  .bb-cell.span3{grid-column:span 2}
-  .bb-cell.span4{grid-column:span 2}
   .stats-grid{grid-template-columns:repeat(2,1fr)}
   .bento-grid{grid-template-columns:repeat(6,1fr)}
   .bento-card.wide{grid-column:span 6}
   .bento-card{grid-column:span 3}
 }
 @media(max-width:768px){
+  :root{--section-gap:88px;--gutter:20px}
   .bento-grid{grid-auto-rows:auto}
-  .bento-card,.bento-card.tall,.bento-card.short,.bento-card.full{grid-row:auto}
+  .bento-card,.bento-card.tall,.bento-card.short{grid-row:auto}
   .nav-links{display:none;position:fixed;top:0;left:0;right:0;bottom:0;
     background:color-mix(in srgb,var(--black) 97%,transparent);backdrop-filter:blur(24px);
     flex-direction:column;align-items:center;justify-content:center;
@@ -1156,9 +1153,8 @@ footer{
   .nav-hamburger{display:flex}
   .hero-h1{font-size:clamp(26px,7vw,50px)}
   .hero-metrics{flex-wrap:wrap;gap:24px}
-  .stats-grid{grid-template-columns:1fr 1fr}
   .bento-grid{grid-template-columns:1fr 1fr}
-  .bento-card,.bento-card.wide,.bento-card.tall,.bento-card.full{grid-column:span 2}
+  .bento-card,.bento-card.wide,.bento-card.tall,.bento-card.short{grid-column:span 2}
   .footer-top{flex-direction:column;gap:32px}
   .signup-form{flex-direction:column}
   .signup-btn{padding:12px}
@@ -1166,7 +1162,7 @@ footer{
 @media(max-width:480px){
   .stats-grid{grid-template-columns:1fr}
   .bento-grid{grid-template-columns:1fr;grid-auto-rows:auto}
-  .bento-card,.bento-card.wide,.bento-card.tall,.bento-card.short,.bento-card.full,.bento-card.small{grid-column:span 1;grid-row:auto}
+  .bento-card,.bento-card.wide,.bento-card.tall,.bento-card.short{grid-column:span 1;grid-row:auto}
   .hero-metrics{flex-direction:column;gap:16px}
 }
 @media(prefers-reduced-motion:reduce){
@@ -1360,7 +1356,7 @@ html body,html nav,html footer,.bento-card,.bb-cell,.stat-cell,.hs-card,.termina
 </div>
 
 <!-- HERO -->
-<section class="hero">
+<section class="hero" id="hero">
   <div class="hero-glow hero-glow-tl"></div>
   <div class="hero-glow hero-glow-br"></div>
   <div class="hero-floor" aria-hidden="true"></div>
@@ -1471,21 +1467,21 @@ html body,html nav,html footer,.bento-card,.bb-cell,.stat-cell,.hs-card,.termina
         <div class="bc-title">Researcher Directory</div>
         <div class="bc-sub">Find collaborators by strategy style, market focus, or research domain.</div>
         <div style="margin-top:20px;display:flex;flex-direction:column;gap:6px">
-          <div style="display:flex;align-items:center;gap:10px;padding:8px;background:var(--border);border-radius:6px;border:1px solid var(--border)">
+          <div style="display:flex;align-items:center;gap:10px;padding:8px;background:var(--surface-2);border-radius:6px;border:1px solid var(--border)">
             <div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#3A3A3A,#5C5C5C);color:#fff;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0">AC</div>
             <div>
               <div style="font-size:12px;font-weight:600;color:var(--text-1)">Alex Chen</div>
               <div style="font-size:10px;color:var(--text-3)">Momentum · Equities</div>
             </div>
           </div>
-          <div style="display:flex;align-items:center;gap:10px;padding:8px;background:var(--border);border-radius:6px;border:1px solid var(--border)">
+          <div style="display:flex;align-items:center;gap:10px;padding:8px;background:var(--surface-2);border-radius:6px;border:1px solid var(--border)">
             <div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#2B0ABF,#6B1FD0);color:#fff;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0">PR</div>
             <div>
               <div style="font-size:12px;font-weight:600;color:var(--text-1)">Priya R.</div>
               <div style="font-size:10px;color:var(--text-3)">NLP · Alt-Data</div>
             </div>
           </div>
-          <div style="display:flex;align-items:center;gap:10px;padding:8px;background:var(--border);border-radius:6px;border:1px solid var(--border)">
+          <div style="display:flex;align-items:center;gap:10px;padding:8px;background:var(--surface-2);border-radius:6px;border:1px solid var(--border)">
             <div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#0A2A7A,#0F4CC8);color:#fff;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0">JK</div>
             <div>
               <div style="font-size:12px;font-weight:600;color:var(--text-1)">James K.</div>
@@ -1509,10 +1505,10 @@ html body,html nav,html footer,.bento-card,.bb-cell,.stat-cell,.hs-card,.termina
         <div class="bc-title">Alpha Signal<br>Feed</div>
         <div class="bc-sub">124 live signals. Updated continuously. Confidence-ranked across every asset class.</div>
         <div style="margin-top:20px;display:flex;gap:6px;flex-wrap:wrap">
-          <span style="font-size:10px;padding:3px 8px;background:var(--border);border:1px solid var(--border-hover);border-radius:100px;color:var(--blue)">NVDA ↑ 2.8%</span>
-          <span style="font-size:10px;padding:3px 8px;background:var(--border);border:1px solid var(--border-hover);border-radius:100px;color:var(--blue)">BTC ↑ 3.1%</span>
+          <span style="font-size:10px;padding:3px 8px;background:var(--surface-2);border:1px solid var(--border);border-radius:100px;color:var(--blue)">NVDA ↑ 2.8%</span>
+          <span style="font-size:10px;padding:3px 8px;background:var(--surface-2);border:1px solid var(--border);border-radius:100px;color:var(--blue)">BTC ↑ 3.1%</span>
           <span style="font-size:10px;padding:3px 8px;background:color-mix(in srgb,var(--red) 8%,transparent);border:1px solid color-mix(in srgb,var(--red) 18%,transparent);border-radius:100px;color:var(--red)">TSLA ↓ 1.6%</span>
-          <span style="font-size:10px;padding:3px 8px;background:var(--border);border:1px solid var(--border-hover);border-radius:100px;color:var(--blue)">AAPL ↑ 2.4%</span>
+          <span style="font-size:10px;padding:3px 8px;background:var(--surface-2);border:1px solid var(--border);border-radius:100px;color:var(--blue)">AAPL ↑ 2.4%</span>
         </div>
       </div>
       <div class="bento-card short glass-layer rv2" data-d="1">
@@ -1545,12 +1541,12 @@ html body,html nav,html footer,.bento-card,.bb-cell,.stat-cell,.hs-card,.termina
 <!-- WORLD MAP -->
 <section class="world-section" id="network">
   <div class="world-inner">
-    <div class="rv2" style="text-align:center">
-      <div class="section-label" style="justify-content:center">Global Network</div>
+    <div class="rv2 section-head center">
+      <div class="section-label">Global Network</div>
       <div class="section-h2">Everywhere<br>intelligence lives.</div>
     </div>
     <div class="world-map-wrap rv2" data-d="1">
-      <canvas id="world-canvas" height="520" aria-label="Interactive globe showing QuantHQ global research network nodes" role="img"></canvas>
+      <canvas id="world-canvas" width="880" height="600" aria-label="Interactive globe showing QuantHQ global research network nodes" role="img"></canvas>
     </div>
   </div>
 </section>
@@ -1586,7 +1582,7 @@ html body,html nav,html footer,.bento-card,.bb-cell,.stat-cell,.hs-card,.termina
         <div class="term-line">  QuantHQ Research Pipeline v2.4.1</div>
         <div class="term-line">─────────────────────────────────────────────</div>
         <div id="term-lines"></div>
-        <span class="term-prompt">$ </span><span id="term-input" class="term-cmd"></span><span class="term-cursor"></span><span id="term-hint" style="color:var(--text-4)">  click here, type 'help'</span>
+        <span class="term-prompt">$ </span><span id="term-input" class="term-cmd"></span><span class="term-cursor"></span><span id="term-hint" style="color:var(--text-3)">  click here, type 'help'</span>
       </div>
     </div>
   </div>
@@ -1595,10 +1591,10 @@ html body,html nav,html footer,.bento-card,.bb-cell,.stat-cell,.hs-card,.termina
 <!-- STATS -->
 <section class="stats-section">
   <div class="stats-inner">
-    <div class="rv2" style="text-align:center">
-      <div class="section-label" style="justify-content:center">Research Metrics</div>
+    <div class="rv2 section-head center">
+      <div class="section-label">Research Metrics</div>
       <div class="section-h2">Numbers that<br>never sleep.</div>
-      <div class="section-sub fade-in-up" style="margin:0 auto;max-width:480px;text-align:center">Real-time metrics from our global research network. Every number is computed live.</div>
+      <div class="section-sub fade-in-up">Real-time metrics from our global research network. Every number is computed live.</div>
     </div>
     <div class="stats-grid rv2" data-d="1">
       <div class="stat-cell">
@@ -1637,8 +1633,8 @@ html body,html nav,html footer,.bento-card,.bb-cell,.stat-cell,.hs-card,.termina
 
 <section class="fcta-section" id="join">
   <div class="fcta-bg-glow"></div>
-  <div class="fcta-inner rv2">
-    <div class="section-label" style="justify-content:center">Free Early Access</div>
+  <div class="fcta-inner rv2 section-head center">
+    <div class="section-label">Free Early Access</div>
     <div class="fcta-h2">Enter the<br><span class="grad-text">institution.</span></div>
     <div class="fcta-sub fade-in-up">Shape the community. Build your network. Get Alpha Toolkit access from day one.</div>
     <form class="signup-form" id="signup-form" onsubmit="return false">
@@ -1673,7 +1669,7 @@ html body,html nav,html footer,.bento-card,.bb-cell,.stat-cell,.hs-card,.termina
     </div>
     <div class="footer-bot">
       <p>QuantHQ © 2026 — Where quant minds build intelligence.</p>
-      <p style="color:var(--text-4);font-family:'Courier New',monospace">v2.4.1 · 124 nodes online</p>
+      <p style="color:var(--text-3);font-family:'Courier New',monospace">v2.4.1 · 124 nodes online</p>
     </div>
   </div>
 </footer>
@@ -2037,7 +2033,7 @@ const canvasInk = () => isLight() ? '15,23,42' : '255,255,255';
 /* ── INTERACTIVE GLOBE (canvas port of 21st.dev Interactive Globe) ── */
 const wCanvas = document.getElementById('world-canvas');
 const wCtx = wCanvas.getContext('2d');
-const GLOBE_H = 520;
+const GLOBE_H = 600;
 const CITIES = [
   {name:'New York',lat:40.7,lon:-74.0},{name:'San Francisco',lat:37.8,lon:-122.4},
   {name:'Chicago',lat:41.9,lon:-87.6},{name:'São Paulo',lat:-23.5,lon:-46.6},
@@ -2077,7 +2073,7 @@ function drawGlobe() {
   if (wCanvas.width !== W) wCanvas.width = W;
   if (wCanvas.height !== GLOBE_H) wCanvas.height = GLOBE_H;
   wCtx.clearRect(0, 0, W, GLOBE_H);
-  const R = Math.min(W, GLOBE_H)*0.46, cx = W/2, cy = GLOBE_H/2;
+  const R = Math.min(W, GLOBE_H)*0.38, cx = W/2, cy = GLOBE_H/2;
   const t = Date.now()/1000;
   const ink = canvasInk();
   if (!gDragging) gRotY += 0.0022; // auto-rotate when idle
@@ -2085,8 +2081,8 @@ function drawGlobe() {
   for (const d of SPHERE_DOTS) {
     const [sx, sy, z] = gProject(d, R, cx, cy);
     if (z <= 0.02) continue;
-    wCtx.fillStyle = `rgba(${ink},${0.08 + z*0.28})`;
-    wCtx.fillRect(sx, sy, 1.6, 1.6);
+    wCtx.fillStyle = `rgba(${ink},${0.14 + z*0.42})`;
+    wCtx.fillRect(sx, sy, 1.9, 1.9);
   }
   // arcs with traveling particles
   ARCS.forEach((arc, k) => {
@@ -2165,12 +2161,12 @@ const nodePalette = () => isLight()
   : ['rgba(122,158,255,0.9)','rgba(178,150,255,0.9)','rgba(0,255,240,0.75)','rgba(255,255,255,0.45)'];
 let fNodes = [], fEdges = [];
 function initForce() {
-  fW = fc.width = fc.offsetWidth; fH = fc.height = 480;
+  fW = fc.width = fc.offsetWidth; fH = fc.height = 420;
   fNodes = Array.from({length:36}, (_,i) => ({
     x: fW/2 + (Math.random()-.5)*fW*0.7,
     y: fH/2 + (Math.random()-.5)*fH*0.7,
     vx:0, vy:0,
-    r: 3+Math.random()*4,
+    r: 4+Math.random()*4.5,
     type: Math.floor(Math.random()*4),
     label: ['Momentum','Earnings NLP','Signal Ranker','Alpha Factor','Quality Score','Regime HMM','Backtest','LLM Agent','Quant Researcher','Factor Attribution','Sharpe Calc','Risk Model','VaR Engine','Portfolio Opt','Alt Data','Sentiment','Volatility','Order Flow','Cross-Section','Walk-Forward','Publication','Network Effect','Collaboration','Co-Author','Peer Review','Replication','Alpha Decay','Half-Life','Transaction Cost','Turnover','Capacity','Skewness','Kurtosis','Tail Risk','Drawdown','Recovery'][i],
   }));
@@ -2255,8 +2251,8 @@ function drawForce() {
   fEdges.forEach(([a,b])=>{
     const na=fNodes[a],nb=fNodes[b];
     const isHovered = fHoverNode === a || fHoverNode === b;
-    fctx.strokeStyle = isHovered ? `rgba(${ink},0.35)` : `rgba(${ink},0.07)`;
-    fctx.lineWidth = isHovered ? 1.5 : 0.7;
+    fctx.strokeStyle = isHovered ? `rgba(${ink},0.45)` : `rgba(${ink},0.16)`;
+    fctx.lineWidth = isHovered ? 1.5 : 0.9;
     fctx.beginPath();fctx.moveTo(na.x,na.y);fctx.lineTo(nb.x,nb.y);fctx.stroke();
   });
 
@@ -2332,7 +2328,9 @@ if (!reduced) {
   }, {threshold: 0.05});
   fObserver.observe(fc);
 
-  addEventListener('resize', ()=>{ initForce(); }, {passive:true});
+  // reassigning canvas.width wipes the bitmap; if the loop is paused (off-screen)
+  // nothing would repaint it, leaving a blank panel until you scroll away and back.
+  addEventListener('resize', ()=>{ initForce(); if (!fActive) drawForce(); }, {passive:true});
 }
 
 /* ── TERMINAL ── */
@@ -2419,13 +2417,15 @@ termBody.addEventListener('keydown', e => {
     echo.innerHTML = '<span class="term-prompt">$ </span><span class="term-cmd"></span>';
     echo.querySelector('.term-cmd').textContent = cmd;
     tl.appendChild(echo);
-    if (cmd === 'clear') { tl.innerHTML = ''; return; }
+    if (cmd === 'clear') { tl.innerHTML = ''; termBody.scrollTop = 0; return; }
     (TERM_CMDS[cmd] || [`command not found: ${cmd} — try 'help'`]).forEach(text => {
       const d = document.createElement('div');
       d.className = text.startsWith('✓') ? 'term-ok' : 'term-out';
       d.textContent = '  ' + text;
       tl.appendChild(d);
     });
+    // the body is a fixed-height scroller — keep the newest output in view
+    termBody.scrollTop = termBody.scrollHeight;
   } else return;
   e.preventDefault();
 });
@@ -2640,6 +2640,9 @@ if (!reduced) {
     for (let i = 0; i <= upToLine; i++) {
       const text = i < upToLine ? lines[i] : lines[i].slice(0, upToChar);
       if (i === 1) html += '<span style="' + styles[1] + '">' + text + '</span>';
+      // the last line is gradient-filled while it types — swapping the fill in
+      // at the end made the word snap from solid white to gradient in one frame
+      else if (i === 3) html += '<span class="grad-text">' + text + '</span>';
       else html += text;
       if (i < upToLine) html += '<br>';
     }
@@ -2647,7 +2650,7 @@ if (!reduced) {
   }
   function typeLine() {
     if (li >= lines.length) {
-      twEl.innerHTML = buildHTML(3, lines[3].length).replace(/OBSESSED/, '<span class="grad-text">OBSESSED</span>');
+      twEl.innerHTML = buildHTML(3, lines[3].length);
       document.querySelector('.tw-cursor').style.display = 'none';
       return;
     }

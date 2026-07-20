@@ -13,8 +13,8 @@ const toc = headings.filter((h) => h.depth <= 3);
 <Base title={`${post.data.title} — QuantHQ Blog`} description={post.data.description}>
   <div id="read-prog" class="fixed top-16 left-0 h-px w-0 bg-gradient-to-r from-[var(--accent)] to-[var(--accent2)] z-40"></div>
 
-  <article class="px-6 pt-20 pb-10">
-    <div class="max-w-6xl mx-auto lg:grid lg:grid-cols-[1fr_240px] lg:gap-16">
+  <article class="px-8 pt-20 pb-10">
+    <div class="max-w-[var(--shell)] mx-auto lg:grid lg:grid-cols-[1fr_240px] lg:gap-16">
       <div class="max-w-3xl">
         <a href="/blog/" class="text-[12px] text-[var(--text-3)] hover:text-[var(--text-1)] transition-colors">← All posts</a>
         <div class="mt-8 text-[10px] uppercase tracking-[0.15em] text-[var(--accent2)] font-semibold">{post.data.category}</div>
@@ -29,8 +29,8 @@ const toc = headings.filter((h) => h.depth <= 3);
         </div>
 
         <div class="mt-16 border-t border-[var(--border)] pt-8">
-          <div class="text-[10px] uppercase tracking-[0.2em] text-[var(--text-4)] font-semibold mb-4">Was this helpful?</div>
-          <div class="flex gap-3" id="reactions">
+          <div class="text-[10px] uppercase tracking-[0.2em] text-[var(--text-3)] font-semibold mb-4">Was this helpful?</div>
+          <div class="flex flex-wrap gap-3" id="reactions">
             {['💡 Insightful', '🔧 Useful', '✨ Interesting'].map((r) => (
               <button data-r={r} class="react-btn px-5 py-2.5 rounded-full border border-[var(--border)] text-[var(--text-2)] text-[13px] hover:border-accent-40 hover:text-[var(--accent)] transition-colors cursor-pointer">{r} <span class="count text-[var(--text-3)] ml-1">0</span></button>
             ))}
@@ -41,7 +41,7 @@ const toc = headings.filter((h) => h.depth <= 3);
       {toc.length > 0 && (
         <aside class="hidden lg:block">
           <div class="sticky top-28">
-            <div class="text-[10px] uppercase tracking-[0.2em] text-[var(--text-4)] font-semibold mb-4">Contents</div>
+            <div class="text-[10px] uppercase tracking-[0.2em] text-[var(--text-3)] font-semibold mb-4">Contents</div>
             <nav class="flex flex-col gap-2.5 text-[13px] border-l border-[var(--border)]">
               {toc.map((h) => (
                 <a href={`#${h.slug}`} class={`text-[var(--text-2)] hover:text-[var(--text-1)] pl-4 transition-colors ${h.depth === 3 ? 'pl-8' : ''}`}>{h.text}</a>
