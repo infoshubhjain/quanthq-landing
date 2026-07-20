@@ -6,6 +6,7 @@
   --color-neon: var(--accent);
   --color-violet: var(--accent2);
   --font-sans: "Inter", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", "SFMono-Regular", ui-monospace, monospace;
   --font-display: "Instrument Serif", Georgia, serif;
 }
 
@@ -258,7 +259,7 @@ html.light .bgfx-b2 { background: rgba(38,84,255,0.04); }
 .tape-track {
   display: flex; gap: 36px; align-items: center; height: 100%;
   width: max-content; padding: 0 18px;
-  font-family: 'Courier New', monospace; font-size: 10px; letter-spacing: 0.08em;
+  font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.08em;
   animation: tapeScroll 45s linear infinite;
 }
 .tape:hover .tape-track { animation-play-state: paused; }
