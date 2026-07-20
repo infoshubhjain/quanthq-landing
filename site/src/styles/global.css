@@ -6,6 +6,7 @@
   --color-neon: var(--accent);
   --color-violet: var(--accent2);
   --font-sans: "Inter", system-ui, sans-serif;
+  --font-display: "Instrument Serif", Georgia, serif;
 }
 
 :root {
@@ -92,7 +93,7 @@ html.light .theme-toggle .tt-sun { display: none; }
 ::-webkit-scrollbar { width: 10px; }
 ::-webkit-scrollbar-track { background: var(--bg); }
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, var(--accent), var(--accent2));
+  background: var(--text-4);
   border-radius: 5px; border: 2px solid var(--bg);
 }
 
@@ -140,11 +141,11 @@ html.light .bgfx-grid {
 }
 .bgfx-b2 {
   width: 46vw; height: 46vw; bottom: -20vw; right: -14vw;
-  background: rgba(112,72,255,0.11);
+  background: rgba(38,84,255,0.08);
   animation: bgfxDrift2 46s ease-in-out infinite alternate;
 }
 html.light .bgfx-b1 { background: rgba(38,84,255,0.07); }
-html.light .bgfx-b2 { background: rgba(112,72,255,0.05); }
+html.light .bgfx-b2 { background: rgba(38,84,255,0.04); }
 @keyframes bgfxDrift1 { to { transform: translate(14vw, 10vh) scale(1.18); } }
 @keyframes bgfxDrift2 { to { transform: translate(-12vw, -12vh) scale(1.22); } }
 .bgfx-grain {
@@ -172,7 +173,8 @@ html.light .bgfx-b2 { background: rgba(112,72,255,0.05); }
   background: linear-gradient(90deg, var(--accent), transparent);
 }
 .gradient-text {
-  background: linear-gradient(110deg, var(--accent), var(--accent2), var(--grad-hi), var(--accent));
+  font-family: var(--font-display);
+  background: linear-gradient(110deg, var(--accent), var(--grad-hi), var(--accent));
   background-size: 250% auto;
   -webkit-background-clip: text; background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -206,9 +208,9 @@ html.light .bgfx-b2 { background: rgba(112,72,255,0.05); }
 .rv.in { opacity: 1; transform: none; }
 
 /* prose for MDX content */
-.prose-dark { color: var(--text-1); line-height: 1.75; }
-.prose-dark h2 { color: var(--text); font-weight: 700; font-size: 1.5rem; margin: 2.5rem 0 1rem; letter-spacing: -0.02em; }
-.prose-dark h3 { color: var(--text); font-weight: 600; font-size: 1.15rem; margin: 2rem 0 .75rem; }
+.prose-dark { color: var(--text-1); line-height: 1.75; max-width: 65ch; }
+.prose-dark h2 { font-family: var(--font-display); color: var(--text); font-weight: 400; font-size: 1.5rem; margin: 2.5rem 0 1rem; letter-spacing: -0.02em; }
+.prose-dark h3 { font-family: var(--font-display); color: var(--text); font-weight: 400; font-size: 1.15rem; margin: 2rem 0 .75rem; }
 .prose-dark p { margin: 1rem 0; }
 .prose-dark a { color: var(--accent); }
 .prose-dark code { background: var(--surface-2); padding: 2px 6px; border-radius: 4px; font-size: .85em; }
