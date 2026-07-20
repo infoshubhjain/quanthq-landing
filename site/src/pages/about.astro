@@ -1,22 +1,28 @@
 ---
 import Base from '../layouts/Base.astro';
-import AboutTabs from '../components/AboutTabs.astro';
+import AboutStory from '../components/AboutStory.astro';
 ---
 <Base title="About — QuantHQ">
-  <section class="px-8 pt-24 pb-16">
-    <div class="max-w-[var(--shell)] mx-auto flex flex-col gap-6 text-[clamp(40px,6.2vw,92px)] display-title leading-[0.98]">
-      <div class="rv">Most communities <span class="text-[var(--text-3)]">consume.</span></div>
-      <div class="rv">We <span class="gradient-text">research.</span></div>
-      <div class="rv">We <span class="gradient-text">build.</span></div>
-      <div class="rv">We <span class="gradient-text">publish.</span></div>
-      <div class="rv">We create <span class="gradient-text">intelligence.</span></div>
-      <div class="rv">Welcome to <span class="gradient-text">QuantHQ.</span></div>
+  <section class="px-8 pt-24 pb-14">
+    <div class="max-w-[var(--shell)] mx-auto">
+      <div class="section-label mb-8">About QuantHQ</div>
+      <div class="flex flex-col gap-5 text-[clamp(40px,6.2vw,92px)] display-title leading-[0.98]">
+        <div class="rv">Most communities <span class="text-[var(--text-3)]">consume.</span></div>
+        <div class="rv">We <span class="gradient-text">research.</span></div>
+        <div class="rv">We <span class="gradient-text">build.</span></div>
+        <div class="rv">We <span class="gradient-text">publish.</span></div>
+        <div class="rv">We create <span class="gradient-text">intelligence.</span></div>
+        <div class="rv">Welcome to <span class="gradient-text">QuantHQ.</span></div>
+      </div>
+      <p class="rv mt-10 max-w-xl text-[var(--text-2)] text-[17px] leading-relaxed">
+        A digital research institution for quantitative finance and AI — building rigorous,
+        open, reproducible research in public, with a global community of quants, engineers,
+        and scientists.
+      </p>
     </div>
   </section>
-  <section class="px-8 pt-4 pb-10">
-    <div class="max-w-[var(--shell)] mx-auto">
-      <div class="section-label mb-6">About QuantHQ</div>
-      <AboutTabs />
-    </div>
+
+  <section class="px-8 pb-10">
+    <AboutStory />
   </section>
 </Base>
