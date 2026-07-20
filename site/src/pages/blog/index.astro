@@ -10,6 +10,14 @@ const searchIndex = posts.map(p => ({
   author: p.data.author,
   category: p.data.category,
 }));
+const catColor = (c) => ({
+  'AI': 'var(--accent)',
+  'Research': 'var(--cyan)',
+  'Engineering': 'var(--green)',
+  'Quantitative Finance': 'var(--gold)',
+  'Opinion': 'var(--accent2)',
+  'Tutorials': 'var(--accent2)',
+}[c] || 'var(--accent)');
 ---
 <Base title="Blog — QuantHQ">
   <section class="px-8 pt-20 pb-8">
@@ -33,19 +41,23 @@ const searchIndex = posts.map(p => ({
       <p id="blog-empty" class="hidden text-[var(--text-2)] text-sm py-8">No posts match that search.</p>
     </div>
     <div class="max-w-[var(--shell)] mx-auto grid md:grid-cols-2 gap-4" id="blog-list">
-      {posts.map((p) => (
-        <a href={`/blog/${p.id}/`} class="card p-8 block blog-item group overflow-hidden" data-id={p.id} data-cat={p.data.category}>
-          <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[var(--accent2)] to-[var(--accent)] opacity-0 group-hover:opacity-100 transition-opacity"></div>
-          <span class="text-[10px] uppercase tracking-[0.15em] text-[var(--accent2)] font-semibold">{p.data.category}</span>
-          <h2 class="font-semibold text-[var(--text-1)] leading-snug group-hover:text-[var(--text)] transition-colors mt-3 text-xl">{p.data.title}</h2>
-          <p class="mt-3 text-sm text-[var(--text-2)] leading-relaxed">{p.data.description}</p>
-          <div class="mt-5 flex items-center gap-3 text-[12px] text-[var(--text-3)]">
+      {posts.map((p) => {
+        const col = catColor(p.data.category);
+        return (
+        <a href={`/blog/${p.id}/`} class="card p-8 block blog-item group overflow-hidden relative" data-id={p.id} data-cat={p.data.category} style={`--glow: color-mix(in srgb, ${col} 22%, transparent)`}>
+          <div class="absolute top-0 left-0 right-0 h-[3px]" style={`background: linear-gradient(90deg, ${col}, transparent 78%)`}></div>
+          <div class="absolute top-0 right-0 w-44 h-44 pointer-events-none" style={`background: radial-gradient(circle at 100% 0%, ${col}, transparent 68%); opacity: 0.09`}></div>
+          <span class="relative text-[10px] uppercase tracking-[0.15em] font-semibold" style={`color: ${col}`}>{p.data.category}</span>
+          <h2 class="relative font-semibold text-[var(--text-1)] leading-snug group-hover:text-[var(--text)] transition-colors mt-3 text-xl">{p.data.title}</h2>
+          <p class="relative mt-3 text-sm text-[var(--text-2)] leading-relaxed">{p.data.description}</p>
+          <div class="relative mt-6 flex items-center gap-3 text-[12px] text-[var(--text-3)]">
             <span class="text-[var(--text-2)] font-medium">{p.data.author}</span>
-            <span>{p.data.date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
-            {p.data.readingTime && <span class="ml-auto">{p.data.readingTime}</span>}
+            <span class="font-mono">{p.data.date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
+            {p.data.readingTime && <span class="ml-auto font-mono">{p.data.readingTime}</span>}
           </div>
         </a>
-      ))}
+        );
+      })}
     </div>
   </section>
 
