@@ -60,8 +60,8 @@ const nav = [
       ))}
     </div>
   </div>
-  <nav class="fixed top-0 inset-x-0 z-50 h-16 border-b border-[var(--border)] bg-ink-85 backdrop-blur-xl">
-    <div class="max-w-[var(--shell)] mx-auto px-8 h-full flex items-center gap-10">
+  <nav class="lg-nav">
+    <div class="max-w-[var(--shell)] mx-auto px-8 h-full flex items-center gap-12 w-full">
       <a href="/" class="flex items-center gap-2.5 font-bold text-[15px] tracking-tight">
         <svg width="26" height="26" viewBox="0 0 34 34" fill="none" aria-hidden="true" class="shrink-0">
           <rect x="3" y="3" width="22" height="22" rx="3" stroke="currentColor" stroke-width="2.2" fill="none"/>
@@ -70,7 +70,7 @@ const nav = [
         </svg>
         QuantHQ
       </a>
-      <div class="hidden md:flex items-center gap-7 ml-auto text-[13px] font-medium">
+      <div class="hidden md:flex items-center gap-8 ml-auto text-[13px] font-medium">
         <a href="/about/" class="text-[var(--text-2)] hover:text-[var(--text-1)] transition-colors">About</a>
         {nav.map((n) => (
           <a href={n.href} class="text-[var(--text-2)] hover:text-[var(--text-1)] transition-colors">{n.label}</a>
@@ -79,7 +79,7 @@ const nav = [
           <svg class="tt-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
           <svg class="tt-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
         </button>
-        <a href="/#join" class="btn-glass" style="padding:8px 18px;font-size:12px">Join →</a>
+        <a href="/#join" class="nav-cta">Join →</a>
       </div>
       <button id="mnav-btn" class="md:hidden ml-auto p-2" aria-label="Toggle menu">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h10"/></svg>

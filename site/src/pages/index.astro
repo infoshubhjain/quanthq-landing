@@ -52,6 +52,10 @@ if(localStorage.theme==='light'){document.documentElement.classList.add('light')
   --border-hover:rgba(255,255,255,0.12);
   /* raised fill for chips/bars that sit on top of a card — NOT --border */
   --surface-2:rgba(255,255,255,0.05);
+  /* aliases so the shared liquid-glass nav CSS resolves here too (themed via --black/--white) */
+  --bg:var(--black);
+  --text:var(--white);
+  --card-bg:var(--carbon);
   --grad-hi:#9BB8FF;
   /* the single warm signature accent — primary action only, never data */
   --gold:#EBA83A;
@@ -163,21 +167,33 @@ button{border:none;background:none;color:inherit;font:inherit}
   z-index:9000;pointer-events:none;
 }
 
-/* ── NAV ── */
+/* ── NAV (liquid glass — identical treatment to Base.astro) ── */
 nav{
   position:fixed;top:0;left:0;right:0;z-index:800;
   height:64px;display:flex;align-items:center;
-  transition:background 0.4s,border-color 0.4s,backdrop-filter 0.4s;
-  border-bottom:1px solid transparent;
+  background:color-mix(in srgb, var(--bg) 58%, transparent);
+  backdrop-filter:blur(22px) saturate(1.8);
+  -webkit-backdrop-filter:blur(22px) saturate(1.8);
+  border-bottom:1px solid color-mix(in srgb, var(--text) 8%, transparent);
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, #fff 9%, transparent),
+    0 16px 40px -28px rgba(0,0,0,0.6);
+  transition:background 0.4s,box-shadow 0.4s,border-color 0.4s;
+}
+html.light nav{
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.75),
+    0 16px 40px -28px rgba(15,23,42,0.14);
 }
 nav.scrolled{
-  background:rgba(4,6,11,0.85);
-  backdrop-filter:blur(24px) saturate(1.8);
-  border-bottom-color:rgba(255,255,255,0.05);
+  background:color-mix(in srgb, var(--bg) 74%, transparent);
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, #fff 10%, transparent),
+    0 22px 50px -28px rgba(0,0,0,0.72);
 }
 html.light nav.scrolled{
-  background:rgba(245,245,247,0.85);
-  border-bottom-color:rgba(0,0,0,0.06);
+  background:color-mix(in srgb, var(--bg) 82%, transparent);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,0.85), 0 22px 50px -28px rgba(15,23,42,0.16);
 }
 .nav-inner{
   max-width:var(--shell);margin:0 auto;padding:0 var(--gutter);
@@ -196,22 +212,25 @@ html.light nav.scrolled{
 }
 .nav-links a:hover{color:var(--text-1)}
 .nav-cta{
-  font-size:12px;font-weight:600;letter-spacing:0.06em;
-  text-transform:uppercase;
-  padding:8px 18px;
-  background:var(--surface-2);
-  backdrop-filter:blur(12px);
-  -webkit-backdrop-filter:blur(12px);
-  border:1px solid var(--border-hover);
-  border-radius:999px;
-  color:var(--white);
-  transition:all 0.2s;
-  flex-shrink:0;
+  display:inline-flex;align-items:center;gap:6px;
+  font-size:12px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;
+  padding:8px 18px;border-radius:999px;flex-shrink:0;color:var(--text);
+  background:color-mix(in srgb, var(--gold) 14%, transparent);
+  backdrop-filter:blur(14px) saturate(1.6);
+  -webkit-backdrop-filter:blur(14px) saturate(1.6);
+  border:1px solid color-mix(in srgb, var(--gold) 42%, transparent);
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, #fff 34%, transparent),
+    0 4px 16px -6px var(--gold-glow);
+  transition:all 0.25s var(--ease-out);
 }
 .nav-cta:hover{
-  background:var(--border-hover);
+  background:color-mix(in srgb, var(--gold) 24%, transparent);
   border-color:var(--gold);
-  box-shadow:0 0 20px var(--gold-glow);
+  transform:translateY(-1px);
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, #fff 44%, transparent),
+    0 8px 22px -8px var(--gold-glow);
 }
 /* ── MOBILE MENU ── */
 .nav-hamburger{
