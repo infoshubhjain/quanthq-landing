@@ -32,7 +32,7 @@ Homepage aliases exist in `global.css :root` for backwards compat only.
 ## Rules
 - **Never modify** `CNAME` or `.github/workflows/deploy.yml`
 - Keep `index.astro` standalone — it intentionally has its own layout, CSS, and JS
-- Homepage nav differs from inner pages: (Research, Blog, About, Intelligence, Network, Terminal) vs (Research, Blogs, Community, Contact)
+- Nav link set is unified across homepage and inner pages: About, Research, Blog, Community, Contact (same order, same labels). The homepage nav is still its own standalone markup/CSS but renders the identical items + the same liquid-glass `.lg-nav`/`.nav-cta` treatment as `Base.astro`. Homepage-only sections (Intelligence/Network/Terminal) are reached via the right-side section dots, not the nav.
 - Ticker data is hardcoded/simulated — not a real API
 - Canvas code (globe, force graph) is decorative only
 - `prefers-reduced-motion` must be respected — disable animations when set
